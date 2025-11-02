@@ -132,28 +132,34 @@ backend/
 
 **Release Command**: `bun run release:backend`
 
-### 5. one-ie/one (Builder Template)
+### 5. one-ie/one (Builder Template - OPEN SOURCE)
 
-**Purpose**: Builder template that users clone to create their own sites
+**Purpose**: Open source builder template that users clone to create their own sites
 **Source**: `/one` + `/web` + `.claude` + root docs
 **Target**: `https://github.com/one-ie/one`
+**License**: Open source (MIT/Apache/custom)
 **Usage**:
 - Users clone this repository to build their own sites
 - You clone this to build the one.ie marketing site
 
+**IMPORTANT**: CLI and Backend are NOT included (not open source yet)
+
 **Contents**:
 ```
 one/
-├── one/              # Ontology documentation
-├── web/              # Astro application
-├── .claude/          # Claude Code configuration
+├── one/              # Ontology documentation (open source)
+├── web/              # Astro application (open source)
+├── .claude/          # Claude Code configuration (open source)
 ├── README.md         # Platform overview
 ├── LICENSE.md
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── SECURITY.md
-├── wrangler.toml     # Cloudflare Pages config
 └── package.json      # Workspace dependencies
+
+NOT INCLUDED:
+├── cli/              # (released separately, not open source yet)
+└── backend/          # (released separately, not open source yet)
 ```
 
 **Release Command**: `bun run release:one`
