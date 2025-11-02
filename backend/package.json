@@ -1,0 +1,36 @@
+{
+  "name": "one-backend",
+  "version": "3.6.13",
+  "description": "ONE Platform - Headless Convex Backend with 6-Dimension Ontology",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "convex dev",
+    "deploy": "convex deploy",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint convex --ext .ts"
+  },
+  "dependencies": {
+    "convex": "^1.27.3",
+    "@convex-dev/better-auth": "^0.8.6",
+    "@convex-dev/rate-limiter": "^0.2.13",
+    "@convex-dev/resend": "^0.1.13",
+    "better-auth": "^1.3.24",
+    "effect": "^3.18.4",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "eslint": "^9.36.0",
+    "prettier": "^3.6.2"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "bun": ">=1.2.0"
+  }
+}

@@ -529,25 +529,47 @@ bun test --watch test/auth      # Watch mode
 
 ---
 
-## 🏗️ Project Structure
+## 🏗️ Project Structure (Multi-Repo)
 
+**Monorepo Source:**
 ```
-ONE/
+one/ (this repository)
 ├── .claude/           # Claude Code agents, commands, hooks
-├── one/               # 6-dimension ontology docs
-├── web/               # Astro 5 + React 19 application
-├── cli/               # CLI package workspace (npm: oneie)
-├── apps/
-│   └── one/           # Master assembly (syncs to one-ie/one)
-│       ├── one/       # Synced ontology bundle
-│       ├── .claude/   # Synced AI configuration
-│       ├── web/       # Git subtree of one-ie/web
-│       └── docs/      # Optional docs staging
+├── one/               # 6-dimension ontology docs → one-ie/ontology
+├── web/               # Astro 5 + React 19 application → one-ie/web
+├── cli/               # CLI package (npm: oneie) → one-ie/cli
+├── backend/           # Convex backend → one-ie/backend
+├── apps/one/          # Master assembly docs (→ one-ie/one)
 ├── scripts/           # Release automation and tooling
 ├── README.md          # Root documentation (synced downstream)
 ├── LICENSE.md         # License
 ├── AGENTS.md          # AI agent defaults
-└── CLAUDE.md          # Claude Code guidance
+├── CLAUDE.md          # Claude Code guidance
+└── package.json       # Workspace configuration
+```
+
+**Published Repositories:**
+```
+one-ie/
+├── ontology          # Documentation (/one)
+├── web               # Template (/web)
+├── cli               # CLI + npm (/cli)
+├── backend           # Convex backend (/backend)
+└── one               # Aggregated deployment (→ one.ie)
+```
+
+**Release Commands:**
+```bash
+# Release all repositories
+bun run release:all
+/release all
+
+# Or release individually
+bun run release:ontology  # /release ontology
+bun run release:web       # /release web
+bun run release:cli       # /release cli
+bun run release:backend   # /release backend
+bun run release:one       # /release one
 ```
 
 ---

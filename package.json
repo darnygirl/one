@@ -1,0 +1,50 @@
+{
+  "name": "one-platform-monorepo",
+  "version": "3.6.13",
+  "description": "ONE Platform - Build apps, websites, and AI agents in English",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.2.19",
+  "workspaces": [
+    "web",
+    "cli",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "cd web && bun run dev",
+    "build": "cd web && bun run build",
+    "preview": "cd web && bun run preview",
+    "check": "cd web && bunx astro check",
+    "test": "cd web && bun test",
+    "release:ontology": "./scripts/release-ontology.sh",
+    "release:web": "./scripts/release-web.sh",
+    "release:cli": "./scripts/release-cli.sh",
+    "release:backend": "./scripts/release-backend.sh",
+    "release:one": "./scripts/release-one.sh",
+    "release:all": "./scripts/release-all.sh"
+  },
+  "keywords": [
+    "astro",
+    "react",
+    "tailwind",
+    "convex",
+    "ontology",
+    "ai",
+    "6-dimension",
+    "one-platform"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/one-ie/one"
+  },
+  "homepage": "https://one.ie",
+  "bugs": {
+    "url": "https://github.com/one-ie/one/issues"
+  },
+  "author": "ONE Platform",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "engines": {
+    "node": ">=22.0.0",
+    "bun": ">=1.2.0"
+  }
+}
