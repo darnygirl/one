@@ -62,10 +62,11 @@ Based on the target requested:
 
 ### For: /release one
 1. Run `./scripts/release-one.sh`
-2. Review output - shows aggregated assembly
+2. Review output - shows builder template assembly
 3. Check temporary directory: `/tmp/one-release-one-*`
 4. Report to user: DRY RUN complete
-5. Remind: After push, Cloudflare auto-deploys to one.ie
+5. Remind: After push, users can clone one-ie/one to build their sites
+6. Remind: Clone one-ie/one to build one.ie marketing site
 
 ### For: /release all
 1. Run `./scripts/release-all.sh`
@@ -83,7 +84,7 @@ Provide a concise summary:
 🌐 web: /tmp/one-release-web-* (review)
 📦 cli: /tmp/one-release-cli-* (review + npm publish)
 ⚙️ backend: /tmp/one-release-backend-* (review)
-🚀 one: /tmp/one-release-one-* (review → auto-deploy)
+🏗️ one: /tmp/one-release-one-* (review → builder template)
 
 Next steps:
 1. Review each /tmp directory
@@ -91,7 +92,8 @@ Next steps:
    cd /tmp/one-release-[target]-*
    git push origin main
 3. For CLI: npm publish --access public
-4. For one: Cloudflare auto-deploys to one.ie
+4. For one: Users clone one-ie/one to build their sites
+5. For one.ie: Clone one-ie/one and customize for marketing site
 ```
 
 ## Important Notes
@@ -195,11 +197,11 @@ After manual push:
 ## Post-Release Tasks
 
 After reviewing and pushing releases:
-1. **ontology**: GitHub only, no deployment
-2. **web**: GitHub only, used as template
+1. **ontology**: GitHub only, documentation repository
+2. **web**: GitHub only, used as standalone template
 3. **cli**: Push to GitHub + `npm publish --access public`
-4. **backend**: GitHub only, deploy separately
-5. **one**: Push to GitHub → Cloudflare auto-deploys to one.ie
+4. **backend**: GitHub only, used as backend reference
+5. **one**: Push to GitHub → Users clone to build their sites (including one.ie)
 
 ---
 

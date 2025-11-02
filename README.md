@@ -555,8 +555,12 @@ one-ie/
 ├── web               # Template (/web)
 ├── cli               # CLI + npm (/cli)
 ├── backend           # Convex backend (/backend)
-└── one               # Aggregated deployment (→ one.ie)
+└── one               # Builder template (clone to build sites)
 ```
+
+**Usage:**
+- **Users**: Clone one-ie/one to build their own sites
+- **one.ie**: Clone one-ie/one and customize for marketing site
 
 **Release Commands:**
 ```bash

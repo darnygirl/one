@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Release script for one-ie/one (Aggregated)
-# Combines /one + /web + /.claude + root docs → one-ie/one → Cloudflare Pages → one.ie
+# Release script for one-ie/one (Builder Template)
+# Combines /one + /web + /.claude + root docs → one-ie/one (the builder that users clone)
 
 set -euo pipefail
 
@@ -45,8 +45,8 @@ trap cleanup EXIT
 
 main() {
     log_info "========================================="
-    log_info "  ONE Platform - Aggregated Release"
-    log_info "  Target: one.ie"
+    log_info "  ONE Platform - Builder Template"
+    log_info "  Target: one-ie/one"
     log_info "========================================="
     log_info ""
 
@@ -57,7 +57,8 @@ main() {
     log_info "  - Root docs (README, LICENSE, etc.)"
     log_info ""
     log_info "Target: $REPO_URL"
-    log_info "Deploy: Cloudflare Pages → one.ie"
+    log_info "Purpose: Builder template that users clone to create their own sites"
+    log_info "Example: Clone one-ie/one to build one.ie marketing site"
     log_info ""
 
     # Create temporary directory
@@ -258,30 +259,33 @@ EOF
 
     log_info ""
     log_warn "========================================="
-    log_warn "  DRY RUN - NOT PUSHING OR DEPLOYING"
+    log_warn "  DRY RUN - NOT PUSHING"
     log_warn "========================================="
     log_warn ""
-    log_warn "To actually release and deploy, run:"
+    log_warn "To actually release the builder template:"
     log_warn ""
     log_warn "1. Push to GitHub:"
     log_warn "   cd $TEMP_DIR"
     log_warn "   git push origin main"
     log_warn ""
-    log_warn "2. Cloudflare will auto-deploy to one.ie"
-    log_warn "   Monitor: https://dash.cloudflare.com/pages"
+    log_warn "2. Users can now clone one-ie/one to build their sites:"
+    log_warn "   git clone https://github.com/one-ie/one my-site"
+    log_warn "   cd my-site"
+    log_warn "   bun install && bun run dev"
     log_warn ""
-    log_warn "3. Verify deployment:"
-    log_warn "   https://one.ie"
+    log_warn "3. To build one.ie marketing site:"
+    log_warn "   Clone one-ie/one and customize for one.ie"
+    log_warn "   Deploy to Cloudflare Pages"
     log_warn ""
     log_warn "Temporary directory preserved for inspection."
     log_warn "It will be cleaned up on next run."
 
     # Show build info
     log_info ""
-    log_info "Build configuration:"
-    log_info "  Build command: cd web && bun run build"
-    log_info "  Output directory: web/dist"
-    log_info "  Framework: Astro 5"
+    log_info "Builder template ready:"
+    log_info "  Repository: one-ie/one"
+    log_info "  Purpose: Template for users to clone and build their sites"
+    log_info "  Includes: /one (docs) + /web (Astro) + /.claude (AI)"
     log_info ""
 
     # Disable cleanup to allow inspection

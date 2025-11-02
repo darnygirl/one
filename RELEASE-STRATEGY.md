@@ -132,17 +132,20 @@ backend/
 
 **Release Command**: `bun run release:backend`
 
-### 5. one-ie/one (Aggregated)
+### 5. one-ie/one (Builder Template)
 
-**Purpose**: Master assembly for one.ie deployment
+**Purpose**: Builder template that users clone to create their own sites
 **Source**: `/one` + `/web` + `.claude` + root docs
-**Target**: `https://github.com/one-ie/one` → Cloudflare Pages → one.ie
+**Target**: `https://github.com/one-ie/one`
+**Usage**:
+- Users clone this repository to build their own sites
+- You clone this to build the one.ie marketing site
 
 **Contents**:
 ```
 one/
-├── one/              # Synced from one-ie/ontology
-├── web/              # Synced from one-ie/web
+├── one/              # Ontology documentation
+├── web/              # Astro application
 ├── .claude/          # Claude Code configuration
 ├── README.md         # Platform overview
 ├── LICENSE.md
@@ -154,7 +157,7 @@ one/
 ```
 
 **Release Command**: `bun run release:one`
-**Deploy**: Cloudflare Pages auto-deploys from `main` branch → one.ie
+**After Release**: Clone one-ie/one to build one.ie or any custom site
 
 ---
 
@@ -201,7 +204,7 @@ bun run release:one
 4. **Tag**: Create git tag (e.g., `v3.6.14`)
 5. **Push**: Push to GitHub repository
 6. **Publish**: Publish to npm (CLI only)
-7. **Deploy**: Trigger Cloudflare deployment (one.ie only)
+7. **Clone**: Users/you clone one-ie/one to build sites (including one.ie)
 
 ---
 
@@ -269,27 +272,36 @@ one/ (root monorepo)
 
 ---
 
-## Cloudflare Deployment Strategy
+## Building Sites from one-ie/one
 
-### Target: one.ie
+### one.ie Marketing Site
 
-**Source Repository**: `one-ie/one`
-**Deploy Branch**: `main`
+**Source**: Clone `one-ie/one` (the builder template)
+**Process**:
+1. Clone one-ie/one to a new repository for one.ie
+2. Customize content for marketing site
+3. Deploy to Cloudflare Pages
+
 **Build Command**: `cd web && bun run build`
 **Output Directory**: `web/dist`
 **Platform**: Cloudflare Pages
 
-### Automatic Deployments
+### User Sites
 
-- **Production**: Push to `main` → Deploy to one.ie
-- **Preview**: Push to any branch → Deploy to preview URL
-
-### Manual Deployment
-
+**Source**: Users clone `one-ie/one`
+**Process**:
 ```bash
-cd web
+# User clones the builder template
+git clone https://github.com/one-ie/one my-site
+cd my-site
+
+# Install and develop
+bun install
+bun run dev
+
+# Build and deploy
 bun run build
-wrangler pages deploy dist --project-name=one --branch=production
+wrangler pages deploy web/dist --project-name=my-site
 ```
 
 ---
