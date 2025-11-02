@@ -25,12 +25,23 @@ one/ (one-ie/one on GitHub)
 
 ```
 one-ie/
-├── ontology        # Documentation repository (/one → here)
-├── web             # Template repository (/web → here)
-├── cli             # CLI package (/cli → here + npm: oneie)
-├── backend         # Headless backend (/backend → here)
-└── one             # Aggregated deployment (one + web + .claude + docs → here → one.ie)
+├── ontology        # PUBLIC - Documentation repository (/one → here)
+├── web             # PUBLIC - Template repository (/web → here)
+├── cli             # PRIVATE repo + PUBLIC npm (/cli → here + npm: oneie)
+├── backend         # PRIVATE - Headless backend (/backend → here)
+└── one             # PUBLIC - Builder template (one + web + .claude)
 ```
+
+### Public vs Private
+
+**Open Source (PUBLIC):**
+1. **one-ie/ontology** - Documentation
+2. **one-ie/web** - Astro starter template
+3. **one-ie/one** - Complete builder (docs + web + AI)
+
+**Proprietary (PRIVATE):**
+4. **one-ie/cli** - Source code private, npm package public (`npx oneie`)
+5. **one-ie/backend** - Source code private, internal use only
 
 ---
 
@@ -77,13 +88,17 @@ web/
 
 **Release Command**: `bun run release:web`
 
-### 3. one-ie/cli
+### 3. one-ie/cli (PRIVATE REPO + PUBLIC NPM)
 
 **Purpose**: CLI tooling (`npx oneie`)
 **Source**: `/cli` directory
 **Target**:
-- GitHub: `https://github.com/one-ie/cli`
-- npm: `oneie`
+- GitHub: `https://github.com/one-ie/cli` (PRIVATE)
+- npm: `oneie` (PUBLIC)
+
+**Access**:
+- ✅ npm package is PUBLIC - anyone can `npx oneie`
+- ❌ Source code is PRIVATE - repo is not public
 
 **Contents**:
 ```
@@ -107,11 +122,15 @@ cli/
 **Release Command**: `bun run release:cli`
 **npm Publish**: `npm publish` (after GitHub release)
 
-### 4. one-ie/backend
+### 4. one-ie/backend (PRIVATE REPO)
 
 **Purpose**: Headless Convex backend (6-dimension schema)
 **Source**: `/backend` directory
-**Target**: `https://github.com/one-ie/backend`
+**Target**: `https://github.com/one-ie/backend` (PRIVATE)
+
+**Access**:
+- ❌ Repository is PRIVATE - not publicly accessible
+- Internal use only
 
 **Contents**:
 ```
