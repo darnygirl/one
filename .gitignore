@@ -32,4 +32,5 @@
 /one.ie/
 /nine-padel/
 one/events/nine-padel/
-.claude/hooks.log
+.claude/hooks.log__pycache__/
+*.pyc
