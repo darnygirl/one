@@ -57,34 +57,33 @@ export function Message({ message, isLatest }: MessageProps) {
 
   return (
     <div
-      className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'} ${
-        isUser ? 'message-user' : 'message-assistant'
-      }`}
+      className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'} message-enter`}
     >
       {/* Avatar (assistant only) */}
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm">🤖</span>
+        <div className="w-8 h-8 rounded-full bg-[#10a37f] flex items-center justify-center flex-shrink-0">
+          <span className="text-sm text-white">🤖</span>
         </div>
       )}
 
       {/* Message Content */}
       <div
-        className={`max-w-[85%] sm:max-w-[75%] ${
+        className={`max-w-[85%] sm:max-w-[75%] px-4 py-3 ${
           isUser
-            ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white'
-            : 'glass-card'
-        } rounded-2xl px-4 py-3 shadow-lg`}
+            ? 'bg-[#f7f7f8] dark:bg-[#444654] text-gray-900 dark:text-white'
+            : 'bg-white dark:bg-[#343541] text-gray-900 dark:text-white'
+        }`}
+        style={{ borderRadius: 'var(--border-radius)' }}
       >
         {renderContent()}
 
         {/* Message Actions */}
         {!isUser && (
-          <div className="flex items-center gap-2 mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-2 mt-3 pt-2" style={{ borderTop: '1px solid var(--chat-border)' }}>
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-xs"
+              className="h-7 text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={handleCopy}
             >
               {copied ? (
@@ -102,7 +101,7 @@ export function Message({ message, isLatest }: MessageProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-xs"
+              className="h-7 text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => {
                 // TODO: Implement regenerate
                 trackEvent(ChatEvents.MESSAGE_REGENERATED);
@@ -117,8 +116,8 @@ export function Message({ message, isLatest }: MessageProps) {
 
       {/* Avatar (user only) */}
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm">👤</span>
+        <div className="w-8 h-8 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+          <span className="text-sm text-white">👤</span>
         </div>
       )}
     </div>

@@ -60,7 +60,13 @@ export function PromptInput({
 
   return (
     <div className="relative">
-      <div className="flex gap-2 items-end glass-card p-2 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+      <div
+        className="flex gap-2 items-end p-2 bg-white dark:bg-[#40414f] border transition-shadow"
+        style={{
+          borderRadius: 'var(--border-radius)',
+          borderColor: 'var(--chat-border)'
+        }}
+      >
         <Textarea
           ref={textareaRef}
           value={value}
@@ -68,13 +74,14 @@ export function PromptInput({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled || isLoading}
-          className="min-h-[52px] max-h-[200px] resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+          className="min-h-[52px] max-h-[200px] resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-gray-900 dark:text-white"
           rows={1}
         />
         <Button
           onClick={handleSubmitClick}
           disabled={disabled || isLoading || !value.trim()}
-          className="h-10 w-10 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 flex-shrink-0"
+          className="h-10 w-10 bg-[#10a37f] hover:bg-[#0d8f6f] disabled:bg-gray-300 dark:disabled:bg-gray-600 flex-shrink-0 text-white"
+          style={{ borderRadius: 'var(--border-radius)' }}
           size="icon"
         >
           {isLoading ? (

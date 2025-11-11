@@ -17,18 +17,18 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ currentModel, onModelChange, hasApiKey }: ChatHeaderProps) {
   return (
-    <header className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl">
-      <div className="container max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="border-b bg-white dark:bg-[#343541]" style={{ borderColor: 'var(--chat-border)', height: 'var(--header-height)' }}>
+      <div className="container max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
         {/* Logo/Title */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 bg-[#10a37f] flex items-center justify-center" style={{ borderRadius: 'var(--border-radius)' }}>
             <span className="text-xl">💬</span>
           </div>
           <div className="hidden sm:block">
-            <h1 className="text-lg font-bold gradient-text">
+            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
               UltraChat
             </h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs" style={{ color: 'var(--chat-text-secondary)' }}>
               Powered by {currentModel?.provider || 'AI'}
             </p>
           </div>
@@ -40,11 +40,12 @@ export function ChatHeader({ currentModel, onModelChange, hasApiKey }: ChatHeade
           <Button
             variant="outline"
             size="sm"
-            className="h-9"
+            className="h-9 border hover:bg-gray-100 dark:hover:bg-gray-700"
+            style={{ borderColor: 'var(--chat-border)' }}
             onClick={() => $isModelSelectorOpen.set(true)}
           >
             <span className="mr-2 hidden sm:inline">🤖</span>
-            <span className="max-w-[120px] sm:max-w-none truncate">
+            <span className="max-w-[120px] sm:max-w-none truncate text-gray-900 dark:text-white">
               {currentModel?.name || 'Select Model'}
             </span>
           </Button>
@@ -53,7 +54,7 @@ export function ChatHeader({ currentModel, onModelChange, hasApiKey }: ChatHeade
           {!hasApiKey && (
             <Button
               size="sm"
-              className="h-9 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              className="h-9 bg-[#10a37f] hover:bg-[#0d8f6f] text-white"
               onClick={() => $isApiKeyModalOpen.set(true)}
             >
               <span className="mr-2">🔑</span>
