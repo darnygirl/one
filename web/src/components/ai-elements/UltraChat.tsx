@@ -54,6 +54,7 @@ export function UltraChat() {
     isLoading,
     error,
     setInput,
+    append,
   } = useChat({
     api: '/api/chat',
     body: {
@@ -100,26 +101,32 @@ export function UltraChat() {
   }, [messages.length]);
 
   // Handle message submission
-  const handleSend = (value: string) => {
-    if (!value.trim()) return;
+  const handleSend = async (value?: string) => {
+    const textToSend = value ?? input;
+    if (!textToSend.trim()) return;
 
     setStartTime(Date.now());
-    trackMessageSent(currentModel, value.length);
+    trackMessageSent(currentModel, textToSend.length);
 
-    // Submit via AI SDK
-    const event = {
-      preventDefault: () => {},
-    } as React.FormEvent<HTMLFormElement>;
-    handleSubmit(event);
+    // If value provided (e.g., from suggestion), use append to bypass input state
+    if (value) {
+      await append({
+        role: 'user',
+        content: value,
+      });
+    } else {
+      // Otherwise, submit the current input via form
+      const event = {
+        preventDefault: () => {},
+      } as React.FormEvent<HTMLFormElement>;
+      handleSubmit(event);
+    }
   };
 
   // Handle suggestion click
   const handleSuggestionClick = (text: string) => {
-    setInput(text);
-    // Auto-submit the suggestion
-    setTimeout(() => {
-      handleSend(text);
-    }, 100);
+    // Set input and submit immediately
+    handleSend(text);
   };
 
   // Handle model change
