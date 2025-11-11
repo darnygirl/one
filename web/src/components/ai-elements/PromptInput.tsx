@@ -1,0 +1,89 @@
+/**
+ * Prompt Input Component
+ *
+ * Advanced input with auto-resize, keyboard shortcuts, and beautiful styling
+ */
+
+import { useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+
+interface PromptInputProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSubmit: (value: string) => void;
+  isLoading?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+}
+
+export function PromptInput({
+  value,
+  onChange,
+  onSubmit,
+  isLoading,
+  disabled,
+  placeholder = 'Type your message...',
+}: PromptInputProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = 'auto';
+    const newHeight = Math.min(textarea.scrollHeight, 200); // Max 200px
+    textarea.style.height = `${newHeight}px`;
+  }, [value]);
+
+  // Focus on mount
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Submit on Enter (without Shift)
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!disabled && !isLoading && value.trim()) {
+        onSubmit(value);
+      }
+    }
+  };
+
+  const handleSubmitClick = () => {
+    if (!disabled && !isLoading && value.trim()) {
+      onSubmit(value);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <div className="flex gap-2 items-end glass-card p-2 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+        <Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={onChange}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          disabled={disabled || isLoading}
+          className="min-h-[52px] max-h-[200px] resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+          rows={1}
+        />
+        <Button
+          onClick={handleSubmitClick}
+          disabled={disabled || isLoading || !value.trim()}
+          className="h-10 w-10 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 flex-shrink-0"
+          size="icon"
+        >
+          {isLoading ? (
+            <span className="animate-spin">⏳</span>
+          ) : (
+            <span className="text-lg">↑</span>
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}

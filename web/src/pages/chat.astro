@@ -1,0 +1,29 @@
+---
+/**
+ * Ultra-Polished AI Chat Page
+ *
+ * Beautiful, responsive chat interface with all AI SDK Elements patterns
+ * Mobile-first, above the fold, absolutely polished
+ */
+
+import Layout from '@/layouts/Layout.astro';
+import { UltraChat } from '@/components/ai-elements/UltraChat';
+---
+
+<Layout
+  title="AI Chat - ONE Platform"
+  description="Ultra-polished AI chat with 30+ models, intelligent suggestions, and beautiful UI"
+>
+  <UltraChat client:only="react" />
+</Layout>
+
+<style>
+  /* Import chat theme */
+  @import '../styles/chat-theme.css';
+
+  /* Ensure full height */
+  :global(html), :global(body) {
+    height: 100%;
+    overflow: hidden;
+  }
+</style>
