@@ -9,13 +9,27 @@ export * from './tools';
 
 // Initialize tools registry
 import { toolRegistry, registerTools } from './registry';
-import { weatherTool, websearchTool, calculatorTool } from './tools';
+import {
+  weatherTool,
+  websearchTool,
+  calculatorTool,
+  translationTool,
+  timeTool,
+  currencyTool,
+  codeFormatterTool,
+  uuidTool,
+} from './tools';
 
 // Register all available tools
 registerTools(
   weatherTool,
   websearchTool,
-  calculatorTool
+  calculatorTool,
+  translationTool,
+  timeTool,
+  currencyTool,
+  codeFormatterTool,
+  uuidTool
 );
 
 export { toolRegistry };
