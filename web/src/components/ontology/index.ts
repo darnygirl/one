@@ -39,3 +39,20 @@ export { TagList } from "./fields/TagList";
 export { DateField } from "./fields/DateField";
 export { Link } from "./fields/Link";
 export { Markdown } from "./fields/Markdown";
+
+// Advanced components
+export { SearchBar } from "./SearchBar";
+export { FilterPanel } from "./FilterPanel";
+export type { FilterValue } from "./FilterPanel";
+export { SortDropdown, courseSortOptions, productSortOptions, postSortOptions } from "./SortDropdown";
+export type { SortOption } from "./SortDropdown";
+export { Pagination } from "./Pagination";
+export { ThingPreview } from "./ThingPreview";
+export { ShareDialog } from "./ShareDialog";
+export { RelatedThings } from "./RelatedThings";
+export { StatsCard } from "./StatsCard";
+export type { StatCardData } from "./StatsCard";
+export { InfiniteScroll } from "./InfiniteScroll";
+export { ThingForm } from "./ThingForm";
+export { BulkActions } from "./BulkActions";
+export { ThingTimeline } from "./ThingTimeline";
