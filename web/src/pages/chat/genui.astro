@@ -1,0 +1,31 @@
+---
+/**
+ * Unified AI Chat Page
+ *
+ * One chat app for all users:
+ * - Free tier: Works without API keys (Gemini Flash Lite only)
+ * - Premium: Users add their own OpenRouter keys for full model access
+ * - Smart UI: Show/hide features based on user API key status
+ *
+ * Features scale with backend capabilities:
+ * - Reasoning visualization (when available)
+ * - Tool call display (when available)
+ * - Generative UI components (when available)
+ */
+
+import Layout from '@/layouts/Layout.astro';
+import { ChatClientV2 } from '@/components/ai/ChatClientV2';
+
+const title = 'Generative UI Demo - Interactive AI Components';
+const description = 'Experience the future of AI chat with generative UI - charts, tables, forms, and custom components rendered dynamically by AI.';
+---
+
+<Layout
+  title={title}
+  description={description}
+  sidebarInitialCollapsed={true}
+  hideHeader={true}
+  fullHeight={true}
+>
+  <ChatClientV2 client:only="react" />
+</Layout>
