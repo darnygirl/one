@@ -18,48 +18,136 @@ import ShopLayout from '@/layouts/ShopLayout.astro';
 import { ProductHeader } from '@/components/shop/ProductHeader';
 import { ThemeToggle } from '@/components/shop/ThemeToggle';
 
-// Get order ID from URL params
-const orderNumber = Astro.url.searchParams.get('order') || 'ORD-202501-001';
+// Check if Stripe is configured
+const stripeSecretKey = import.meta.env.STRIPE_SECRET_KEY;
+const stripeEnabled = Boolean(stripeSecretKey);
 
-// Mock order data (would come from Convex in real implementation)
-const order = {
-  orderNumber,
-  status: 'completed',
-  createdAt: new Date(),
-  customerName: 'John Doe',
-  customerEmail: 'john@example.com',
-  items: [
-    {
-      id: '1',
-      name: 'Classic White Tee',
-      price: 73,
-      quantity: 2,
-      image: 'https://i.imgur.com/Y54Bt8J.jpeg',
-      downloadUrl: '/downloads/product-1',
-    },
-    {
-      id: '2',
-      name: 'Sleek Modern Laptop',
-      price: 1299,
-      quantity: 1,
-      image: 'https://i.imgur.com/QkIa5tT.jpeg',
-      downloadUrl: null,
-    }
-  ],
-  subtotal: 1445,
-  tax: 0,
-  shipping: 0,
-  total: 1445,
-  paymentMethod: 'X402 (USDC)',
-  shippingAddress: {
-    name: 'John Doe',
-    address: '123 Main St, Apt 4B',
-    city: 'San Francisco',
-    state: 'CA',
-    zip: '94102',
-    country: 'United States',
+// Get session ID or order ID from URL params
+const sessionId = Astro.url.searchParams.get('session_id');
+const orderNumber = Astro.url.searchParams.get('order') || `ORD-${Date.now()}`;
+const txHash = Astro.url.searchParams.get('tx'); // For X402 payments
+
+// Initialize Stripe if enabled
+let stripe: any = null;
+if (stripeEnabled) {
+  const { default: Stripe } = await import('stripe');
+  stripe = new Stripe(stripeSecretKey);
+}
+
+// Retrieve Stripe session if session_id is provided
+let stripeSession: any = null;
+if (stripeEnabled && sessionId) {
+  try {
+    stripeSession = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['line_items', 'payment_intent'],
+    });
+  } catch (error) {
+    console.error('Error retrieving Stripe session:', error);
   }
-};
+}
+
+// Build order data from Stripe session or use mock data
+let order: any;
+
+if (stripeSession) {
+  // Extract order data from Stripe session
+  const lineItems = stripeSession.line_items?.data || [];
+
+  order = {
+    orderNumber: sessionId.slice(-12).toUpperCase(),
+    status: 'completed',
+    createdAt: new Date(stripeSession.created * 1000),
+    customerName: stripeSession.customer_details?.name || 'Customer',
+    customerEmail: stripeSession.customer_details?.email || '',
+    items: lineItems.map((item: any) => ({
+      id: item.price.product,
+      name: item.description,
+      price: item.price.unit_amount / 100,
+      quantity: item.quantity,
+      image: 'https://i.imgur.com/Y54Bt8J.jpeg', // TODO: Get from product data
+      downloadUrl: null,
+    })),
+    subtotal: stripeSession.amount_subtotal / 100,
+    tax: (stripeSession.total_details?.amount_tax || 0) / 100,
+    shipping: (stripeSession.total_details?.amount_shipping || 0) / 100,
+    total: stripeSession.amount_total / 100,
+    paymentMethod: 'Credit Card (Stripe)',
+    shippingAddress: stripeSession.shipping_details ? {
+      name: stripeSession.shipping_details.name,
+      address: stripeSession.shipping_details.address.line1 + (stripeSession.shipping_details.address.line2 ? `, ${stripeSession.shipping_details.address.line2}` : ''),
+      city: stripeSession.shipping_details.address.city,
+      state: stripeSession.shipping_details.address.state,
+      zip: stripeSession.shipping_details.address.postal_code,
+      country: stripeSession.shipping_details.address.country,
+    } : null,
+  };
+} else if (txHash) {
+  // X402 crypto payment
+  order = {
+    orderNumber,
+    status: 'completed',
+    createdAt: new Date(),
+    customerName: 'Crypto Customer',
+    customerEmail: 'customer@example.com',
+    items: [
+      {
+        id: '1',
+        name: 'Digital Product',
+        price: 145.00,
+        quantity: 1,
+        image: 'https://i.imgur.com/Y54Bt8J.jpeg',
+        downloadUrl: null,
+      }
+    ],
+    subtotal: 145.00,
+    tax: 0,
+    shipping: 0,
+    total: 145.00,
+    paymentMethod: 'USDC (X402 Protocol)',
+    transactionHash: txHash,
+    shippingAddress: null,
+  };
+} else {
+  // Mock order data (fallback)
+  order = {
+    orderNumber,
+    status: 'completed',
+    createdAt: new Date(),
+    customerName: 'John Doe',
+    customerEmail: 'john@example.com',
+    items: [
+      {
+        id: '1',
+        name: 'Classic White Tee',
+        price: 73,
+        quantity: 2,
+        image: 'https://i.imgur.com/Y54Bt8J.jpeg',
+        downloadUrl: '/downloads/product-1',
+      },
+      {
+        id: '2',
+        name: 'Sleek Modern Laptop',
+        price: 1299,
+        quantity: 1,
+        image: 'https://i.imgur.com/QkIa5tT.jpeg',
+        downloadUrl: null,
+      }
+    ],
+    subtotal: 1445,
+    tax: 0,
+    shipping: 0,
+    total: 1445,
+    paymentMethod: 'Mock Payment',
+    shippingAddress: {
+      name: 'John Doe',
+      address: '123 Main St, Apt 4B',
+      city: 'San Francisco',
+      state: 'CA',
+      zip: '94102',
+      country: 'United States',
+    }
+  };
+}
 ---
 
 <ShopLayout title={`Order ${orderNumber} Confirmed`} description="Thank you for your order">
@@ -251,6 +339,22 @@ const order = {
             <div class="border-t-2 border-black dark:border-white pt-4 space-y-2">
               <p class="text-xs opacity-60">Payment Method</p>
               <p class="text-sm font-medium">{order.paymentMethod}</p>
+              {order.transactionHash && (
+                <div class="mt-2 pt-2 border-t border-black/20 dark:border-white/20">
+                  <p class="text-xs opacity-60 mb-1">Transaction Hash</p>
+                  <a
+                    href={`https://basescan.org/tx/${order.transactionHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-xs font-mono hover:opacity-60 transition-opacity flex items-center gap-1"
+                  >
+                    {order.transactionHash.slice(0, 10)}...{order.transactionHash.slice(-8)}
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              )}
             </div>
 
             <div class="border-t-2 border-black dark:border-white pt-4 space-y-2">
