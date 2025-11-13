@@ -18,7 +18,6 @@
 import ShopLayout from '@/layouts/ShopLayout.astro';
 import { ProductHeader } from '@/components/shop/ProductHeader';
 import { ThemeToggle } from '@/components/shop/ThemeToggle';
-import { X402CheckoutFlow } from '@/components/web3/X402CheckoutFlow';
 
 // Check if Stripe is configured
 const stripeSecretKey = import.meta.env.STRIPE_SECRET_KEY;
@@ -244,21 +243,30 @@ if (stripeEnabled && Astro.request.method === 'POST') {
 
                     <!-- X402 Checkout (Hidden by default) -->
                     <div id="x402-checkout-form" class="mt-6 pt-6 border-t-2 border-black dark:border-white hidden">
-                      <!-- X402 Checkout Flow Component -->
+                      <!-- X402 Placeholder - Component loaded dynamically via loadX402Component() -->
                       <div id="x402-component-mount">
-                        <X402CheckoutFlow
-                          client:load
-                          cartItems={[
-                            {
-                              id: '1',
-                              name: 'Premium Wireless Headphones',
-                              price: 299.99,
-                              quantity: 1,
-                              image: 'https://i.imgur.com/ZANVnHE.jpeg'
-                            }
-                          ]}
-                          total={299.99}
-                        />
+                        <div class="text-center p-8 border-2 border-black dark:border-white bg-black/5 dark:bg-white/5">
+                          <div class="mb-4">
+                            <svg class="w-12 h-12 mx-auto opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                          </div>
+                          <p class="text-sm font-bold tracking-wide mb-2">X402 Crypto Payment</p>
+                          <p class="text-xs opacity-60 mb-4">
+                            Install web3 dependencies to enable crypto payments
+                          </p>
+                          <div class="space-y-1 text-xs opacity-40">
+                            <p>Required packages:</p>
+                            <p class="font-mono">bun add wagmi viem @rainbow-me/rainbowkit</p>
+                          </div>
+                          <a
+                            href="https://github.com/one-platform/one-ecommerce"
+                            target="_blank"
+                            class="inline-block mt-4 text-xs underline hover:opacity-60"
+                          >
+                            View Setup Guide →
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
