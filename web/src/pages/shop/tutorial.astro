@@ -1,0 +1,395 @@
+---
+/**
+ * Setup Tutorial - ONE E-Commerce Package
+ *
+ * Interactive step-by-step guide to set up your online store.
+ */
+
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+---
+
+<ShopLayout
+  title="Setup Tutorial - ONE E-Commerce"
+  description="Step-by-step guide to set up your online store"
+>
+  <div class="bg-white dark:bg-black text-black dark:text-white min-h-screen">
+
+    <!-- Header -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-4xl mx-auto px-6 py-20 text-center">
+        <div class="inline-block px-4 py-2 border-2 border-black dark:border-white mb-8">
+          <span class="text-xs font-bold tracking-[0.3em] uppercase">Interactive Tutorial</span>
+        </div>
+
+        <h1 class="text-5xl md:text-6xl font-light tracking-tight mb-6">
+          Setup Your Store
+        </h1>
+
+        <p class="text-xl opacity-60 mb-8">
+          Follow this step-by-step guide to get your e-commerce store running in 15 minutes
+        </p>
+
+        <div class="inline-flex items-center gap-2 bg-black/5 dark:bg-white/5 px-4 py-2 border border-black dark:border-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-sm font-bold">15 minutes</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-4xl mx-auto px-6 py-12">
+
+      <!-- Step 1: Copy Package -->
+      <section class="mb-20">
+        <div class="flex items-start gap-6 mb-8">
+          <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+            1
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-light mb-3">Copy Package Files</h2>
+            <p class="text-lg opacity-60">Copy the e-commerce package into your Astro project</p>
+          </div>
+        </div>
+
+        <div class="pl-22 space-y-6">
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Option A: Copy from Package</h3>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div># Navigate to your Astro project</div>
+                <div>cd your-project/</div>
+                <div class="mt-4"># Copy all source files</div>
+                <div>cp -r ONE-ECOMMERCE-PACKAGE/src/* src/</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Option B: Selective Copy</h3>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div># Copy only what you need</div>
+                <div>cp -r ONE-ECOMMERCE-PACKAGE/src/components/shop src/components/</div>
+                <div>cp -r ONE-ECOMMERCE-PACKAGE/src/pages/shop src/pages/</div>
+                <div>cp -r ONE-ECOMMERCE-PACKAGE/src/layouts/ShopLayout.astro src/layouts/</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-l-4 border-black dark:border-white pl-6 py-4 bg-black/5 dark:bg-white/5">
+            <p class="text-sm">
+              <strong>Note:</strong> The package includes 40+ files. You can copy everything or just the components you need.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2: Install Dependencies -->
+      <section class="mb-20">
+        <div class="flex items-start gap-6 mb-8">
+          <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+            2
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-light mb-3">Install Dependencies</h2>
+            <p class="text-lg opacity-60">Install required npm packages</p>
+          </div>
+        </div>
+
+        <div class="pl-22 space-y-6">
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Required (Stripe Only)</h3>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div>bun add stripe</div>
+                <div>bun add -D @types/stripe</div>
+              </div>
+            </div>
+            <p class="text-sm opacity-60 mt-3">This is all you need for card payments via Stripe.</p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Optional (X402 Crypto Payments)</h3>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div>bun add wagmi viem @rainbow-me/rainbowkit</div>
+              </div>
+            </div>
+            <p class="text-sm opacity-60 mt-3">Only install these if you want to accept USDC crypto payments.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Configure Environment -->
+      <section class="mb-20">
+        <div class="flex items-start gap-6 mb-8">
+          <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+            3
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-light mb-3">Configure Environment</h2>
+            <p class="text-lg opacity-60">Set up your environment variables</p>
+          </div>
+        </div>
+
+        <div class="pl-22 space-y-6">
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Create .env File</h3>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div># Stripe Configuration (Required)</div>
+                <div>STRIPE_SECRET_KEY=sk_test_your_key_here</div>
+                <div>PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here</div>
+                <div class="mt-4"># X402 Configuration (Optional)</div>
+                <div>PUBLIC_X402_ENABLED=true</div>
+                <div>PUBLIC_USDC_CONTRACT_ADDRESS=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</div>
+                <div>PUBLIC_MERCHANT_WALLET=your_wallet_address</div>
+                <div>PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <a
+              href="/shop/tutorial/stripe"
+              class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+            >
+              <h4 class="text-lg font-light mb-2">Get Stripe Keys →</h4>
+              <p class="text-sm opacity-60 group-hover:opacity-100">
+                Step-by-step guide to get your Stripe API keys
+              </p>
+            </a>
+
+            <a
+              href="/shop/tutorial/x402"
+              class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+            >
+              <h4 class="text-lg font-light mb-2">Configure X402 →</h4>
+              <p class="text-sm opacity-60 group-hover:opacity-100">
+                Set up crypto payments on Base network
+              </p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 4: Run Dev Server -->
+      <section class="mb-20">
+        <div class="flex items-start gap-6 mb-8">
+          <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+            4
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-light mb-3">Start Development Server</h2>
+            <p class="text-lg opacity-60">Run your store locally</p>
+          </div>
+        </div>
+
+        <div class="pl-22 space-y-6">
+          <div>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div>bun run dev</div>
+              </div>
+            </div>
+            <p class="text-sm opacity-60 mt-3">Your store will be running at <strong>http://localhost:4321</strong></p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Visit Demo Pages</h3>
+            <div class="space-y-2">
+              <a href="/shop/product-landing" class="block text-sm hover:opacity-60">
+                → http://localhost:4321/shop/product-landing
+              </a>
+              <a href="/shop/marketplace" class="block text-sm hover:opacity-60">
+                → http://localhost:4321/shop/marketplace
+              </a>
+              <a href="/shop/checkout" class="block text-sm hover:opacity-60">
+                → http://localhost:4321/shop/checkout
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 5: Customize -->
+      <section class="mb-20">
+        <div class="flex items-start gap-6 mb-8">
+          <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+            5
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-light mb-3">Customize Your Store</h2>
+            <p class="text-lg opacity-60">Make it your own</p>
+          </div>
+        </div>
+
+        <div class="pl-22 space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="border-2 border-black dark:border-white p-6">
+              <h4 class="text-lg font-light mb-3">Product Information</h4>
+              <ul class="space-y-2 text-sm">
+                <li class="flex items-start gap-2">
+                  <span class="opacity-60">→</span>
+                  <span>Update product names and prices</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="opacity-60">→</span>
+                  <span>Replace product images</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="opacity-60">→</span>
+                  <span>Edit descriptions and specs</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="border-2 border-black dark:border-white p-6">
+              <h4 class="text-lg font-light mb-3">Branding</h4>
+              <ul class="space-y-2 text-sm">
+                <li class="flex items-start gap-2">
+                  <span class="opacity-60">→</span>
+                  <span>Update site name in TopBar</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="opacity-60">→</span>
+                  <span>Customize colors in tailwind.config</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="opacity-60">→</span>
+                  <span>Add your logo</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border-l-4 border-black dark:border-white pl-6 py-4 bg-black/5 dark:bg-white/5">
+            <p class="text-sm">
+              <strong>Tip:</strong> All components are designed to be easily customizable. Just edit the props passed to each component.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 6: Deploy -->
+      <section class="mb-20">
+        <div class="flex items-start gap-6 mb-8">
+          <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+            6
+          </div>
+          <div class="flex-1">
+            <h2 class="text-3xl font-light mb-3">Deploy to Production</h2>
+            <p class="text-lg opacity-60">Go live with your store</p>
+          </div>
+        </div>
+
+        <div class="pl-22 space-y-6">
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Build for Production</h3>
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div>bun run build</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold tracking-wider uppercase mb-3">Deploy Options</h3>
+            <div class="grid md:grid-cols-3 gap-4">
+              <div class="border-2 border-black dark:border-white p-4">
+                <h4 class="text-sm font-bold mb-2">Cloudflare Pages</h4>
+                <code class="text-xs font-mono">wrangler pages deploy dist</code>
+              </div>
+              <div class="border-2 border-black dark:border-white p-4">
+                <h4 class="text-sm font-bold mb-2">Vercel</h4>
+                <code class="text-xs font-mono">vercel deploy</code>
+              </div>
+              <div class="border-2 border-black dark:border-white p-4">
+                <h4 class="text-sm font-bold mb-2">Netlify</h4>
+                <code class="text-xs font-mono">netlify deploy</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-l-4 border-black dark:border-white pl-6 py-4 bg-black/5 dark:bg-white/5">
+            <p class="text-sm">
+              <strong>Important:</strong> Make sure to set your environment variables in your hosting platform's dashboard.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Next Steps -->
+      <section class="border-t-2 border-black dark:border-white pt-12">
+        <h2 class="text-3xl font-light mb-8 text-center">Next Steps</h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <a
+            href="/shop/tutorial/stripe"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all text-center"
+          >
+            <div class="text-4xl mb-4">💳</div>
+            <h3 class="text-xl font-light mb-3">Configure Stripe</h3>
+            <p class="text-sm opacity-60 mb-4">
+              Set up card payments with Stripe Checkout
+            </p>
+            <div class="text-xs font-bold tracking-wider uppercase">
+              Learn More →
+            </div>
+          </a>
+
+          <a
+            href="/shop/tutorial/x402"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all text-center"
+          >
+            <div class="text-4xl mb-4">🔗</div>
+            <h3 class="text-xl font-light mb-3">Enable X402</h3>
+            <p class="text-sm opacity-60 mb-4">
+              Accept USDC payments on Base network
+            </p>
+            <div class="text-xs font-bold tracking-wider uppercase">
+              Learn More →
+            </div>
+          </a>
+
+          <a
+            href="/shop/demo/components"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all text-center"
+          >
+            <div class="text-4xl mb-4">🎨</div>
+            <h3 class="text-xl font-light mb-3">Browse Components</h3>
+            <p class="text-sm opacity-60 mb-4">
+              Explore all 40+ available components
+            </p>
+            <div class="text-xs font-bold tracking-wider uppercase">
+              View Gallery →
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Help -->
+      <section class="mt-20 border-2 border-black dark:border-white p-12 text-center">
+        <h3 class="text-2xl font-light mb-4">Need Help?</h3>
+        <p class="text-lg opacity-60 mb-6">
+          Check out the documentation or visit the demo pages
+        </p>
+        <div class="flex flex-wrap gap-4 justify-center">
+          <a
+            href="/shop/demo"
+            class="px-6 py-3 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+          >
+            <span class="text-xs font-bold tracking-wider uppercase">View Demos</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Theme Toggle -->
+    <ThemeToggle client:load />
+
+  </div>
+</ShopLayout>

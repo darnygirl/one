@@ -1,0 +1,526 @@
+---
+/**
+ * X402 Setup Tutorial - ONE E-Commerce Package
+ *
+ * Complete guide to setting up X402 crypto payments with demo.
+ */
+
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+---
+
+<ShopLayout
+  title="X402 Setup - ONE E-Commerce"
+  description="Complete guide to setting up X402 crypto payments on Base"
+>
+  <div class="bg-white dark:bg-black text-black dark:text-white min-h-screen">
+
+    <!-- Header -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-4xl mx-auto px-6 py-16">
+        <a href="/shop/tutorial" class="inline-block text-sm font-bold tracking-wider uppercase hover:opacity-60 mb-8">
+          ← Back to Tutorial
+        </a>
+
+        <div class="inline-block px-4 py-2 border-2 border-black dark:border-white mb-6">
+          <span class="text-xs font-bold tracking-[0.3em] uppercase">Crypto Payments</span>
+        </div>
+
+        <h1 class="text-5xl md:text-6xl font-light tracking-tight mb-6">
+          X402 Payments
+        </h1>
+
+        <p class="text-xl opacity-60 mb-8">
+          Accept USDC payments on Base network with gasless transactions
+        </p>
+
+        <div class="flex flex-wrap gap-3">
+          <span class="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold">USDC</span>
+          <span class="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold">BASE</span>
+          <span class="px-3 py-1 border-2 border-black dark:border-white text-xs font-bold">EIP-3009</span>
+          <span class="px-3 py-1 border-2 border-black dark:border-white text-xs font-bold">~$0.0001 FEE</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-4xl mx-auto px-6 py-12">
+
+      <!-- What is X402 -->
+      <section class="mb-20">
+        <h2 class="text-3xl font-light mb-8">What is X402?</h2>
+
+        <div class="border-2 border-black dark:border-white p-8 mb-8">
+          <p class="text-lg mb-6">
+            X402 is a protocol for <strong>gasless crypto payments</strong> using EIP-3009 (transferWithAuthorization) on USDC stablecoins.
+          </p>
+
+          <div class="space-y-4 text-sm">
+            <div class="flex items-start gap-3">
+              <span class="font-bold">Customer:</span>
+              <span>Signs a message (FREE, no gas cost)</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-bold">Merchant:</span>
+              <span>Submits the signed message and pays tiny gas (~$0.0001 on Base)</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-bold">Result:</span>
+              <span>USDC transfers from customer → merchant instantly</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="border-2 border-black dark:border-white p-6">
+            <h3 class="text-lg font-light mb-4">Why X402?</h3>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>Zero gas for customers</strong> - merchant pays ~$0.0001</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>Instant settlement</strong> - 1-2 seconds on Base</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>Lower fees</strong> - vs 2.9% + 30¢ for cards</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>No chargebacks</strong> - blockchain transactions are final</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span><strong>Better UX</strong> - one signature vs approve + transfer</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="border-2 border-black dark:border-white p-6">
+            <h3 class="text-lg font-light mb-4">Cost Comparison</h3>
+            <div class="space-y-6 text-sm">
+              <div>
+                <div class="flex justify-between mb-2">
+                  <span class="font-bold">Stripe (Card)</span>
+                  <span class="font-bold">2.9% + 30¢</span>
+                </div>
+                <div class="text-xs opacity-60">
+                  $100 sale = <strong>$97.10</strong> received
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-black dark:border-white">
+                <div class="flex justify-between mb-2">
+                  <span class="font-bold">X402 (USDC)</span>
+                  <span class="font-bold">~$0.0001</span>
+                </div>
+                <div class="text-xs opacity-60">
+                  $100 sale = <strong>$99.9999</strong> received
+                </div>
+              </div>
+
+              <div class="pt-4 border-t-2 border-black dark:border-white">
+                <div class="flex justify-between text-base">
+                  <span class="font-bold">You Save</span>
+                  <span class="font-bold text-green-600 dark:text-green-400">$2.9</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Requirements -->
+      <section class="mb-20">
+        <h2 class="text-3xl font-light mb-8">Requirements</h2>
+
+        <div class="space-y-4">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+              1
+            </div>
+            <div class="flex-1">
+              <p class="text-sm"><strong>Crypto Wallet</strong> - MetaMask, Coinbase Wallet, or WalletConnect-compatible</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+              2
+            </div>
+            <div class="flex-1">
+              <p class="text-sm"><strong>Base Network</strong> - Free to add to wallet (Layer 2 Ethereum)</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+              3
+            </div>
+            <div class="flex-1">
+              <p class="text-sm"><strong>USDC on Base</strong> - Stablecoin (1 USDC = $1 USD)</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+              4
+            </div>
+            <div class="flex-1">
+              <p class="text-sm"><strong>WalletConnect Project ID</strong> - Free from WalletConnect Cloud</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Setup Steps -->
+      <section class="mb-20">
+        <h2 class="text-3xl font-light mb-12">Setup Guide</h2>
+
+        <!-- Step 1 -->
+        <div class="mb-16">
+          <div class="flex items-start gap-6 mb-8">
+            <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+              1
+            </div>
+            <div class="flex-1">
+              <h3 class="text-2xl font-light mb-3">Install Dependencies</h3>
+              <p class="text-lg opacity-60">Add wagmi, viem, and RainbowKit</p>
+            </div>
+          </div>
+
+          <div class="pl-22">
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div>bun add wagmi viem @rainbow-me/rainbowkit</div>
+              </div>
+            </div>
+            <p class="text-sm opacity-60 mt-3">These are the web3 libraries needed for wallet connection and payments.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="mb-16">
+          <div class="flex items-start gap-6 mb-8">
+            <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+              2
+            </div>
+            <div class="flex-1">
+              <h3 class="text-2xl font-light mb-3">Get WalletConnect ID</h3>
+              <p class="text-lg opacity-60">Create free project on WalletConnect Cloud</p>
+            </div>
+          </div>
+
+          <div class="pl-22 space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+                1
+              </div>
+              <div class="flex-1">
+                <p class="text-sm">Go to <a href="https://cloud.walletconnect.com" target="_blank" class="underline font-bold">cloud.walletconnect.com</a></p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+                2
+              </div>
+              <div class="flex-1">
+                <p class="text-sm">Sign up / log in (free account)</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+                3
+              </div>
+              <div class="flex-1">
+                <p class="text-sm">Create new project (name: "My Store")</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-8 h-8 border border-black dark:border-white flex items-center justify-center text-sm">
+                4
+              </div>
+              <div class="flex-1">
+                <p class="text-sm">Copy your <strong>Project ID</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="mb-16">
+          <div class="flex items-start gap-6 mb-8">
+            <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+              3
+            </div>
+            <div class="flex-1">
+              <h3 class="text-2xl font-light mb-3">Configure Environment</h3>
+              <p class="text-lg opacity-60">Add X402 variables to .env</p>
+            </div>
+          </div>
+
+          <div class="pl-22">
+            <div class="bg-black text-white dark:bg-white dark:text-black p-6 font-mono text-sm overflow-x-auto">
+              <div class="space-y-2">
+                <div class="opacity-60"># X402 Configuration</div>
+                <div>PUBLIC_X402_ENABLED=true</div>
+                <div></div>
+                <div class="opacity-60"># Base Network USDC Contract</div>
+                <div>PUBLIC_USDC_CONTRACT_ADDRESS=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</div>
+                <div></div>
+                <div class="opacity-60"># Your wallet address (where you receive payments)</div>
+                <div>PUBLIC_MERCHANT_WALLET=0xYourWalletAddressHere</div>
+                <div></div>
+                <div class="opacity-60"># WalletConnect Project ID</div>
+                <div>PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here</div>
+              </div>
+            </div>
+
+            <div class="mt-6 border-l-4 border-black dark:border-white pl-6 py-4 bg-black/5 dark:bg-white/5">
+              <p class="text-sm mb-2"><strong>Important:</strong></p>
+              <ul class="space-y-2 text-sm">
+                <li>• <strong>USDC Contract:</strong> This is the official USDC contract on Base (don't change)</li>
+                <li>• <strong>Merchant Wallet:</strong> Your Ethereum wallet address (0x...)</li>
+                <li>• <strong>All variables start with PUBLIC_</strong> because they're used in browser</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="mb-16">
+          <div class="flex items-start gap-6 mb-8">
+            <div class="flex-shrink-0 w-16 h-16 border-2 border-black dark:border-white flex items-center justify-center text-2xl font-light">
+              4
+            </div>
+            <div class="flex-1">
+              <h3 class="text-2xl font-light mb-3">Test Payment</h3>
+              <p class="text-lg opacity-60">Try X402 checkout flow</p>
+            </div>
+          </div>
+
+          <div class="pl-22 space-y-6">
+            <div>
+              <h4 class="text-sm font-bold tracking-wider uppercase mb-3">Get Test USDC</h4>
+              <div class="space-y-3">
+                <div class="flex items-start gap-2">
+                  <span class="opacity-60">1.</span>
+                  <span class="text-sm">Add Base network to your wallet</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="opacity-60">2.</span>
+                  <span class="text-sm">Get test ETH from <a href="https://www.coinbase.com/faucets/base-ethereum-goerli-faucet" target="_blank" class="underline">Base faucet</a></span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="opacity-60">3.</span>
+                  <span class="text-sm">Bridge ETH to Base on <a href="https://bridge.base.org" target="_blank" class="underline">bridge.base.org</a></span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="opacity-60">4.</span>
+                  <span class="text-sm">Swap for USDC on <a href="https://app.uniswap.org" target="_blank" class="underline">Uniswap</a></span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-bold tracking-wider uppercase mb-3">Try Demo</h4>
+              <a
+                href="/shop/checkout-x402"
+                class="inline-block px-8 py-4 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white hover:opacity-80 transition-opacity"
+              >
+                <span class="text-xs font-bold tracking-[0.3em] uppercase">Test X402 Checkout →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- How It Works -->
+      <section class="mb-20">
+        <h2 class="text-3xl font-light mb-8">How X402 Works</h2>
+
+        <div class="space-y-6">
+          <div class="border-2 border-black dark:border-white p-6">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="flex-shrink-0 w-12 h-12 border-2 border-black dark:border-white flex items-center justify-center font-bold">
+                1
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold mb-2">Customer Connects Wallet</h4>
+                <p class="text-sm opacity-60">RainbowKit shows wallet options (MetaMask, Coinbase, etc.)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-2 border-black dark:border-white p-6">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="flex-shrink-0 w-12 h-12 border-2 border-black dark:border-white flex items-center justify-center font-bold">
+                2
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold mb-2">Customer Reviews Cart</h4>
+                <p class="text-sm opacity-60">Cart items displayed with total in USDC (1:1 with USD)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-2 border-black dark:border-white p-6">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="flex-shrink-0 w-12 h-12 border-2 border-black dark:border-white flex items-center justify-center font-bold">
+                3
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold mb-2">Customer Signs Authorization (FREE)</h4>
+                <p class="text-sm opacity-60 mb-2">Wallet shows "Sign message" popup - no gas required</p>
+                <div class="bg-black/5 dark:bg-white/5 p-3 text-xs font-mono">
+                  Authorize transfer of 299.99 USDC to Merchant
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-2 border-black dark:border-white p-6">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="flex-shrink-0 w-12 h-12 border-2 border-black dark:border-white flex items-center justify-center font-bold">
+                4
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold mb-2">Merchant Submits Transaction (~$0.0001)</h4>
+                <p class="text-sm opacity-60">Your backend/frontend submits the signed authorization on-chain</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-2 border-black dark:border-white p-6 bg-green-50 dark:bg-green-950">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="flex-shrink-0 w-12 h-12 border-2 border-green-600 dark:border-green-400 flex items-center justify-center font-bold">
+                ✓
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold mb-2 text-green-700 dark:text-green-300">Payment Confirmed (1-2 seconds)</h4>
+                <p class="text-sm opacity-60 text-green-700 dark:text-green-300">USDC transferred to your wallet, transaction recorded on blockchain</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Demo -->
+      <section class="mb-20 border-2 border-black dark:border-white p-12 bg-black text-white dark:bg-white dark:text-black">
+        <div class="text-center">
+          <h2 class="text-4xl font-light mb-6">Try X402 Now</h2>
+          <p class="text-lg opacity-80 mb-8">
+            Experience gasless crypto payments on Base
+          </p>
+
+          <div class="flex flex-wrap gap-4 justify-center mb-8">
+            <a
+              href="/shop/checkout-x402"
+              class="px-8 py-4 bg-white text-black dark:bg-black dark:text-white border-2 border-white dark:border-black hover:opacity-80 transition-opacity"
+            >
+              <span class="text-xs font-bold tracking-[0.3em] uppercase">X402 Checkout Demo</span>
+            </a>
+
+            <a
+              href="/shop/x402-features"
+              class="px-8 py-4 border-2 border-white dark:border-black hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-colors"
+            >
+              <span class="text-xs font-bold tracking-[0.3em] uppercase">View Features</span>
+            </a>
+          </div>
+
+          <p class="text-sm opacity-60">
+            You'll need a crypto wallet with USDC on Base network
+          </p>
+        </div>
+      </section>
+
+      <!-- Resources -->
+      <section class="border-t-2 border-black dark:border-white pt-12 mb-20">
+        <h2 class="text-3xl font-light mb-8">Additional Resources</h2>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <a
+            href="https://eips.ethereum.org/EIPS/eip-3009"
+            target="_blank"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+          >
+            <h3 class="text-lg font-light mb-2">EIP-3009 Specification →</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100">
+              Official spec for transferWithAuthorization
+            </p>
+          </a>
+
+          <a
+            href="https://www.base.org/"
+            target="_blank"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+          >
+            <h3 class="text-lg font-light mb-2">Base Network Docs →</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100">
+              Learn about Base L2 Ethereum network
+            </p>
+          </a>
+
+          <a
+            href="https://www.rainbowkit.com/"
+            target="_blank"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+          >
+            <h3 class="text-lg font-light mb-2">RainbowKit Docs →</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100">
+              Wallet connection library documentation
+            </p>
+          </a>
+
+          <a
+            href="/shop/x402-features"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+          >
+            <h3 class="text-lg font-light mb-2">X402 Features →</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100">
+              Explore all X402 features and benefits
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <section class="flex justify-between items-center">
+        <a
+          href="/shop/tutorial/stripe"
+          class="px-6 py-3 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+        >
+          <span class="text-xs font-bold tracking-wider uppercase">← Stripe Setup</span>
+        </a>
+
+        <a
+          href="/shop/demo"
+          class="px-6 py-3 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white hover:opacity-80 transition-opacity"
+        >
+          <span class="text-xs font-bold tracking-wider uppercase">View All Demos →</span>
+        </a>
+      </section>
+
+    </div>
+
+    <!-- Theme Toggle -->
+    <ThemeToggle client:load />
+
+  </div>
+</ShopLayout>

@@ -1,0 +1,502 @@
+---
+/**
+ * X402 Features Showcase - ONE E-Commerce Package
+ *
+ * Comprehensive showcase of X402 crypto payment features and benefits.
+ */
+
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+---
+
+<ShopLayout
+  title="X402 Features - ONE E-Commerce"
+  description="Discover the power of gasless crypto payments with X402"
+>
+  <div class="bg-white dark:bg-black text-black dark:text-white min-h-screen">
+
+    <!-- Hero -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-12">
+          <div class="inline-block px-4 py-2 border-2 border-black dark:border-white mb-8">
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">Revolutionary Payments</span>
+          </div>
+
+          <h1 class="text-5xl md:text-7xl font-light tracking-tight mb-6">
+            X402 Features
+          </h1>
+
+          <p class="text-xl md:text-2xl opacity-60 mb-8 max-w-3xl mx-auto">
+            Gasless, instant, low-fee crypto payments that your customers will love
+          </p>
+
+          <div class="flex flex-wrap gap-3 justify-center mb-12">
+            <span class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-bold">$0 GAS FOR CUSTOMERS</span>
+            <span class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-bold">1-2 SEC SETTLEMENT</span>
+            <span class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-bold">~$0.0001 FEE</span>
+          </div>
+
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a
+              href="/shop/checkout-x402"
+              class="px-8 py-4 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white hover:opacity-80 transition-opacity"
+            >
+              <span class="text-xs font-bold tracking-[0.3em] uppercase">Try Demo</span>
+            </a>
+
+            <a
+              href="/shop/tutorial/x402"
+              class="px-8 py-4 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+            >
+              <span class="text-xs font-bold tracking-[0.3em] uppercase">Setup Guide</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Benefits -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <h2 class="text-4xl font-light mb-16 text-center">Why X402?</h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+          <!-- Zero Gas -->
+          <div class="border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all">
+            <div class="text-5xl mb-6">💸</div>
+            <h3 class="text-2xl font-light mb-4">Zero Gas for Customers</h3>
+            <p class="text-sm opacity-60 mb-6">
+              Customers sign a message (FREE). You pay the gas (~$0.0001 on Base). Better UX, higher conversions.
+            </p>
+            <div class="bg-black/5 dark:bg-white/5 p-4 text-xs">
+              <div class="mb-2 font-bold">Traditional Crypto:</div>
+              <div class="mb-1">• Approve token: $1-5 gas</div>
+              <div>• Send payment: $1-5 gas</div>
+              <div class="mt-3 pt-3 border-t border-black dark:border-white font-bold">
+                Total: $2-10 paid by customer
+              </div>
+
+              <div class="mt-4 mb-2 font-bold">X402:</div>
+              <div>• Sign message: $0</div>
+              <div class="mt-3 pt-3 border-t border-black dark:border-white font-bold text-green-600 dark:text-green-400">
+                Total: $0 paid by customer
+              </div>
+            </div>
+          </div>
+
+          <!-- Instant Settlement -->
+          <div class="border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all">
+            <div class="text-5xl mb-6">⚡</div>
+            <h3 class="text-2xl font-light mb-4">Instant Settlement</h3>
+            <p class="text-sm opacity-60 mb-6">
+              Base network confirms transactions in 1-2 seconds. No waiting days for bank transfers.
+            </p>
+            <div class="bg-black/5 dark:bg-white/5 p-4 text-xs space-y-3">
+              <div>
+                <div class="font-bold mb-1">Stripe/Cards:</div>
+                <div class="opacity-60">2-7 days to bank account</div>
+              </div>
+
+              <div>
+                <div class="font-bold mb-1">Traditional Crypto:</div>
+                <div class="opacity-60">12-600 seconds (varies by network)</div>
+              </div>
+
+              <div class="pt-3 border-t border-black dark:border-white">
+                <div class="font-bold mb-1 text-green-600 dark:text-green-400">X402 on Base:</div>
+                <div class="text-green-600 dark:text-green-400">1-2 seconds to your wallet</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ultra-Low Fees -->
+          <div class="border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all">
+            <div class="text-5xl mb-6">💰</div>
+            <h3 class="text-2xl font-light mb-4">Ultra-Low Fees</h3>
+            <p class="text-sm opacity-60 mb-6">
+              ~$0.0001 gas on Base vs 2.9% + 30¢ for cards. Keep 99% more of your revenue.
+            </p>
+            <div class="bg-black/5 dark:bg-white/5 p-4 text-xs">
+              <div class="mb-4 font-bold">$1,000 Sale Example:</div>
+
+              <div class="mb-3">
+                <div class="flex justify-between mb-1">
+                  <span>Stripe</span>
+                  <span class="font-mono">$1,000.00</span>
+                </div>
+                <div class="flex justify-between text-red-600 dark:text-red-400">
+                  <span>- Fees (2.9%+30¢)</span>
+                  <span class="font-mono">-$29.30</span>
+                </div>
+                <div class="flex justify-between font-bold pt-2 border-t border-black dark:border-white">
+                  <span>You receive</span>
+                  <span class="font-mono">$970.70</span>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t-2 border-black dark:border-white">
+                <div class="flex justify-between mb-1">
+                  <span>X402</span>
+                  <span class="font-mono">$1,000.00</span>
+                </div>
+                <div class="flex justify-between text-green-600 dark:text-green-400">
+                  <span>- Fees</span>
+                  <span class="font-mono">-$0.0001</span>
+                </div>
+                <div class="flex justify-between font-bold pt-2 border-t border-black dark:border-white text-green-600 dark:text-green-400">
+                  <span>You receive</span>
+                  <span class="font-mono">$999.9999</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t-2 border-black dark:border-white font-bold text-green-600 dark:text-green-400">
+                You save $29.30 per $1,000 sale!
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Features -->
+    <section class="border-b-2 border-black dark:border-white bg-black/5 dark:bg-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <h2 class="text-4xl font-light mb-16 text-center">Technical Advantages</h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+
+          <!-- EIP-3009 -->
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-8">
+            <h3 class="text-xl font-light mb-4">Built on EIP-3009</h3>
+            <p class="text-sm opacity-60 mb-6">
+              Industry-standard protocol for gasless transfers, built into USDC smart contracts by Circle.
+            </p>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Cryptographically secure signatures</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Nonce prevents replay attacks</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Time-bound authorizations (expires)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Battle-tested by Circle/USDC</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Base Network -->
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-8">
+            <h3 class="text-xl font-light mb-4">Powered by Base</h3>
+            <p class="text-sm opacity-60 mb-6">
+              Base is a Layer 2 Ethereum network built by Coinbase. Blazing fast, dirt cheap, Ethereum-secure.
+            </p>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>~$0.0001 gas fees (vs $5-20 on Ethereum)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>1-2 second block times</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Ethereum security (settles to L1)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Growing ecosystem of dApps</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- USDC Stablecoin -->
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-8">
+            <h3 class="text-xl font-light mb-4">USDC Stablecoin</h3>
+            <p class="text-sm opacity-60 mb-6">
+              1 USDC = $1 USD. No volatility, no price risk. Backed 1:1 by cash and short-term US Treasuries.
+            </p>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Price stable (always $1)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Issued by Circle (trusted company)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Monthly attestation reports</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Easy to offramp to USD</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- No Chargebacks -->
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-8">
+            <h3 class="text-xl font-light mb-4">No Chargebacks</h3>
+            <p class="text-sm opacity-60 mb-6">
+              Blockchain transactions are final. No risk of customers reversing payments 6 months later.
+            </p>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Transactions are irreversible</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>No chargeback fees</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>No fraud disputes</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Transparent on blockchain</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <h2 class="text-4xl font-light mb-16 text-center">Payment Method Comparison</h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-2 border-black dark:border-white">
+            <thead>
+              <tr class="border-b-2 border-black dark:border-white">
+                <th class="text-left p-4 border-r-2 border-black dark:border-white font-light">Feature</th>
+                <th class="text-center p-4 border-r-2 border-black dark:border-white font-light">Credit Cards (Stripe)</th>
+                <th class="text-center p-4 border-r-2 border-black dark:border-white font-light">Traditional Crypto</th>
+                <th class="text-center p-4 font-light bg-black text-white dark:bg-white dark:text-black">X402 (USDC on Base)</th>
+              </tr>
+            </thead>
+            <tbody class="text-sm">
+              <tr class="border-b border-black dark:border-white">
+                <td class="p-4 border-r-2 border-black dark:border-white font-bold">Customer Gas Cost</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center">$0</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center text-red-600 dark:text-red-400">$2-10</td>
+                <td class="p-4 text-center bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400 font-bold">$0</td>
+              </tr>
+              <tr class="border-b border-black dark:border-white">
+                <td class="p-4 border-r-2 border-black dark:border-white font-bold">Merchant Fee ($100 sale)</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center">$3.20</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center">$0.50-2</td>
+                <td class="p-4 text-center bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400 font-bold">$0.0001</td>
+              </tr>
+              <tr class="border-b border-black dark:border-white">
+                <td class="p-4 border-r-2 border-black dark:border-white font-bold">Settlement Time</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center">2-7 days</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center">12-600 sec</td>
+                <td class="p-4 text-center bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400 font-bold">1-2 sec</td>
+              </tr>
+              <tr class="border-b border-black dark:border-white">
+                <td class="p-4 border-r-2 border-black dark:border-white font-bold">Chargebacks</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center text-red-600 dark:text-red-400">Yes (risk)</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center text-green-600 dark:text-green-400">No</td>
+                <td class="p-4 text-center bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400 font-bold">No</td>
+              </tr>
+              <tr class="border-b border-black dark:border-white">
+                <td class="p-4 border-r-2 border-black dark:border-white font-bold">UX Complexity</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center text-green-600 dark:text-green-400">Simple</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center text-red-600 dark:text-red-400">Complex</td>
+                <td class="p-4 text-center bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400 font-bold">Simple</td>
+              </tr>
+              <tr>
+                <td class="p-4 border-r-2 border-black dark:border-white font-bold">Blockchain Transparent</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center">No</td>
+                <td class="p-4 border-r-2 border-black dark:border-white text-center text-green-600 dark:text-green-400">Yes</td>
+                <td class="p-4 text-center bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400 font-bold">Yes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="border-b-2 border-black dark:border-white bg-black/5 dark:bg-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <h2 class="text-4xl font-light mb-16 text-center">Perfect For</h2>
+
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-6 text-center">
+            <div class="text-4xl mb-4">🎓</div>
+            <h3 class="text-lg font-light mb-2">Online Courses</h3>
+            <p class="text-xs opacity-60">Instant access, no chargebacks</p>
+          </div>
+
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-6 text-center">
+            <div class="text-4xl mb-4">💎</div>
+            <h3 class="text-lg font-light mb-2">Digital Goods</h3>
+            <p class="text-xs opacity-60">NFTs, memberships, licenses</p>
+          </div>
+
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-6 text-center">
+            <div class="text-4xl mb-4">🛍️</div>
+            <h3 class="text-lg font-light mb-2">E-Commerce</h3>
+            <p class="text-xs opacity-60">Physical products, subscriptions</p>
+          </div>
+
+          <div class="bg-white dark:bg-black border-2 border-black dark:border-white p-6 text-center">
+            <div class="text-4xl mb-4">🌍</div>
+            <h3 class="text-lg font-light mb-2">Global Sales</h3>
+            <p class="text-xs opacity-60">No currency conversion, works worldwide</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Demo CTA -->
+    <section class="border-b-2 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black">
+      <div class="max-w-4xl mx-auto px-6 py-20 text-center">
+        <h2 class="text-4xl md:text-5xl font-light mb-6">
+          Experience X402
+        </h2>
+        <p class="text-xl opacity-80 mb-12">
+          See gasless crypto payments in action
+        </p>
+
+        <div class="flex flex-wrap gap-4 justify-center mb-8">
+          <a
+            href="/shop/checkout-x402"
+            class="px-8 py-4 bg-white text-black dark:bg-black dark:text-white border-2 border-white dark:border-black hover:opacity-80 transition-opacity"
+          >
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">Try Demo Checkout</span>
+          </a>
+
+          <a
+            href="/shop/tutorial/x402"
+            class="px-8 py-4 border-2 border-white dark:border-black hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-colors"
+          >
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">Setup Guide</span>
+          </a>
+        </div>
+
+        <p class="text-sm opacity-60">
+          Connect your wallet and try making a payment with USDC
+        </p>
+      </div>
+    </section>
+
+    <!-- Resources -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <h2 class="text-3xl font-light mb-12 text-center">Learn More</h2>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <a
+            href="https://eips.ethereum.org/EIPS/eip-3009"
+            target="_blank"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group text-center"
+          >
+            <h3 class="text-lg font-light mb-2">EIP-3009 Spec</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+              Official Ethereum specification
+            </p>
+            <span class="text-xs font-bold tracking-wider uppercase">Read More →</span>
+          </a>
+
+          <a
+            href="https://www.base.org/"
+            target="_blank"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group text-center"
+          >
+            <h3 class="text-lg font-light mb-2">Base Network</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+              Learn about Base L2
+            </p>
+            <span class="text-xs font-bold tracking-wider uppercase">Visit Site →</span>
+          </a>
+
+          <a
+            href="https://www.circle.com/en/usdc"
+            target="_blank"
+            class="border-2 border-black dark:border-white p-6 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group text-center"
+          >
+            <h3 class="text-lg font-light mb-2">USDC by Circle</h3>
+            <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+              About the stablecoin
+            </p>
+            <span class="text-xs font-bold tracking-wider uppercase">Learn More →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <section class="max-w-4xl mx-auto px-6 py-12">
+      <div class="flex justify-between items-center">
+        <a
+          href="/shop/demo"
+          class="px-6 py-3 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+        >
+          <span class="text-xs font-bold tracking-wider uppercase">← All Demos</span>
+        </a>
+
+        <a
+          href="/shop/tutorial/x402"
+          class="px-6 py-3 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white hover:opacity-80 transition-opacity"
+        >
+          <span class="text-xs font-bold tracking-wider uppercase">Setup Tutorial →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Theme Toggle -->
+    <ThemeToggle client:load />
+
+  </div>
+</ShopLayout>
