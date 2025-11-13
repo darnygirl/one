@@ -1,0 +1,599 @@
+---
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ProductGallery } from '@/components/ecommerce/interactive/ProductGallery';
+import { ProductHeader } from '@/components/shop/ProductHeader';
+import { InlineUrgencyBanner } from '@/components/shop/InlineUrgencyBanner';
+import { RecentPurchaseToast } from '@/components/shop/RecentPurchaseToast';
+import { ProductSpecs } from '@/components/shop/ProductSpecs';
+import { FragranceNotes } from '@/components/shop/FragranceNotes';
+import { FeaturesWithImages } from '@/components/shop/FeaturesWithImages';
+import { ValueProposition } from '@/components/shop/ValueProposition';
+import { ReviewsSection } from '@/components/shop/ReviewsSection';
+import { ProductFAQ } from '@/components/ecommerce/static/FAQAccordion';
+import { StickyCartButton } from '@/components/shop/StickyCartButton';
+import { StickyBuyBar } from '@/components/shop/StickyBuyBar';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+
+// Check if Stripe is configured
+const stripeSecretKey = import.meta.env.STRIPE_SECRET_KEY;
+const stripeEnabled = Boolean(stripeSecretKey);
+
+// Import Stripe only if enabled
+let stripe: any = null;
+if (stripeEnabled) {
+  const { default: Stripe } = await import('stripe');
+  stripe = new Stripe(stripeSecretKey);
+}
+
+// Handle Stripe Checkout Session Creation (POST request)
+if (stripeEnabled && Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const quantity = Number(formData.get('quantity')) || 1;
+    const customerEmail = formData.get('email')?.toString();
+
+    // Validate quantity
+    if (quantity < 1 || quantity > 10) {
+      return new Response(JSON.stringify({ error: 'Invalid quantity' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Product info for Stripe (will be defined below)
+    const productPrice = 129.99;
+    const productTitle = 'Chanel Coco Noir Eau de Parfum';
+    const productDescription = 'Elegant and mysterious. Coco Noir captures the essence of timeless sophistication with notes of grapefruit, rose, and sandalwood.';
+    const productImage = 'https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/1.webp';
+
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: productTitle,
+              description: productDescription,
+              images: [productImage],
+            },
+            unit_amount: Math.round(productPrice * 100), // Convert to cents
+          },
+          quantity: quantity,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${Astro.url.origin}/thankyou-product?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${Astro.url.origin}/shop/product-landing`,
+      customer_email: customerEmail || undefined,
+      metadata: {
+        productId: 'chanel-coco-noir',
+        productCategory: 'Fragrances',
+      },
+    });
+
+    // Return the checkout URL as JSON
+    return new Response(
+      JSON.stringify({ url: session.url }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  } catch (error) {
+    console.error('Stripe checkout error:', error);
+    return new Response(
+      JSON.stringify({ error: 'Payment processing failed' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+}
+
+// Product data (from DummyJSON)
+const product = {
+  title: 'Chanel Coco Noir Eau de Parfum',
+  category: 'Fragrances',
+  brand: 'Chanel',
+  rating: 4.26,
+  reviewCount: 89,
+  price: 129.99,
+  originalPrice: 155.99,
+  stock: 7,
+  description: 'Elegant and mysterious. Coco Noir captures the essence of timeless sophistication with notes of grapefruit, rose, and sandalwood. A fragrance for the modern woman who embraces mystery.',
+  images: [
+    'https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/1.webp',
+    'https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/2.webp',
+    'https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/3.webp',
+  ],
+};
+
+const specs = [
+  { label: 'Brand', value: 'Chanel' },
+  { label: 'Fragrance Type', value: 'Eau de Parfum' },
+  { label: 'Volume', value: '100ml / 3.4 fl oz' },
+  { label: 'Gender', value: 'Women' },
+  { label: 'Stock Status', value: `${product.stock} units available` },
+  { label: 'SKU', value: 'COCO-NOIR-EDP-100' },
+];
+
+const fragranceNotes = {
+  topNotes: [
+    { name: 'Grapefruit', description: 'Fresh and citrusy opening' },
+  ],
+  middleNotes: [
+    { name: 'Rose', description: 'Elegant floral heart' },
+    { name: 'Jasmine', description: 'Delicate white flower' },
+  ],
+  baseNotes: [
+    { name: 'Sandalwood', description: 'Warm and woody foundation' },
+  ],
+};
+
+const featuresWithImages = [
+  {
+    title: 'Iconic Bottle Design',
+    description: 'The sleek, minimalist black bottle embodies pure sophistication. Every curve and edge is meticulously crafted to reflect the mysterious and timeless character of Coco Noir. A statement piece for your vanity that exudes luxury and elegance.',
+    image: product.images[0],
+  },
+  {
+    title: 'Long-Lasting Formula',
+    description: 'Experience a fragrance that evolves throughout the day. Premium Eau de Parfum concentration ensures 8-10 hours of rich, complex scent. From the bright citrus opening to the warm woody base, each note lingers with intention and depth.',
+    image: product.images[1],
+  },
+  {
+    title: 'Luxury Presentation',
+    description: 'Arrives in signature Chanel packaging with premium gift box included. Every detail speaks to the heritage and craftsmanship that defines the Chanel legacy. Perfect for gifting or adding to your personal collection.',
+    image: product.images[2],
+  },
+];
+
+const reviews = [
+  {
+    author: 'Jennifer K.',
+    rating: 5,
+    text: 'An absolute masterpiece. The craftsmanship is exceptional and the design is truly timeless. Worth every penny.',
+    date: 'January 2025',
+  },
+  {
+    author: 'Michael R.',
+    rating: 5,
+    text: 'Worth every penny. The quality is unmatched and it arrived beautifully packaged.',
+    date: 'December 2024',
+  },
+  {
+    author: 'Sarah M.',
+    rating: 5,
+    text: 'A stunning fragrance that gets compliments everywhere I go. Highly recommend!',
+    date: 'December 2024',
+  },
+];
+---
+
+<ShopLayout title="Chanel Coco Noir Eau de Parfum - Luxury Fragrance">
+  <div class="bg-white dark:bg-black text-black dark:text-white">
+    <!-- Header -->
+    <ProductHeader client:load productName={product.title} stripeEnabled={stripeEnabled} />
+
+    <!-- Hero Section - Above the Fold -->
+    <section class="max-w-7xl mx-auto px-6 py-24 border-b border-black dark:border-white">
+      <div class="grid md:grid-cols-2 gap-20 items-center">
+        <!-- Product Gallery - Left Side -->
+        <div>
+          <ProductGallery client:load images={product.images} productName={product.title} />
+        </div>
+
+        <!-- Product Info - Right Side -->
+        <div class="space-y-12">
+          <!-- Category -->
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase">
+              {product.category}
+            </p>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-5xl md:text-6xl font-light tracking-tight leading-none">
+            {product.title}
+          </h1>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-6 border-t border-b border-black dark:border-white py-4">
+            <span class="text-4xl font-light tabular-nums">{product.rating.toFixed(1)}</span>
+            <div class="flex gap-1">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" style="color: #D4AF37">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" style="color: #D4AF37">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" style="color: #D4AF37">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" style="color: #D4AF37">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" style="color: #D4AF37" opacity="0.3">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <div class="flex flex-col border-l border-black dark:border-white pl-4">
+              <span class="text-[10px] font-bold tracking-[0.25em] uppercase opacity-60">Rating</span>
+              <span class="text-[10px] tracking-wide opacity-40">{product.reviewCount} Reviews</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-base leading-relaxed">
+            {product.description}
+          </p>
+
+          <!-- Price -->
+          <div class="space-y-4">
+            <div class="flex items-baseline gap-6">
+              <span class="text-6xl font-light tabular-nums">${product.price.toFixed(2)}</span>
+              {product.originalPrice && (
+                <div class="flex flex-col">
+                  <span class="text-sm line-through tabular-nums">
+                    ${product.originalPrice.toFixed(2)}
+                  </span>
+                  <span class="text-xs font-bold tracking-[0.2em] uppercase">
+                    Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Quantity & Buy Now Button -->
+          <div class="space-y-4">
+            <div class="flex gap-4">
+              <!-- Quantity Selector -->
+              <div class="flex items-center border-2 border-black dark:border-white">
+                <button
+                  id="decrease-qty"
+                  class="px-5 py-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-r-2 border-black dark:border-white"
+                  aria-label="Decrease quantity"
+                >
+                  <span class="text-xl font-light">−</span>
+                </button>
+                <div class="px-6 py-5 min-w-[60px] text-center">
+                  <span id="quantity-display" class="text-base font-medium tabular-nums">1</span>
+                </div>
+                <button
+                  id="increase-qty"
+                  class="px-5 py-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-l-2 border-black dark:border-white"
+                  aria-label="Increase quantity"
+                >
+                  <span class="text-xl font-light">+</span>
+                </button>
+              </div>
+
+              <!-- Buy Now Button -->
+              <button
+                id="hero-buy-button"
+                class="flex-1 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white py-5 hover:opacity-80 transition-opacity duration-200"
+              >
+                <span class="text-xs font-bold tracking-[0.3em] uppercase">
+                  Buy Now
+                </span>
+              </button>
+            </div>
+            <div class="grid grid-cols-3 gap-4 text-center text-xs tracking-wide pt-4">
+              <div>Free Shipping</div>
+              <div>90-Day Returns</div>
+              <div>3-Year Warranty</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Quantity selector logic
+      let currentQuantity = 1;
+      const maxQuantity = 10;
+
+      const quantityDisplay = document.getElementById('quantity-display');
+      const decreaseBtn = document.getElementById('decrease-qty');
+      const increaseBtn = document.getElementById('increase-qty');
+
+      decreaseBtn?.addEventListener('click', () => {
+        if (currentQuantity > 1) {
+          currentQuantity--;
+          if (quantityDisplay) quantityDisplay.textContent = String(currentQuantity);
+        }
+      });
+
+      increaseBtn?.addEventListener('click', () => {
+        if (currentQuantity < maxQuantity) {
+          currentQuantity++;
+          if (quantityDisplay) quantityDisplay.textContent = String(currentQuantity);
+        }
+      });
+
+      // Connect hero Buy Now button to header dialog
+      const heroBuyButton = document.getElementById('hero-buy-button');
+      heroBuyButton?.addEventListener('click', () => {
+        // Store quantity for modal
+        (window as any).orderQuantity = currentQuantity;
+        // Dispatch custom event to open the buy dialog
+        window.dispatchEvent(new Event('openBuyDialog'));
+      });
+    </script>
+
+    <!-- Inline Urgency Banner -->
+    <InlineUrgencyBanner
+      client:load
+      stock={product.stock}
+      offerText="Free overnight shipping"
+      countdownMinutes={154}
+    />
+
+    <!-- Features with Images Section -->
+    <FeaturesWithImages features={featuresWithImages} />
+
+    <!-- Product Description + Specs -->
+    <section id="details" class="max-w-7xl mx-auto px-6 py-32 border-t-4 border-black dark:border-white">
+      <div class="grid md:grid-cols-2 gap-20">
+        <div class="space-y-8">
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase mb-6">Description</p>
+            <h2 class="text-4xl md:text-5xl font-light leading-tight mb-8">
+              Mystery in a bottle
+            </h2>
+          </div>
+          <div class="h-px bg-black dark:bg-white w-20" />
+          <p class="text-base leading-relaxed">
+            Coco Noir is an ode to femininity and mystery. Inspired by the legendary Coco Chanel herself, this fragrance blends dark, intoxicating notes of grapefruit with delicate florals and a sensual sandalwood base.
+          </p>
+          <p class="text-base leading-relaxed">
+            Each spritz reveals layers of sophistication—perfect for evening wear or whenever you want to make an unforgettable impression.
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          <p class="text-xs font-bold tracking-[0.3em] uppercase mb-6">Specifications</p>
+          {specs.map(spec => (
+            <div class="grid grid-cols-2 gap-6 py-4 border-b border-black dark:border-white">
+              <span class="text-xs font-bold tracking-[0.2em] uppercase">{spec.label}</span>
+              <span class="text-base">{spec.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Fragrance Notes -->
+    <FragranceNotes
+      topNotes={fragranceNotes.topNotes}
+      middleNotes={fragranceNotes.middleNotes}
+      baseNotes={fragranceNotes.baseNotes}
+    />
+
+    <!-- Value Proposition -->
+    <ValueProposition />
+
+    <!-- Reviews -->
+    <section id="reviews">
+      <ReviewsSection
+      averageRating={product.rating}
+      totalReviews={product.reviewCount}
+      reviews={reviews}
+      ratingDistribution={{ 5: 72, 4: 12, 3: 3, 2: 1, 1: 1 }}
+    />
+
+    <!-- FAQ -->
+    <section id="faq" class="max-w-7xl mx-auto px-6">
+      <div class="mt-16">
+        <ProductFAQ client:load />
+      </div>
+    </section>
+
+    <!-- Bottom Buy Section -->
+    <section class="max-w-7xl mx-auto px-6 py-24">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-16">
+          <p class="text-xs font-bold tracking-[0.3em] uppercase mb-4">Final Offer</p>
+          <h2 class="text-4xl md:text-5xl font-light tracking-tight">Complete Your Purchase</h2>
+        </div>
+
+        <!-- Product Buy Card -->
+        <div class="border-2 border-black dark:border-white bg-white dark:bg-black p-6 md:p-8 lg:p-12">
+          <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <!-- Left: Product Image & Info -->
+            <div class="space-y-6">
+              <img
+                src={product.images[0]}
+                alt={product.title}
+                class="w-full max-w-[300px] mx-auto aspect-square object-cover border border-black dark:border-white"
+              />
+              <div class="text-center md:text-left">
+                <h3 class="text-2xl font-light tracking-tight mb-3">{product.title}</h3>
+                <div class="flex items-baseline gap-4 justify-center md:justify-start mb-4">
+                  <span class="text-4xl font-light tabular-nums">${product.price.toFixed(2)}</span>
+                  {product.originalPrice && (
+                    <div class="flex flex-col">
+                      <span class="text-sm line-through tabular-nums opacity-60">
+                        ${product.originalPrice.toFixed(2)}
+                      </span>
+                      <span class="text-xs font-bold tracking-[0.2em] uppercase">
+                        Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <!-- Trust Badges -->
+                <div class="grid grid-cols-3 gap-3 text-center text-[10px] tracking-wide border-t border-black dark:border-white pt-4">
+                  <div>Free Shipping</div>
+                  <div>90-Day Returns</div>
+                  <div>3-Year Warranty</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Quantity & Buy -->
+            <div class="space-y-6">
+              <!-- Quantity Selector -->
+              <div>
+                <label class="text-xs font-bold tracking-[0.2em] uppercase mb-3 block">Quantity</label>
+                <div class="flex items-center border-2 border-black dark:border-white w-full">
+                  <button
+                    id="bottom-decrease-qty"
+                    class="px-4 md:px-6 py-4 md:py-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-r-2 border-black dark:border-white flex-1"
+                    aria-label="Decrease quantity"
+                  >
+                    <span class="text-xl md:text-2xl font-light">−</span>
+                  </button>
+                  <div class="px-6 md:px-8 py-4 md:py-5 min-w-[70px] md:min-w-[80px] text-center">
+                    <span id="bottom-quantity-display" class="text-xl md:text-2xl font-medium tabular-nums">1</span>
+                  </div>
+                  <button
+                    id="bottom-increase-qty"
+                    class="px-4 md:px-6 py-4 md:py-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-l-2 border-black dark:border-white flex-1"
+                    aria-label="Increase quantity"
+                  >
+                    <span class="text-xl md:text-2xl font-light">+</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Total -->
+              <div class="border-t-2 border-black dark:border-white pt-4 md:pt-6">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-[10px] md:text-xs tracking-[0.2em] uppercase opacity-60">Subtotal</span>
+                  <span id="bottom-subtotal" class="text-base md:text-lg font-medium tabular-nums">${product.price.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between items-center mb-3 md:mb-4">
+                  <span class="text-[10px] md:text-xs tracking-[0.2em] uppercase opacity-60">Shipping</span>
+                  <span class="text-sm font-bold tracking-wide">FREE</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 md:pt-4 border-t-2 border-black dark:border-white">
+                  <span class="text-xs md:text-sm font-bold tracking-[0.2em] uppercase">Total</span>
+                  <span id="bottom-total" class="text-2xl md:text-3xl font-light tabular-nums">${product.price.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <!-- Buy Now Button -->
+              <button
+                id="bottom-buy-button"
+                class="w-full bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white py-4 md:py-6 hover:opacity-80 transition-opacity duration-200"
+              >
+                <span class="text-[10px] md:text-xs font-bold tracking-[0.25em] md:tracking-[0.3em] uppercase">
+                  Complete Purchase
+                </span>
+              </button>
+
+              <!-- Additional Info -->
+              <p class="text-xs text-center opacity-60 tracking-wide">
+                {product.stock} units remaining • Ships within 24 hours
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Bottom quantity selector logic
+      let bottomQuantity = 1;
+      const productPrice = 129.99;
+
+      const bottomQuantityDisplay = document.getElementById('bottom-quantity-display');
+      const bottomDecreaseBtn = document.getElementById('bottom-decrease-qty');
+      const bottomIncreaseBtn = document.getElementById('bottom-increase-qty');
+      const bottomSubtotal = document.getElementById('bottom-subtotal');
+      const bottomTotal = document.getElementById('bottom-total');
+
+      function updateBottomTotal() {
+        const subtotal = productPrice * bottomQuantity;
+        if (bottomSubtotal) bottomSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        if (bottomTotal) bottomTotal.textContent = `$${subtotal.toFixed(2)}`;
+      }
+
+      bottomDecreaseBtn?.addEventListener('click', () => {
+        if (bottomQuantity > 1) {
+          bottomQuantity--;
+          if (bottomQuantityDisplay) bottomQuantityDisplay.textContent = String(bottomQuantity);
+          updateBottomTotal();
+        }
+      });
+
+      bottomIncreaseBtn?.addEventListener('click', () => {
+        if (bottomQuantity < 10) {
+          bottomQuantity++;
+          if (bottomQuantityDisplay) bottomQuantityDisplay.textContent = String(bottomQuantity);
+          updateBottomTotal();
+        }
+      });
+
+      // Update bottom buy button to use bottom quantity
+      const bottomBuyBtn = document.getElementById('bottom-buy-button');
+      bottomBuyBtn?.addEventListener('click', () => {
+        (window as any).orderQuantity = bottomQuantity;
+        window.dispatchEvent(new Event('openBuyDialog'));
+      });
+    </script>
+
+    <!-- Footer -->
+    <footer class="border-t-4 border-black dark:border-white py-16">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-8 mb-12">
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase mb-4">
+              Shipping
+            </p>
+            <p class="text-sm leading-relaxed">
+              Free worldwide delivery on all orders
+            </p>
+          </div>
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase mb-4">
+              Returns
+            </p>
+            <p class="text-sm leading-relaxed">
+              90-day money-back guarantee
+            </p>
+          </div>
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase mb-4">
+              Warranty
+            </p>
+            <p class="text-sm leading-relaxed">
+              3-year premium coverage
+            </p>
+          </div>
+        </div>
+        <div class="border-t border-black dark:border-white pt-8 text-center">
+          <p class="text-xs tracking-wide">
+            © 2025 Your Brand. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Sticky Buy Bar (Desktop) -->
+    <StickyBuyBar
+      client:load
+      productName={product.title}
+      price={product.price}
+      originalPrice={product.originalPrice}
+      stripeEnabled={stripeEnabled}
+    />
+
+    <!-- Sticky Cart Button (Mobile) -->
+    <StickyCartButton client:load price={product.price} productName={product.title} stripeEnabled={stripeEnabled} />
+
+    <!-- Recent Purchase Toast -->
+    <RecentPurchaseToast client:load />
+
+    <!-- Theme Toggle -->
+    <ThemeToggle client:load />
+  </div>
+</ShopLayout>

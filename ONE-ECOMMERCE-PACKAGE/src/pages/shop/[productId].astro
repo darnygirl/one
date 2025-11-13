@@ -1,0 +1,340 @@
+---
+/**
+ * Dynamic Product Landing Page
+ * Fetches product from DummyJSON and generates landing page
+ * Route: /shop/[productId]
+ * Example: /shop/1 (iPhone)
+ */
+
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ProductGallery } from '@/components/ecommerce/interactive/ProductGallery';
+import { ProductHeader } from '@/components/shop/ProductHeader';
+import { InlineUrgencyBanner } from '@/components/shop/InlineUrgencyBanner';
+import { RecentPurchaseToast } from '@/components/shop/RecentPurchaseToast';
+import { FeaturesWithImages } from '@/components/shop/FeaturesWithImages';
+import { ValueProposition } from '@/components/shop/ValueProposition';
+import { ReviewsSection } from '@/components/shop/ReviewsSection';
+import { ProductFAQ } from '@/components/ecommerce/static/FAQAccordion';
+import { StickyCartButton } from '@/components/shop/StickyCartButton';
+import { StickyBuyBar } from '@/components/shop/StickyBuyBar';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+import { FragranceNotes } from '@/components/shop/FragranceNotes';
+import {
+  getOriginalPrice,
+  getTrustBadges,
+  getProductFeatures,
+  getProductSpecs,
+  getCTAText,
+  hasFragranceNotes,
+  generateReviews,
+} from '@/lib/productTemplateHelpers';
+
+// Fetch product from DummyJSON
+const { productId } = Astro.params;
+const response = await fetch(`https://dummyjson.com/products/${productId}`);
+const productData = await response.json();
+
+// Transform to our format
+const product = {
+  id: productData.id,
+  title: productData.title,
+  category: productData.category,
+  brand: productData.brand || 'Premium',
+  rating: productData.rating,
+  reviewCount: Math.floor(Math.random() * 150) + 50, // Random review count
+  price: productData.price,
+  originalPrice: getOriginalPrice(productData.price, productData.discountPercentage),
+  stock: productData.stock,
+  description: productData.description,
+  images: productData.images || [productData.thumbnail],
+};
+
+// Generate dynamic content
+const specs = getProductSpecs(productData);
+const features = getProductFeatures(productData);
+const trustBadges = getTrustBadges(product.category);
+const reviews = generateReviews(productData);
+const cta = getCTAText(product.category);
+const showFragranceNotes = hasFragranceNotes(product.category);
+
+// Mock fragrance notes (only for fragrances)
+const fragranceNotes = showFragranceNotes ? {
+  topNotes: [
+    { name: 'Citrus', description: 'Fresh and vibrant opening' },
+  ],
+  middleNotes: [
+    { name: 'Florals', description: 'Elegant heart notes' },
+  ],
+  baseNotes: [
+    { name: 'Woods', description: 'Warm foundation' },
+  ],
+} : null;
+---
+
+<ShopLayout title={`${product.title} - Premium ${product.category}`}>
+  <div class="bg-white dark:bg-black text-black dark:text-white">
+    <!-- Header -->
+    <ProductHeader client:load productName={product.title} />
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-6 py-24 border-b border-black dark:border-white">
+      <div class="grid md:grid-cols-2 gap-20 items-center">
+        <!-- Product Gallery -->
+        <div>
+          <ProductGallery client:load images={product.images} productName={product.title} />
+        </div>
+
+        <!-- Product Info -->
+        <div class="space-y-12">
+          <!-- Category -->
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase">
+              {product.category}
+            </p>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-5xl md:text-6xl font-light tracking-tight leading-none">
+            {product.title}
+          </h1>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-6 border-t border-b border-black dark:border-white py-4">
+            <span class="text-4xl font-light tabular-nums">{product.rating.toFixed(1)}</span>
+            <div class="flex gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" style="color: #D4AF37" opacity={i < Math.floor(product.rating) ? 1 : 0.3}>
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              ))}
+            </div>
+            <div class="flex flex-col border-l border-black dark:border-white pl-4">
+              <span class="text-[10px] font-bold tracking-[0.25em] uppercase opacity-60">Rating</span>
+              <span class="text-[10px] tracking-wide opacity-40">{product.reviewCount} Reviews</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-base leading-relaxed">
+            {product.description}
+          </p>
+
+          <!-- Price -->
+          <div class="space-y-4">
+            <div class="flex items-baseline gap-6">
+              <span class="text-6xl font-light tabular-nums">${product.price.toFixed(2)}</span>
+              {product.originalPrice && (
+                <div class="flex flex-col">
+                  <span class="text-sm line-through tabular-nums">
+                    ${product.originalPrice.toFixed(2)}
+                  </span>
+                  <span class="text-xs font-bold tracking-[0.2em] uppercase">
+                    Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Quantity & Buy Now -->
+          <div class="space-y-4">
+            <div class="flex gap-4">
+              <!-- Quantity Selector -->
+              <div class="flex items-center border-2 border-black dark:border-white">
+                <button
+                  id="decrease-qty"
+                  class="px-5 py-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-r-2 border-black dark:border-white"
+                >
+                  <span class="text-xl font-light">−</span>
+                </button>
+                <div class="px-6 py-5 min-w-[60px] text-center">
+                  <span id="quantity-display" class="text-base font-medium tabular-nums">1</span>
+                </div>
+                <button
+                  id="increase-qty"
+                  class="px-5 py-5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-l-2 border-black dark:border-white"
+                >
+                  <span class="text-xl font-light">+</span>
+                </button>
+              </div>
+
+              <!-- Buy Now Button -->
+              <button
+                id="hero-buy-button"
+                class="flex-1 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white py-5 hover:opacity-80 transition-opacity duration-200"
+              >
+                <span class="text-xs font-bold tracking-[0.3em] uppercase">
+                  Buy Now
+                </span>
+              </button>
+            </div>
+            <div class="grid grid-cols-3 gap-4 text-center text-xs tracking-wide pt-4">
+              {trustBadges.map(badge => <div>{badge}</div>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      let currentQuantity = 1;
+      const quantityDisplay = document.getElementById('quantity-display');
+      const decreaseBtn = document.getElementById('decrease-qty');
+      const increaseBtn = document.getElementById('increase-qty');
+
+      decreaseBtn?.addEventListener('click', () => {
+        if (currentQuantity > 1) {
+          currentQuantity--;
+          if (quantityDisplay) quantityDisplay.textContent = String(currentQuantity);
+        }
+      });
+
+      increaseBtn?.addEventListener('click', () => {
+        if (currentQuantity < 10) {
+          currentQuantity++;
+          if (quantityDisplay) quantityDisplay.textContent = String(currentQuantity);
+        }
+      });
+
+      const heroBuyButton = document.getElementById('hero-buy-button');
+      heroBuyButton?.addEventListener('click', () => {
+        (window as any).orderQuantity = currentQuantity;
+        window.dispatchEvent(new Event('openBuyDialog'));
+      });
+    </script>
+
+    <!-- Inline Urgency Banner -->
+    <InlineUrgencyBanner
+      client:load
+      stock={product.stock}
+      offerText="Free worldwide shipping"
+      countdownMinutes={180}
+    />
+
+    <!-- Features with Images -->
+    <FeaturesWithImages features={features} />
+
+    <!-- Product Specs -->
+    <section id="details" class="max-w-7xl mx-auto px-6 py-32 border-t-4 border-black dark:border-white">
+      <div class="grid md:grid-cols-2 gap-20">
+        <div class="space-y-8">
+          <div>
+            <p class="text-xs font-bold tracking-[0.3em] uppercase mb-6">Description</p>
+            <h2 class="text-4xl md:text-5xl font-light leading-tight mb-8">
+              {cta.title.replace('Ready to ', '').replace('?', '')}
+            </h2>
+          </div>
+          <div class="h-px bg-black dark:bg-white w-20" />
+          <p class="text-base leading-relaxed">
+            {product.description}
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          <p class="text-xs font-bold tracking-[0.3em] uppercase mb-6">Specifications</p>
+          {specs.map(spec => (
+            <div class="grid grid-cols-2 gap-6 py-4 border-b border-black dark:border-white">
+              <span class="text-xs font-bold tracking-[0.2em] uppercase">{spec.label}</span>
+              <span class="text-base">{spec.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Fragrance Notes (conditional) -->
+    {showFragranceNotes && fragranceNotes && (
+      <FragranceNotes
+        topNotes={fragranceNotes.topNotes}
+        middleNotes={fragranceNotes.middleNotes}
+        baseNotes={fragranceNotes.baseNotes}
+      />
+    )}
+
+    <!-- Value Proposition -->
+    <ValueProposition />
+
+    <!-- Reviews -->
+    <section id="reviews">
+      <ReviewsSection
+        averageRating={product.rating}
+        totalReviews={product.reviewCount}
+        reviews={reviews}
+        ratingDistribution={{ 5: 72, 4: 12, 3: 3, 2: 1, 1: 1 }}
+      />
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="max-w-7xl mx-auto px-6">
+      <div class="mt-16">
+        <ProductFAQ client:load />
+      </div>
+    </section>
+
+    <!-- Bottom Buy Section -->
+    <section class="max-w-7xl mx-auto px-6 py-24">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16">
+          <p class="text-xs font-bold tracking-[0.3em] uppercase mb-4">Final Offer</p>
+          <h2 class="text-4xl md:text-5xl font-light tracking-tight">{cta.title}</h2>
+        </div>
+
+        <div class="border-2 border-black dark:border-white bg-white dark:bg-black p-6 md:p-8 lg:p-12">
+          <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <!-- Product Image & Info -->
+            <div class="space-y-6">
+              <img
+                src={product.images[0]}
+                alt={product.title}
+                class="w-full max-w-[300px] mx-auto aspect-square object-cover border border-black dark:border-white"
+              />
+              <div class="text-center md:text-left">
+                <h3 class="text-2xl font-light tracking-tight mb-3">{product.title}</h3>
+                <div class="flex items-baseline gap-4 justify-center md:justify-start mb-4">
+                  <span class="text-4xl font-light tabular-nums">${product.price.toFixed(2)}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center text-[10px] tracking-wide border-t border-black dark:border-white pt-4">
+                  {trustBadges.map(badge => <div>{badge}</div>)}
+                </div>
+              </div>
+            </div>
+
+            <!-- Buy Section (simplified for demo) -->
+            <div class="text-center">
+              <button
+                class="w-full bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white py-4 md:py-6 hover:opacity-80 transition-opacity duration-200"
+              >
+                <span class="text-[10px] md:text-xs font-bold tracking-[0.25em] md:tracking-[0.3em] uppercase">
+                  Complete Purchase
+                </span>
+              </button>
+              <p class="text-xs mt-4 opacity-60 tracking-wide">
+                {product.stock} units remaining
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t-4 border-black dark:border-white py-16">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <p class="text-xs tracking-wide">
+          © 2025 ONE Platform. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Sticky Components -->
+    <StickyBuyBar
+      client:load
+      productName={product.title}
+      price={product.price}
+      originalPrice={product.originalPrice}
+    />
+    <StickyCartButton client:load price={product.price} />
+    <RecentPurchaseToast client:load />
+    <ThemeToggle client:load />
+  </div>
+</ShopLayout>
