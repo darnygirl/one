@@ -1,23 +1,20 @@
 ---
 /**
- * Unified AI Chat Page
+ * Modern AI Chat Interface
  *
- * One chat app for all users:
- * - Free tier: Works without API keys (Gemini Flash Lite only)
- * - Premium: Users add their own OpenRouter keys for full model access
- * - Smart UI: Show/hide features based on user API key status
- *
- * Features scale with backend capabilities:
- * - Reasoning visualization (when available)
- * - Tool call display (when available)
- * - Generative UI components (when available)
+ * Production-ready chat with:
+ * - Centered prompt UI (transitions to bottom after first message)
+ * - Free tier: Gemini Flash Lite (no API key needed)
+ * - Premium tier: GPT-4, Claude, and 50+ models with OpenRouter API key
+ * - Generative UI components (charts, tables, forms, timelines)
+ * - Clean, maintainable codebase
  */
 
 import Layout from '@/layouts/Layout.astro';
-import { ChatClientV2 } from '@/components/ai/ChatClientV2';
+import { ChatClient } from '@/components/chat';
 
-const title = 'AI Chat - Experience the Future';
-const description = 'Free AI chat with reasoning visualization, tool calls, and dynamic UI generation. 10x faster than ChatGPT.';
+const title = 'AI Chat - ChatGPT Competitor';
+const description = 'Free AI chat with centered prompt UI, 15+ AI models, and generative UI. 10x faster than ChatGPT.';
 ---
 
 <Layout
@@ -27,5 +24,5 @@ const description = 'Free AI chat with reasoning visualization, tool calls, and 
   hideHeader={true}
   fullHeight={true}
 >
-  <ChatClientV2 client:only="react" />
+  <ChatClient client:only="react" />
 </Layout>
