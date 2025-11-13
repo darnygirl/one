@@ -157,4 +157,64 @@ export interface Instructor {
     linkedin?: string;
     github?: string;
   };
+}
+
+// ============================================================================
+// Quiz & Assessment Types
+// ============================================================================
+
+export type QuestionType = 'multiple-choice' | 'true-false' | 'short-answer';
+
+export interface QuizOption {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface QuizQuestionData {
+  id: string;
+  type: QuestionType;
+  question: string;
+  options?: QuizOption[]; // For multiple choice
+  correctAnswer: string | boolean; // Index/id for MCQ, boolean for T/F, string for short answer
+  explanation?: string;
+  points: number;
+}
+
+export interface Quiz {
+  id: string;
+  lessonId: string;
+  title: string;
+  description?: string;
+  questions: QuizQuestionData[];
+  passingScore: number; // Percentage
+  timeLimit?: number; // in minutes
+  attemptsAllowed?: number;
+}
+
+export interface QuizAnswer {
+  questionId: string;
+  answer: string | boolean;
+  isCorrect: boolean;
+  timeSpent?: number; // seconds
+}
+
+export interface QuizAttempt {
+  id: string;
+  quizId: string;
+  userId: string;
+  answers: QuizAnswer[];
+  score: number;
+  percentage: number;
+  passed: boolean;
+  startedAt: Date;
+  completedAt: Date;
+  timeSpent: number; // seconds
+}
+
+export interface QuizProgress {
+  currentQuestionIndex: number;
+  answers: QuizAnswer[];
+  startTime: Date;
+  timeElapsed: number; // seconds
 } 
