@@ -1,0 +1,475 @@
+---
+/**
+ * Progress Tracking Demo Page
+ * Showcases CourseProgress, LessonProgress, and ProgressRing components
+ */
+
+import { CourseProgress } from '@/components/course/interactive/CourseProgress';
+import { LessonProgress } from '@/components/course/interactive/LessonProgress';
+import { ProgressRing } from '@/components/course/interactive/ProgressRing';
+import type {
+  CourseProgressData,
+  LessonProgressData,
+  LearningStreak,
+  ProgressMilestone,
+} from '@/types/course';
+
+// Mock course progress data
+const courseProgress: CourseProgressData = {
+  id: 'progress-1',
+  courseId: 'course-1',
+  userId: 'user-1',
+  overallProgress: 65,
+  lessonsCompleted: 13,
+  lessonsTotal: 20,
+  quizzesCompleted: 4,
+  quizzesTotal: 6,
+  averageQuizScore: 87,
+  timeSpent: 18000, // 5 hours
+  enrolledAt: new Date('2025-01-01'),
+  lastAccessedAt: new Date(),
+  estimatedCompletion: new Date('2025-02-15'),
+  certificateEligible: false,
+  certificateEarned: false,
+};
+
+// Mock learning streak
+const learningStreak: LearningStreak = {
+  currentStreak: 7,
+  longestStreak: 14,
+  lastActivityDate: new Date(),
+  totalActiveDays: 42,
+};
+
+// Mock milestones
+const milestones: ProgressMilestone[] = [
+  {
+    id: 'm1',
+    title: 'First Steps',
+    description: 'Complete your first lesson',
+    threshold: 5,
+    icon: '👣',
+    unlockedAt: new Date('2025-01-02'),
+  },
+  {
+    id: 'm2',
+    title: 'Quarter Way There',
+    description: 'Reach 25% course completion',
+    threshold: 25,
+    icon: '🎯',
+    unlockedAt: new Date('2025-01-10'),
+  },
+  {
+    id: 'm3',
+    title: 'Halfway Hero',
+    description: 'Reach 50% course completion',
+    threshold: 50,
+    icon: '🚀',
+    unlockedAt: new Date('2025-01-20'),
+  },
+  {
+    id: 'm4',
+    title: 'Almost There',
+    description: 'Reach 75% course completion',
+    threshold: 75,
+    icon: '⭐',
+  },
+  {
+    id: 'm5',
+    title: 'Course Master',
+    description: 'Complete 100% of the course',
+    threshold: 100,
+    icon: '🏆',
+  },
+];
+
+// Mock lesson progress data
+const lessons = [
+  {
+    lesson: {
+      id: 'lesson-1',
+      title: 'Introduction to React Hooks',
+      description: 'Learn the basics of useState and useEffect',
+      duration: 25,
+      hasQuiz: true,
+      order: 1,
+    },
+    progress: {
+      id: 'lp-1',
+      lessonId: 'lesson-1',
+      userId: 'user-1',
+      courseId: 'course-1',
+      status: 'completed' as const,
+      progress: 100,
+      timeSpent: 1800,
+      lastAccessedAt: new Date('2025-01-15'),
+      completedAt: new Date('2025-01-15'),
+      quizScore: 95,
+      quizPassed: true,
+    },
+  },
+  {
+    lesson: {
+      id: 'lesson-2',
+      title: 'Advanced Hook Patterns',
+      description: 'Custom hooks, useContext, and useReducer',
+      duration: 35,
+      hasQuiz: true,
+      order: 2,
+    },
+    progress: {
+      id: 'lp-2',
+      lessonId: 'lesson-2',
+      userId: 'user-1',
+      courseId: 'course-1',
+      status: 'in-progress' as const,
+      progress: 60,
+      timeSpent: 1200,
+      lastAccessedAt: new Date(),
+    },
+  },
+  {
+    lesson: {
+      id: 'lesson-3',
+      title: 'Performance Optimization',
+      description: 'useMemo, useCallback, and React.memo',
+      duration: 30,
+      hasQuiz: false,
+      order: 3,
+    },
+  },
+  {
+    lesson: {
+      id: 'lesson-4',
+      title: 'Testing React Components',
+      description: 'Jest, React Testing Library, and best practices',
+      duration: 40,
+      hasQuiz: true,
+      order: 4,
+    },
+    locked: true,
+  },
+];
+
+// Completed course example
+const completedCourseProgress: CourseProgressData = {
+  id: 'progress-2',
+  courseId: 'course-2',
+  userId: 'user-1',
+  overallProgress: 100,
+  lessonsCompleted: 20,
+  lessonsTotal: 20,
+  quizzesCompleted: 6,
+  quizzesTotal: 6,
+  averageQuizScore: 92,
+  timeSpent: 28800, // 8 hours
+  enrolledAt: new Date('2024-11-01'),
+  lastAccessedAt: new Date('2025-01-10'),
+  certificateEligible: true,
+  certificateEarned: true,
+  certificateIssuedAt: new Date('2025-01-10'),
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Progress Tracking Demo - ONE Platform</title>
+  </head>
+  <body>
+    <div class="min-h-screen bg-background">
+      <!-- Header -->
+      <header class="border-b border-border bg-card sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4">
+          <h1 class="text-2xl font-bold text-foreground">
+            Progress Tracking Demo
+          </h1>
+          <p class="text-muted-foreground mt-1">
+            Showcasing CourseProgress, LessonProgress, and ProgressRing
+            components
+          </p>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="container mx-auto px-4 py-8 space-y-12">
+        <!-- Course Progress (In Progress) -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Course Progress (In Progress)</h2>
+            <p class="text-muted-foreground">
+              Comprehensive course progress with stats, streak, and milestones
+            </p>
+          </div>
+
+          <CourseProgress
+            client:load
+            courseTitle="React Fundamentals: From Beginner to Pro"
+            progress={courseProgress}
+            streak={learningStreak}
+            milestones={milestones}
+            onContinue={() => console.log('Continue learning')}
+            showDetailedStats={true}
+          />
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-border"></div>
+
+        <!-- Course Progress (Completed) -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Course Progress (Completed)</h2>
+            <p class="text-muted-foreground">
+              Completed course with certificate available
+            </p>
+          </div>
+
+          <CourseProgress
+            client:load
+            courseTitle="JavaScript ES6+: Modern Development"
+            progress={completedCourseProgress}
+            onGetCertificate={() => console.log('Get certificate')}
+            showDetailedStats={false}
+          />
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-border"></div>
+
+        <!-- Lesson Progress List -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Lesson Progress</h2>
+            <p class="text-muted-foreground">
+              Individual lesson cards with different states
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            {
+              lessons.map((item) => (
+                <LessonProgress
+                  client:load
+                  lesson={item.lesson}
+                  progress={item.progress}
+                  locked={item.locked}
+                  onStart={() => console.log(`Start lesson ${item.lesson.id}`)}
+                  onContinue={() =>
+                    console.log(`Continue lesson ${item.lesson.id}`)
+                  }
+                  onReview={() => console.log(`Review lesson ${item.lesson.id}`)}
+                  showDetails={true}
+                />
+              ))
+            }
+          </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-border"></div>
+
+        <!-- Progress Ring Variations -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Progress Ring Variations</h2>
+            <p class="text-muted-foreground">
+              Circular progress indicators in different sizes and states
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <!-- Different progress values -->
+            <div class="text-center">
+              <ProgressRing client:load progress={0} size={100} />
+              <p class="text-sm text-muted-foreground mt-2">Not Started</p>
+            </div>
+
+            <div class="text-center">
+              <ProgressRing client:load progress={25} size={100} />
+              <p class="text-sm text-muted-foreground mt-2">Just Started</p>
+            </div>
+
+            <div class="text-center">
+              <ProgressRing client:load progress={65} size={100} />
+              <p class="text-sm text-muted-foreground mt-2">In Progress</p>
+            </div>
+
+            <div class="text-center">
+              <ProgressRing client:load progress={100} size={100} />
+              <p class="text-sm text-muted-foreground mt-2">Completed</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap justify-center gap-8 mt-8">
+            <!-- Different sizes -->
+            <div class="text-center">
+              <ProgressRing client:load progress={75} size={80} strokeWidth={6} />
+              <p class="text-sm text-muted-foreground mt-2">Small (80px)</p>
+            </div>
+
+            <div class="text-center">
+              <ProgressRing client:load progress={75} size={120} strokeWidth={8} />
+              <p class="text-sm text-muted-foreground mt-2">Medium (120px)</p>
+            </div>
+
+            <div class="text-center">
+              <ProgressRing
+                client:load
+                progress={75}
+                size={160}
+                strokeWidth={12}
+              />
+              <p class="text-sm text-muted-foreground mt-2">Large (160px)</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Features List -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Progress Tracking Features</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">📊 Overall Progress</h3>
+              <p class="text-sm text-muted-foreground">
+                Track completion percentage, lessons, quizzes, and time spent
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🔥 Learning Streaks</h3>
+              <p class="text-sm text-muted-foreground">
+                Daily activity tracking with current and longest streaks
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🎯 Milestones</h3>
+              <p class="text-sm text-muted-foreground">
+                Achievement tracking with progress thresholds and unlock dates
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">📝 Lesson Status</h3>
+              <p class="text-sm text-muted-foreground">
+                Track not-started, in-progress, and completed states per lesson
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🏆 Quiz Scores</h3>
+              <p class="text-sm text-muted-foreground">
+                Display quiz performance and average scores
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">⏱️ Time Tracking</h3>
+              <p class="text-sm text-muted-foreground">
+                Monitor time spent per lesson and overall course
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🎓 Certificates</h3>
+              <p class="text-sm text-muted-foreground">
+                Certificate eligibility and issuance tracking
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">📅 Enrollment Info</h3>
+              <p class="text-sm text-muted-foreground">
+                Enrollment date, days enrolled, and last activity
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🔒 Lesson Locking</h3>
+              <p class="text-sm text-muted-foreground">
+                Sequential unlocking based on completion requirements
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Technical Details -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Technical Implementation</h2>
+          </div>
+
+          <div class="p-6 border border-border rounded-lg bg-card space-y-4">
+            <div>
+              <h3 class="font-semibold mb-2">Components:</h3>
+              <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                <li>
+                  <code>CourseProgress</code> - Overall course stats with streak and
+                  milestones
+                </li>
+                <li>
+                  <code>LessonProgress</code> - Individual lesson cards with status
+                  tracking
+                </li>
+                <li>
+                  <code>ProgressRing</code> - Circular SVG progress indicator
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold mb-2">Data Structures:</h3>
+              <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                <li>
+                  <code>CourseProgressData</code> - Overall progress, stats, and
+                  certificate info
+                </li>
+                <li>
+                  <code>LessonProgressData</code> - Per-lesson completion and time
+                  tracking
+                </li>
+                <li>
+                  <code>LearningStreak</code> - Daily activity streak tracking
+                </li>
+                <li>
+                  <code>ProgressMilestone</code> - Achievement thresholds and unlock
+                  status
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold mb-2">Features:</h3>
+              <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                <li>Real-time progress updates and percentage calculations</li>
+                <li>
+                  Visual indicators (checkmarks, progress bars, circular rings)
+                </li>
+                <li>Time formatting (seconds to hours/minutes)</li>
+                <li>Date formatting and relative time calculations</li>
+                <li>Conditional actions based on completion state</li>
+                <li>Responsive grid layouts with dark mode support</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t border-border bg-card mt-16">
+        <div class="container mx-auto px-4 py-8 text-center text-muted-foreground">
+          <p>📈 Progress Tracking Demo - Built with ONE Platform</p>
+          <p class="text-sm mt-2">
+            Components: CourseProgress, LessonProgress, ProgressRing
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

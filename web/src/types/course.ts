@@ -217,4 +217,57 @@ export interface QuizProgress {
   answers: QuizAnswer[];
   startTime: Date;
   timeElapsed: number; // seconds
+}
+
+// ============================================================================
+// Progress Tracking Types
+// ============================================================================
+
+export interface LessonProgressData {
+  id: string;
+  lessonId: string;
+  userId: string;
+  courseId: string;
+  status: 'not-started' | 'in-progress' | 'completed';
+  progress: number; // 0-100
+  timeSpent: number; // in seconds
+  lastAccessedAt: Date;
+  completedAt?: Date;
+  quizScore?: number; // If lesson has a quiz
+  quizPassed?: boolean;
+}
+
+export interface CourseProgressData {
+  id: string;
+  courseId: string;
+  userId: string;
+  overallProgress: number; // 0-100
+  lessonsCompleted: number;
+  lessonsTotal: number;
+  quizzesCompleted: number;
+  quizzesTotal: number;
+  averageQuizScore: number; // 0-100
+  timeSpent: number; // Total time in seconds
+  enrolledAt: Date;
+  lastAccessedAt: Date;
+  estimatedCompletion?: Date;
+  certificateEligible: boolean;
+  certificateEarned?: boolean;
+  certificateIssuedAt?: Date;
+}
+
+export interface ProgressMilestone {
+  id: string;
+  title: string;
+  description: string;
+  threshold: number; // Progress percentage to unlock
+  icon?: string;
+  unlockedAt?: Date;
+}
+
+export interface LearningStreak {
+  currentStreak: number; // days
+  longestStreak: number; // days
+  lastActivityDate: Date;
+  totalActiveDays: number;
 } 
