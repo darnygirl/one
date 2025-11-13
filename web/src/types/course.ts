@@ -64,4 +64,97 @@ export interface LegacyModule {
   mainDescription: string;
   output: string;
   lessons: Lesson[];
+}
+
+// ============================================================================
+// Course Catalog Types (for e-learning marketplace)
+// ============================================================================
+
+/**
+ * Course interface for catalog/marketplace display
+ * Similar to Product but adapted for e-learning
+ */
+export interface CourseCatalog {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  price: number;
+  compareAtPrice?: number;
+  thumbnail: string;
+  images: string[];
+  instructor: string;
+  instructorAvatar?: string;
+  category: string;
+  tags: string[];
+  level: 'beginner' | 'intermediate' | 'advanced' | 'all-levels';
+  duration: number; // in minutes
+  lessonsCount: number;
+  enrolled: number;
+  rating?: number;
+  reviewCount?: number;
+  featured?: boolean;
+  certificate?: boolean;
+  language: string;
+  lastUpdated: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  progress?: number; // For enrolled students (0-100)
+  inStock?: boolean; // For limited enrollment courses
+  inventory?: number; // For limited enrollment courses
+}
+
+export interface CourseEnrollment {
+  id: string;
+  courseId: string;
+  userId: string;
+  enrolledAt: Date;
+  progress: number; // 0-100
+  completedLessons: string[]; // Lesson IDs
+  lastAccessedAt: Date;
+  certificateEarned?: boolean;
+  certificateIssuedAt?: Date;
+}
+
+export interface CourseReview {
+  id: string;
+  courseId: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  title?: string;
+  content: string;
+  createdAt: Date;
+  verified?: boolean; // Verified purchase
+  helpful?: number;
+}
+
+export interface CourseCategory {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  image?: string;
+  courseCount: number;
+  parentCategory?: string;
+}
+
+export interface Instructor {
+  id: string;
+  name: string;
+  bio: string;
+  avatar?: string;
+  title?: string;
+  expertise: string[];
+  coursesCount: number;
+  studentsCount: number;
+  rating?: number;
+  reviewCount?: number;
+  socialLinks?: {
+    website?: string;
+    twitter?: string;
+    linkedin?: string;
+    github?: string;
+  };
 } 
