@@ -153,7 +153,7 @@ PUBLIC_X402_ENABLED=true
 ```astro
 ---
 // checkout.astro
-import { X402CheckoutFlow } from '@/components/shop/X402CheckoutFlow';
+import { X402CheckoutFlow } from '@/components/web3/X402CheckoutFlow';
 
 const cartItems = [...]; // Your cart data
 const total = 145.00;
