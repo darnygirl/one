@@ -92,6 +92,32 @@ export {
   type RefreshTokenRequest,
 } from "./AuthService";
 
+// CryptoService - Cryptocurrency data from CoinGecko API
+export {
+  CryptoService,
+  CryptoServiceLive,
+  CryptoServiceTag,
+  getCryptoService,
+  type ICryptoService,
+  type CryptoServiceError,
+  type Token,
+  type TokenBalance,
+  type TokenPrice,
+  type TokenMarketData,
+  type TokenChartData,
+  type TokenSocials,
+  type TokenDetails,
+  type MarketStats,
+  formatTokenBalance,
+  formatUsdValue,
+  formatPriceChange,
+  getPriceChangeColor,
+  formatLargeNumber,
+  calculatePortfolioValue,
+  sortTokensByValue,
+  filterTokensByValue,
+} from "./CryptoService";
+
 // ============================================================================
 // Combined Layer (All Services)
 // ============================================================================

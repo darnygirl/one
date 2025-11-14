@@ -124,6 +124,9 @@ export * from './app';
 // Mail/Inbox Components (Phase 4 - Cycles 83-89)
 export * from './mail';
 
+// Crypto Components (Cryptocurrency & Web3 Integration)
+export * from './crypto';
+
 // Universal
 export * from './universal/OntologyForm';
 export * from './universal/OntologyModal';
