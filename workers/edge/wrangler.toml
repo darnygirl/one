@@ -1,0 +1,50 @@
+name = "oaas-edge-worker"
+main = "worker.ts"
+compatibility_date = "2025-11-14"
+workers_dev = true
+
+[env.production]
+name = "oaas-edge-worker-prod"
+route = "one.ie/oaas/*"
+
+# R2 bucket for packs storage
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "oaas-packs"
+
+# KV namespace for offers, nonces, sui_rights cache
+[[kv_namespaces]]
+binding = "KV_NAMESPACE"
+id = "YOUR_KV_NAMESPACE_ID"
+preview_id = "YOUR_KV_PREVIEW_ID"
+
+# D1 database for usage_events
+[[d1_databases]]
+binding = "D1_DATABASE"
+database_name = "oaas-usage"
+database_id = "YOUR_D1_DATABASE_ID"
+
+# Durable Objects for SSE streaming (signals)
+[[durable_objects.bindings]]
+name = "SIGNALS_DO"
+class_name = "SignalsDO"
+script_name = "oaas-edge-worker"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["SignalsDO"]
+
+# Environment variables
+[vars]
+CONVEX_URL = "https://shocking-falcon-870.convex.cloud"
+X402_RECIPIENT = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+
+# Production environment variables
+[env.production.vars]
+BASE_RPC_URL = "https://mainnet.base.org"
+SUI_RPC_URL = "https://fullnode.mainnet.sui.io"
+X402_GATEWAY_URL = "https://x402.org/gateway"
+
+# Development secrets (use `wrangler secret put` for production)
+[env.development]
+# BASE_RPC_URL, SUI_RPC_URL will be set via secrets
