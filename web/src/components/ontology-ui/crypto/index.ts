@@ -27,3 +27,15 @@ export * from "./checkout";
 
 // Multi-Currency Components (Cycles 47-50)
 export * from "./multi-currency";
+
+// DEX Components (Cycles 51-57)
+export * from "./dex";
+
+// Liquidity Components (Cycles 58-64)
+export * from "./liquidity";
+
+// Lending Components (Cycles 65-71)
+export * from "./lending";
+
+// Advanced DeFi Components (Cycles 72-75)
+export * from "./advanced";
