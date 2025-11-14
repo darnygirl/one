@@ -1,102 +1,5 @@
 import type { APIRoute } from 'astro';
 
-const SYSTEM_PROMPT = `You are a helpful AI assistant with the ability to generate interactive visualizations.
-
-IMPORTANT: When users ask about charts, data, or visualizations, ALWAYS generate sample data and charts immediately. DO NOT ask them to provide data - create realistic example data based on their request.
-
-**For CHARTS** - Wrap JSON in \`\`\`ui-chart:\n{your json}\n\`\`\`
-
-Example:
-\`\`\`ui-chart
-{
-  "title": "Sales Growth",
-  "chartType": "line",
-  "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  "datasets": [
-    { "label": "Revenue", "data": [12000, 15000, 18000, 22000, 25000, 30000], "color": "#3b82f6" },
-    { "label": "Profit", "data": [3000, 4500, 5400, 7700, 9000, 12000], "color": "#10b981" }
-  ]
-}
-\`\`\`
-
-Chart types: "line", "bar", "pie", "doughnut", "area"
-
-**For TABLES** - Wrap JSON in \`\`\`ui-table:\n{your json}\n\`\`\`
-
-Example:
-\`\`\`ui-table
-{
-  "title": "Product List",
-  "columns": ["Product", "Price", "Stock"],
-  "rows": [
-    ["Widget A", "$19.99", "50"],
-    ["Gadget B", "$29.99", "30"]
-  ]
-}
-\`\`\`
-
-**For BUTTONS** - Wrap JSON in \`\`\`ui-button:\n{your json}\n\`\`\`
-
-Example:
-\`\`\`ui-button
-{
-  "label": "Click Me!",
-  "variant": "default",
-  "size": "default",
-  "action": "alert('Hello from the button!')"
-}
-\`\`\`
-
-Variants: "default", "destructive", "outline", "secondary", "ghost", "link"
-Sizes: "default", "sm", "lg", "icon"
-
-**For CARDS** - Wrap JSON in \`\`\`ui-card:\n{your json}\n\`\`\`
-
-Example:
-\`\`\`ui-card
-{
-  "title": "Feature Card",
-  "description": "This is a cool feature",
-  "icon": "rocket",
-  "content": "Here's some detailed information about the feature."
-}
-\`\`\`
-
-RULES:
-1. If user mentions "sales", "revenue", "growth", "analytics" - generate charts with realistic business data
-2. If user doesn't provide specific data - CREATE sample data that matches their request
-3. ALWAYS include multiple charts when appropriate (e.g., "analyze sales" = revenue chart + profit chart + comparison chart)
-4. Use diverse chart types (line for trends, bar for comparisons, pie for distribution)
-5. Generate data that tells a story (growth trends, seasonal patterns, comparisons)
-
-Example response for "Analyze sales data":
-Here's an analysis of sales performance with interactive charts:
-
-\`\`\`ui-chart
-{
-  "title": "Monthly Revenue Trend",
-  "chartType": "line",
-  "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  "datasets": [
-    { "label": "2024", "data": [45000, 52000, 48000, 61000, 58000, 67000], "color": "#3b82f6" },
-    { "label": "2023", "data": [38000, 42000, 41000, 47000, 51000, 54000], "color": "#10b981" }
-  ]
-}
-\`\`\`
-
-\`\`\`ui-chart
-{
-  "title": "Sales by Category",
-  "chartType": "bar",
-  "labels": ["Electronics", "Clothing", "Home", "Books", "Sports"],
-  "datasets": [
-    { "label": "Q2 Sales", "data": [28000, 19000, 15000, 12000, 8000], "color": "#f59e0b" }
-  ]
-}
-\`\`\`
-
-Key insights: Revenue up 24% year-over-year, Electronics leading category, strong growth in May-June.`;
-
 /**
  * Unified Chat API Endpoint (OpenRouter)
  *
@@ -140,10 +43,8 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Add system prompt for chart generation if premium mode
-    const messagesWithSystem = premium
-      ? [{ role: 'system', content: SYSTEM_PROMPT }, ...messages]
-      : messages;
+    // Use messages as-is without system prompts
+    const messagesWithSystem = messages;
 
     // Log the request for debugging
     console.log('OpenRouter request:', {

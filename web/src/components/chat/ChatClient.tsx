@@ -23,8 +23,6 @@ import {
 } from 'lucide-react';
 
 // Components
-import { DemoCard } from './DemoCard';
-import { HeroSection } from './HeroSection';
 import { CenteredPrompt } from './CenteredPrompt';
 import { AgentMessage } from '@/components/ai/AgentMessage';
 import { Message, MessageContent, MessageResponse, MessageActions, MessageAction } from '@/components/ai/elements/message';
@@ -34,7 +32,7 @@ import { PromptInputSpeechButton } from '@/components/ai/elements/prompt-input';
 
 // Config
 import { ALL_MODELS, FREE_MODELS, DEFAULT_MODEL, isModelFree, type Model } from '@/lib/chat/models';
-import { DEMO_SUGGESTIONS, DEMO_CATEGORIES } from '@/lib/chat/demos';
+import { PROMPT_SUGGESTIONS } from '@/lib/chat/suggestions';
 import { STORAGE_KEYS, API_ENDPOINTS } from '@/lib/chat/constants';
 import type { Message as MessageType } from '@/lib/chat/types';
 
@@ -342,55 +340,8 @@ export function ChatClient() {
         <Conversation className={cn(hasMessages ? "pb-[200px]" : "pb-0")}>
           <ConversationContent>
             {!hasMessages && !isLoading ? (
-              <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-8 px-4">
-                <HeroSection hasApiKey={hasApiKey} />
-
-                {/* Demo Cards Grid */}
-                <div className="w-full max-w-4xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold">Try These Demos</h2>
-                    {!hasApiKey && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShowSettings(true)}
-                        className="gap-2"
-                      >
-                        <Unlock className="w-4 h-4" />
-                        Add API Key
-                      </Button>
-                    )}
-                  </div>
-
-                  {/* Category tabs */}
-                  <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                    {Object.entries(DEMO_CATEGORIES).map(([key, cat]) => (
-                      <Badge
-                        key={key}
-                        variant="outline"
-                        className="flex items-center gap-1.5 px-3 py-1.5 whitespace-nowrap"
-                      >
-                        <cat.icon className="w-3.5 h-3.5" />
-                        {cat.name}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  {/* Demo cards grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {DEMO_SUGGESTIONS.map((suggestion) => (
-                      <DemoCard
-                        key={suggestion.id}
-                        suggestion={suggestion}
-                        onSelect={(prompt) => {
-                          const cleanPrompt = prompt.replace(/📊|📋|📝|⏱️/g, '').trim();
-                          handleSubmit(cleanPrompt);
-                        }}
-                        isLocked={false}
-                      />
-                    ))}
-                  </div>
-                </div>
+              <div className="flex items-center justify-center min-h-[80vh]">
+                {/* Empty state - centered prompt will show below */}
               </div>
             ) : (
               <>
@@ -410,6 +361,28 @@ export function ChatClient() {
         {/* Prompt Input - Centered when empty, bottom when has messages */}
         <CenteredPrompt isVisible={!hasMessages && !isLoading}>
           <div className="relative flex flex-col bg-[hsl(var(--color-sidebar))] rounded-2xl p-3 gap-3 border-2 border-border">
+            {/* Prompt Suggestions - Only show when empty */}
+            {!hasMessages && (
+              <div className="flex flex-wrap gap-2 mb-2 px-2">
+                {PROMPT_SUGGESTIONS.map((suggestion) => (
+                  <button
+                    key={suggestion.id}
+                    onClick={() => {
+                      if (textareaRef.current) {
+                        textareaRef.current.value = suggestion.text;
+                        textareaRef.current.focus();
+                      }
+                      handleSubmit(suggestion.text);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50 hover:bg-muted text-sm text-foreground/80 hover:text-foreground transition-colors border border-border/50"
+                  >
+                    <span>{suggestion.icon}</span>
+                    <span>{suggestion.text}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
             <textarea
               ref={textareaRef}
               placeholder="Ask anything..."
