@@ -4,6 +4,7 @@
  * Showcases Quiz, QuizResults, and all question type components
  */
 
+import Layout from '@/layouts/Layout.astro';
 import { Quiz } from '@/components/course/interactive/Quiz';
 import { QuizMultipleChoice } from '@/components/course/interactive/QuizMultipleChoice';
 import { QuizTrueFalse } from '@/components/course/interactive/QuizTrueFalse';
@@ -123,27 +124,21 @@ const saExample: QuizQuestionData = {
 };
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz System Demo - ONE Platform</title>
-  </head>
-  <body>
-    <div class="min-h-screen bg-background">
-      <!-- Header -->
-      <header class="border-b border-border bg-card sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-4">
-          <h1 class="text-2xl font-bold text-foreground">Quiz System Demo</h1>
-          <p class="text-muted-foreground mt-1">
-            Showcasing Quiz, QuizResults, and all question type components
-          </p>
+<Layout title="Quiz Demo - ONE Platform" description="Interactive quiz system with multiple question types">
+  <div class="min-h-screen">
+    <header class="border-b border-border bg-card mb-8">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold">Quiz System Demo</h1>
+            <p class="text-muted-foreground mt-1">Quiz, QuizResults, QuizMultipleChoice, QuizTrueFalse, QuizShortAnswer</p>
+          </div>
+          <a href="/demos" class="text-primary hover:underline">← Back to Demos</a>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <!-- Main Content -->
-      <main class="container mx-auto px-4 py-8 space-y-12">
+    <main id="main-content" class="container mx-auto px-4 pb-16 space-y-12">
         <!-- Full Quiz Demo -->
         <section>
           <div class="mb-6">
@@ -330,17 +325,6 @@ const saExample: QuizQuestionData = {
             </div>
           </div>
         </section>
-      </main>
-
-      <!-- Footer -->
-      <footer class="border-t border-border bg-card mt-16">
-        <div class="container mx-auto px-4 py-8 text-center text-muted-foreground">
-          <p>📝 Quiz System Demo - Built with ONE Platform</p>
-          <p class="text-sm mt-2">
-            Components: Quiz, QuizMultipleChoice, QuizTrueFalse, QuizShortAnswer, QuizResults
-          </p>
-        </div>
-      </footer>
-    </div>
-  </body>
-</html>
+    </main>
+  </div>
+</Layout>

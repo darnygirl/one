@@ -4,30 +4,27 @@
  * Showcases VideoPlayer component with progress tracking
  */
 
+import Layout from '@/layouts/Layout.astro';
 import { VideoPlayer } from '@/components/course/interactive/VideoPlayer';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Video Player Demo - ONE Platform</title>
-  </head>
-  <body>
-    <div class="min-h-screen bg-background">
-      <!-- Header -->
-      <header class="border-b border-border bg-card">
-        <div class="container mx-auto px-4 py-4">
-          <h1 class="text-2xl font-bold text-foreground">Video Player Demo</h1>
-          <p class="text-muted-foreground mt-1">
-            Custom video player with progress tracking, playback speed, and keyboard shortcuts
-          </p>
+<Layout title="Video Player Demo - ONE Platform" description="Custom HTML5 video player with progress tracking">
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-border bg-card mb-8">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold">Video Player Demo</h1>
+            <p class="text-muted-foreground mt-1">VideoPlayer component with progress tracking</p>
+          </div>
+          <a href="/demos" class="text-primary hover:underline">← Back to Demos</a>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <!-- Main Content -->
-      <main class="container mx-auto px-4 py-8">
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-4 pb-16">
         <div class="grid gap-8 lg:grid-cols-3">
           <!-- Video Player (larger column) -->
           <div class="lg:col-span-2 space-y-6">
@@ -246,5 +243,4 @@ import { VideoPlayer } from '@/components/course/interactive/VideoPlayer';
         </div>
       </footer>
     </div>
-  </body>
-</html>
+</Layout>

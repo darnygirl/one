@@ -4,6 +4,7 @@
  * Central hub for all ONE Platform demo pages
  */
 
+import Layout from '@/layouts/Layout.astro';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -13,7 +14,11 @@ const demos = [
     route: '/courses-demo',
     description: 'Browse and filter courses with advanced search capabilities',
     category: 'E-Learning',
-    components: ['CourseCard', 'CourseGrid', 'CourseFilters'],
+    components: [
+      { name: 'CourseCard', path: '/web/src/components/course/interactive/CourseCard.tsx' },
+      { name: 'CourseGrid', path: '/web/src/components/course/static/CourseGrid.tsx' },
+      { name: 'CourseFilters', path: '/web/src/components/course/interactive/CourseFilters.tsx' },
+    ],
     features: [
       'Advanced filtering (8 categories)',
       'Course cards with pricing',
@@ -29,7 +34,10 @@ const demos = [
     route: '/video-player-demo',
     description: 'Custom HTML5 video player with full controls and progress tracking',
     category: 'E-Learning',
-    components: ['VideoPlayer', 'useVideoPlayer'],
+    components: [
+      { name: 'VideoPlayer', path: '/web/src/components/course/interactive/VideoPlayer.tsx' },
+      { name: 'useVideoPlayer', path: '/web/src/lib/hooks/useVideoPlayer.ts' },
+    ],
     features: [
       'Playback speed (0.25x - 2x)',
       '10 keyboard shortcuts',
@@ -45,7 +53,13 @@ const demos = [
     route: '/quiz-demo',
     description: 'Interactive quiz with multiple question types and detailed results',
     category: 'E-Learning',
-    components: ['Quiz', 'QuizResults', 'QuizMultipleChoice', 'QuizTrueFalse', 'QuizShortAnswer'],
+    components: [
+      { name: 'Quiz', path: '/web/src/components/course/interactive/Quiz.tsx' },
+      { name: 'QuizResults', path: '/web/src/components/course/interactive/QuizResults.tsx' },
+      { name: 'QuizMultipleChoice', path: '/web/src/components/course/interactive/QuizMultipleChoice.tsx' },
+      { name: 'QuizTrueFalse', path: '/web/src/components/course/interactive/QuizTrueFalse.tsx' },
+      { name: 'QuizShortAnswer', path: '/web/src/components/course/interactive/QuizShortAnswer.tsx' },
+    ],
     features: [
       '3 question types',
       'Time limits with countdown',
@@ -61,7 +75,11 @@ const demos = [
     route: '/progress-demo',
     description: 'Course and lesson progress with streaks and milestones',
     category: 'E-Learning',
-    components: ['CourseProgress', 'LessonProgress', 'ProgressRing'],
+    components: [
+      { name: 'CourseProgress', path: '/web/src/components/course/interactive/CourseProgress.tsx' },
+      { name: 'LessonProgress', path: '/web/src/components/course/interactive/LessonProgress.tsx' },
+      { name: 'ProgressRing', path: '/web/src/components/course/interactive/ProgressRing.tsx' },
+    ],
     features: [
       'Circular progress rings',
       'Learning streaks',
@@ -77,7 +95,12 @@ const demos = [
     route: '/shop/product-landing',
     description: 'Complete product landing page with Stripe checkout',
     category: 'E-Commerce',
-    components: ['ProductHero', 'FeatureGrid', 'PricingSection', 'CheckoutButton'],
+    components: [
+      { name: 'HeroSection', path: '/web/src/components/course/HeroSection.tsx' },
+      { name: 'PricingSection', path: '/web/src/components/course/PricingSection.tsx' },
+      { name: 'CourseModules', path: '/web/src/components/course/CourseModules.tsx' },
+      { name: 'FAQSection', path: '/web/src/components/course/FAQSection.tsx' },
+    ],
     features: [
       'Hero with countdown',
       'Social proof',
@@ -88,22 +111,6 @@ const demos = [
     lines: 800,
     status: 'production',
   },
-  {
-    title: 'Component Playground',
-    route: '/playground',
-    description: 'Interactive playground for testing UI components',
-    category: 'Development',
-    components: ['All shadcn/ui components'],
-    features: [
-      '50+ components',
-      'Live code editing',
-      'Dark mode toggle',
-      'Copy code snippets',
-      'Responsive preview',
-    ],
-    lines: 400,
-    status: 'beta',
-  },
 ];
 
 const categories = [...new Set(demos.map(d => d.category))];
@@ -111,355 +118,331 @@ const totalComponents = demos.reduce((sum, d) => sum + d.components.length, 0);
 const totalLines = demos.reduce((sum, d) => sum + d.lines, 0);
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo Pages - ONE Platform</title>
-    <meta name="description" content="Explore all ONE Platform demo pages and components" />
-  </head>
-  <body>
-    <div class="min-h-screen bg-background">
-      <!-- Header -->
-      <header class="border-b border-border bg-card sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-3xl font-bold text-foreground">ONE Platform Demos</h1>
-              <p class="text-muted-foreground mt-2">
-                Explore our collection of production-ready components and features
-              </p>
-            </div>
-            <div class="text-right">
-              <div class="text-sm text-muted-foreground">Total Stats</div>
-              <div class="flex gap-4 mt-1">
-                <div>
-                  <span class="text-2xl font-bold text-primary">{demos.length}</span>
-                  <span class="text-sm text-muted-foreground ml-1">demos</span>
-                </div>
-                <div>
-                  <span class="text-2xl font-bold text-primary">{totalComponents}</span>
-                  <span class="text-sm text-muted-foreground ml-1">components</span>
-                </div>
-                <div>
-                  <span class="text-2xl font-bold text-primary">{totalLines.toLocaleString()}</span>
-                  <span class="text-sm text-muted-foreground ml-1">LOC</span>
-                </div>
+<Layout title="Demo Hub - ONE Platform" description="Explore all ONE Platform demo pages and components">
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-border bg-card mb-8">
+      <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-4xl font-bold">ONE Platform Demos</h1>
+            <p class="text-muted-foreground mt-2 text-lg">
+              Explore our collection of production-ready components and features
+            </p>
+          </div>
+          <div class="text-left md:text-right">
+            <div class="text-sm text-muted-foreground mb-2">Total Stats</div>
+            <div class="flex gap-6">
+              <div>
+                <span class="text-3xl font-bold text-primary">{demos.length}</span>
+                <span class="text-sm text-muted-foreground ml-1">demos</span>
+              </div>
+              <div>
+                <span class="text-3xl font-bold text-primary">{totalComponents}</span>
+                <span class="text-sm text-muted-foreground ml-1">components</span>
+              </div>
+              <div>
+                <span class="text-3xl font-bold text-primary">{(totalLines / 1000).toFixed(1)}k</span>
+                <span class="text-sm text-muted-foreground ml-1">LOC</span>
               </div>
             </div>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <!-- Main Content -->
-      <main class="container mx-auto px-4 py-8">
-        <!-- Category Filters -->
-        <div class="flex flex-wrap gap-2 mb-8">
-          <span class="text-sm font-medium text-muted-foreground mr-2">Categories:</span>
-          {categories.map((category) => (
-            <Badge variant="secondary" className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
-              {category}
-            </Badge>
-          ))}
-          <Badge variant="outline" className="cursor-pointer">
-            All Demos
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-4 pb-16">
+      <!-- Category Filters -->
+      <div class="flex flex-wrap gap-2 mb-8">
+        <span class="text-sm font-medium text-muted-foreground mr-2">Categories:</span>
+        {categories.map((category) => (
+          <Badge variant="secondary" class="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+            {category}
           </Badge>
-        </div>
+        ))}
+        <Badge variant="outline" class="cursor-pointer">
+          All Demos
+        </Badge>
+      </div>
 
-        <!-- Demo Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Demo Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        {demos.map((demo) => (
+          <a
+            href={demo.route}
+            class="group block transition-transform hover:scale-[1.02]"
+          >
+            <Card className="h-full p-6 hover:shadow-lg transition-shadow border-2 hover:border-primary/50">
+              {/* Header */}
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold group-hover:text-primary transition-colors mb-1">
+                    {demo.title}
+                  </h3>
+                  <p class="text-sm text-muted-foreground">
+                    {demo.description}
+                  </p>
+                </div>
+                <Badge
+                  variant={demo.status === 'production' ? 'default' : 'secondary'}
+                  className="ml-2 flex-shrink-0"
+                >
+                  {demo.status}
+                </Badge>
+              </div>
+
+              {/* Category */}
+              <div class="mb-4">
+                <Badge variant="outline" className="text-xs">
+                  {demo.category}
+                </Badge>
+              </div>
+
+              {/* Components */}
+              <div class="mb-4">
+                <div class="text-xs font-medium text-muted-foreground mb-2">
+                  Components ({demo.components.length}):
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  {demo.components.slice(0, 3).map((component) => (
+                    <code class="text-xs bg-muted px-2 py-1 rounded hover:bg-primary/10 transition-colors">
+                      {component.name}
+                    </code>
+                  ))}
+                  {demo.components.length > 3 && (
+                    <span class="text-xs text-muted-foreground px-2 py-1">
+                      +{demo.components.length - 3}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Features */}
+              <div class="mb-4">
+                <div class="text-xs font-medium text-muted-foreground mb-2">
+                  Key Features:
+                </div>
+                <ul class="text-xs text-muted-foreground space-y-1">
+                  {demo.features.slice(0, 3).map((feature) => (
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-primary mt-0.5 flex-shrink-0">✓</span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Footer Stats */}
+              <div class="flex items-center justify-between pt-4 border-t border-border mt-auto">
+                <div class="flex items-center gap-4 text-xs text-muted-foreground">
+                  <div>
+                    <span class="font-medium text-foreground">{demo.lines}</span>
+                    <span class="ml-1">lines</span>
+                  </div>
+                </div>
+                <div class="text-xs text-primary font-medium group-hover:underline">
+                  View Demo →
+                </div>
+              </div>
+            </Card>
+          </a>
+        ))}
+      </div>
+
+      <!-- Component Links Section -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-6">Component Library</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           {demos.map((demo) => (
-            <a
-              href={demo.route}
-              class="group block transition-transform hover:scale-105"
-            >
-              <Card className="h-full p-6 hover:shadow-lg transition-shadow">
-                {/* Header */}
-                <div class="flex items-start justify-between mb-3">
-                  <div class="flex-1">
-                    <h3 class="text-xl font-bold group-hover:text-primary transition-colors">
-                      {demo.title}
-                    </h3>
-                    <p class="text-sm text-muted-foreground mt-1">
-                      {demo.description}
-                    </p>
-                  </div>
-                  <Badge
-                    variant={demo.status === 'production' ? 'default' : 'secondary'}
-                    className="ml-2 flex-shrink-0"
-                  >
-                    {demo.status}
-                  </Badge>
-                </div>
-
-                {/* Category */}
-                <div class="mb-4">
-                  <Badge variant="outline" className="text-xs">
-                    {demo.category}
-                  </Badge>
-                </div>
-
-                {/* Components */}
-                <div class="mb-4">
-                  <div class="text-xs font-medium text-muted-foreground mb-2">
-                    Components ({demo.components.length}):
-                  </div>
-                  <div class="flex flex-wrap gap-1">
-                    {demo.components.slice(0, 3).map((component) => (
-                      <code class="text-xs bg-muted px-2 py-0.5 rounded">
-                        {component}
-                      </code>
-                    ))}
-                    {demo.components.length > 3 && (
-                      <span class="text-xs text-muted-foreground px-2 py-0.5">
-                        +{demo.components.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Features */}
-                <div class="mb-4">
-                  <div class="text-xs font-medium text-muted-foreground mb-2">
-                    Key Features:
-                  </div>
-                  <ul class="text-xs text-muted-foreground space-y-1">
-                    {demo.features.slice(0, 3).map((feature) => (
-                      <li class="flex items-start gap-1.5">
-                        <span class="text-primary mt-0.5">✓</span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Footer Stats */}
-                <div class="flex items-center justify-between pt-4 border-t border-border">
-                  <div class="flex items-center gap-4 text-xs text-muted-foreground">
-                    <div>
-                      <span class="font-medium text-foreground">{demo.lines}</span>
-                      <span class="ml-1">lines</span>
-                    </div>
-                  </div>
-                  <div class="text-xs text-primary font-medium group-hover:underline">
-                    View Demo →
-                  </div>
-                </div>
-              </Card>
-            </a>
+            <Card className="p-6">
+              <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span>{demo.title === 'Course Catalog' ? '🎓' : demo.title === 'Video Player' ? '🎬' : demo.title === 'Quiz System' ? '📝' : demo.title === 'Progress Tracking' ? '📈' : '🛍️'}</span>
+                <span>{demo.title} Components</span>
+              </h3>
+              <ul class="space-y-2">
+                {demo.components.map((component) => (
+                  <li class="flex items-center justify-between group">
+                    <code class="text-sm font-mono">{component.name}</code>
+                    <a
+                      href={`https://github.com/one-ie/one/blob/main${component.path}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-xs text-primary hover:underline opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      View Source →
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </Card>
           ))}
         </div>
+      </section>
 
-        <!-- Quick Links Section -->
-        <section class="mt-16">
-          <h2 class="text-2xl font-bold mb-6">Quick Links</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* E-Learning */}
-            <Card className="p-4">
-              <h3 class="font-semibold mb-2 flex items-center gap-2">
-                <span>🎓</span>
-                <span>E-Learning System</span>
-              </h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="/courses-demo" class="text-primary hover:underline">
-                    Course Catalog
-                  </a>
-                </li>
-                <li>
-                  <a href="/video-player-demo" class="text-primary hover:underline">
-                    Video Player
-                  </a>
-                </li>
-                <li>
-                  <a href="/quiz-demo" class="text-primary hover:underline">
-                    Quiz System
-                  </a>
-                </li>
-                <li>
-                  <a href="/progress-demo" class="text-primary hover:underline">
-                    Progress Tracking
-                  </a>
-                </li>
-              </ul>
-            </Card>
-
-            {/* E-Commerce */}
-            <Card className="p-4">
-              <h3 class="font-semibold mb-2 flex items-center gap-2">
-                <span>🛍️</span>
-                <span>E-Commerce</span>
-              </h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="/shop/product-landing" class="text-primary hover:underline">
-                    Product Landing
-                  </a>
-                </li>
-                <li>
-                  <a href="/shop" class="text-muted-foreground">
-                    Product Catalog (Soon)
-                  </a>
-                </li>
-                <li>
-                  <a href="/shop/cart" class="text-muted-foreground">
-                    Shopping Cart (Soon)
-                  </a>
-                </li>
-                <li>
-                  <a href="/shop/checkout" class="text-muted-foreground">
-                    Checkout (Soon)
-                  </a>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Documentation */}
-            <Card className="p-4">
-              <h3 class="font-semibold mb-2 flex items-center gap-2">
-                <span>📚</span>
-                <span>Documentation</span>
-              </h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="https://github.com/one-ie/one" class="text-primary hover:underline">
-                    GitHub Repository
-                  </a>
-                </li>
-                <li>
-                  <a href="/docs" class="text-muted-foreground">
-                    Component Docs (Soon)
-                  </a>
-                </li>
-                <li>
-                  <a href="/docs/api" class="text-muted-foreground">
-                    API Reference (Soon)
-                  </a>
-                </li>
-                <li>
-                  <a href="/docs/guides" class="text-muted-foreground">
-                    Guides (Soon)
-                  </a>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Development */}
-            <Card className="p-4">
-              <h3 class="font-semibold mb-2 flex items-center gap-2">
-                <span>⚙️</span>
-                <span>Development</span>
-              </h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="/playground" class="text-primary hover:underline">
-                    Component Playground
-                  </a>
-                </li>
-                <li>
-                  <a href="/storybook" class="text-muted-foreground">
-                    Storybook (Soon)
-                  </a>
-                </li>
-                <li>
-                  <a href="/design-system" class="text-muted-foreground">
-                    Design System (Soon)
-                  </a>
-                </li>
-                <li>
-                  <a href="/changelog" class="text-muted-foreground">
-                    Changelog (Soon)
-                  </a>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </section>
-
-        <!-- System Stats -->
-        <section class="mt-16">
-          <h2 class="text-2xl font-bold mb-6">System Overview</h2>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="p-6 text-center">
-              <div class="text-4xl font-bold text-primary mb-2">14</div>
-              <div class="text-sm text-muted-foreground">Components Built</div>
-            </Card>
-            <Card className="p-6 text-center">
-              <div class="text-4xl font-bold text-primary mb-2">2,631</div>
-              <div class="text-sm text-muted-foreground">Lines of Code</div>
-            </Card>
-            <Card className="p-6 text-center">
-              <div class="text-4xl font-bold text-primary mb-2">85%</div>
-              <div class="text-sm text-muted-foreground">Feature Parity</div>
-            </Card>
-            <Card className="p-6 text-center">
-              <div class="text-4xl font-bold text-primary mb-2">100%</div>
-              <div class="text-sm text-muted-foreground">Type Safe</div>
-            </Card>
-          </div>
-        </section>
-
-        <!-- Tech Stack -->
-        <section class="mt-16">
-          <h2 class="text-2xl font-bold mb-6">Technology Stack</h2>
-          <Card className="p-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div>
-                <div class="font-semibold mb-2">Frontend</div>
-                <ul class="text-sm text-muted-foreground space-y-1">
-                  <li>Astro 5</li>
-                  <li>React 19</li>
-                  <li>TypeScript</li>
-                  <li>Tailwind v4</li>
-                </ul>
-              </div>
-              <div>
-                <div class="font-semibold mb-2">UI Components</div>
-                <ul class="text-sm text-muted-foreground space-y-1">
-                  <li>shadcn/ui</li>
-                  <li>Radix UI</li>
-                  <li>Lucide Icons</li>
-                  <li>50+ components</li>
-                </ul>
-              </div>
-              <div>
-                <div class="font-semibold mb-2">Backend</div>
-                <ul class="text-sm text-muted-foreground space-y-1">
-                  <li>Convex</li>
-                  <li>Effect.ts</li>
-                  <li>Better Auth</li>
-                  <li>Real-time DB</li>
-                </ul>
-              </div>
-              <div>
-                <div class="font-semibold mb-2">Features</div>
-                <ul class="text-sm text-muted-foreground space-y-1">
-                  <li>SSR + Islands</li>
-                  <li>Dark Mode</li>
-                  <li>WCAG 2.1 AA</li>
-                  <li>Mobile First</li>
-                </ul>
-              </div>
-            </div>
+      <!-- Quick Links Section -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-6">Quick Navigation</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* E-Learning */}
+          <Card className="p-6 hover:shadow-md transition-shadow">
+            <h3 class="font-semibold mb-3 flex items-center gap-2 text-lg">
+              <span>🎓</span>
+              <span>E-Learning System</span>
+            </h3>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="/courses-demo" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Course Catalog
+                </a>
+              </li>
+              <li>
+                <a href="/video-player-demo" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Video Player
+                </a>
+              </li>
+              <li>
+                <a href="/quiz-demo" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Quiz System
+                </a>
+              </li>
+              <li>
+                <a href="/progress-demo" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Progress Tracking
+                </a>
+              </li>
+            </ul>
           </Card>
-        </section>
-      </main>
 
-      <!-- Footer -->
-      <footer class="border-t border-border bg-card mt-16">
-        <div class="container mx-auto px-4 py-8">
-          <div class="text-center text-muted-foreground">
-            <p class="text-lg font-semibold mb-2">ONE Platform</p>
-            <p class="text-sm">
-              Built with clarity, simplicity, and infinite scale in mind
-            </p>
-            <p class="text-xs mt-4">
-              Version 1.0.0 | 2025-01-14 | E-Learning System Complete
-            </p>
-          </div>
+          {/* E-Commerce */}
+          <Card className="p-6 hover:shadow-md transition-shadow">
+            <h3 class="font-semibold mb-3 flex items-center gap-2 text-lg">
+              <span>🛍️</span>
+              <span>E-Commerce</span>
+            </h3>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="/shop/product-landing" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Product Landing
+                </a>
+              </li>
+              <li>
+                <a href="/shop" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Product Catalog
+                </a>
+              </li>
+            </ul>
+          </Card>
+
+          {/* Documentation */}
+          <Card className="p-6 hover:shadow-md transition-shadow">
+            <h3 class="font-semibold mb-3 flex items-center gap-2 text-lg">
+              <span>📚</span>
+              <span>Documentation</span>
+            </h3>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="https://github.com/one-ie/one" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> GitHub Repository
+                </a>
+              </li>
+              <li>
+                <a href="/ontology-demo" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> 6-Dimension Ontology
+                </a>
+              </li>
+            </ul>
+          </Card>
+
+          {/* Development */}
+          <Card className="p-6 hover:shadow-md transition-shadow">
+            <h3 class="font-semibold mb-3 flex items-center gap-2 text-lg">
+              <span>⚙️</span>
+              <span>Development</span>
+            </h3>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="/" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="/chat" class="text-primary hover:underline flex items-center gap-1">
+                  <span>→</span> AI Chat
+                </a>
+              </li>
+            </ul>
+          </Card>
         </div>
-      </footer>
-    </div>
-  </body>
-</html>
+      </section>
+
+      <!-- System Stats -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-6">System Overview</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="p-6 text-center hover:shadow-md transition-shadow">
+            <div class="text-5xl font-bold text-primary mb-2">14</div>
+            <div class="text-sm text-muted-foreground">Components Built</div>
+          </Card>
+          <Card className="p-6 text-center hover:shadow-md transition-shadow">
+            <div class="text-5xl font-bold text-primary mb-2">2.6k</div>
+            <div class="text-sm text-muted-foreground">Lines of Code</div>
+          </Card>
+          <Card className="p-6 text-center hover:shadow-md transition-shadow">
+            <div class="text-5xl font-bold text-primary mb-2">85%</div>
+            <div class="text-sm text-muted-foreground">Feature Parity</div>
+          </Card>
+          <Card className="p-6 text-center hover:shadow-md transition-shadow">
+            <div class="text-5xl font-bold text-primary mb-2">100%</div>
+            <div class="text-sm text-muted-foreground">Type Safe</div>
+          </Card>
+        </div>
+      </section>
+
+      <!-- Tech Stack -->
+      <section>
+        <h2 class="text-3xl font-bold mb-6">Technology Stack</h2>
+        <Card className="p-8">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <div class="font-semibold mb-3 text-lg">Frontend</div>
+              <ul class="text-sm text-muted-foreground space-y-2">
+                <li>• Astro 5</li>
+                <li>• React 19</li>
+                <li>• TypeScript</li>
+                <li>• Tailwind v4</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-semibold mb-3 text-lg">UI Components</div>
+              <ul class="text-sm text-muted-foreground space-y-2">
+                <li>• shadcn/ui</li>
+                <li>• Radix UI</li>
+                <li>• Lucide Icons</li>
+                <li>• 50+ components</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-semibold mb-3 text-lg">Backend</div>
+              <ul class="text-sm text-muted-foreground space-y-2">
+                <li>• Convex</li>
+                <li>• Effect.ts</li>
+                <li>• Better Auth</li>
+                <li>• Real-time DB</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-semibold mb-3 text-lg">Features</div>
+              <ul class="text-sm text-muted-foreground space-y-2">
+                <li>• SSR + Islands</li>
+                <li>• Dark Mode</li>
+                <li>• WCAG 2.1 AA</li>
+                <li>• Mobile First</li>
+              </ul>
+            </div>
+          </div>
+        </Card>
+      </section>
+    </main>
+  </div>
+</Layout>
