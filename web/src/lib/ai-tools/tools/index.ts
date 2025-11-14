@@ -17,3 +17,6 @@ export { regexTool } from './regex';
 export { qrCodeTool } from './qr-code';
 export { urlShortenerTool } from './url-shortener';
 export { colorToolsTool } from './color-tools';
+export { loremTool } from './lorem';
+export { passwordTool } from './password';
+export { markdownTool } from './markdown';
