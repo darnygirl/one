@@ -14,6 +14,8 @@ import { guardReplay, consumeNonce } from './lib/nonce';
 import { settlePayment } from './lib/settle';
 import { getOffer, getOfferForPath, applyRolePricing, applySurgePricing } from './lib/offers';
 import { enforceRight, checkSuiRight, applyPremiumDiscount } from './lib/sui';
+import { serveR2Object } from './lib/serve';
+import { logUsageEvent } from './lib/usage';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -204,132 +206,7 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
   }
 }
 
-// Offer loading functions moved to lib/offers.ts
-
-/**
- * Serve R2 object with observed metrics headers
- */
-async function serveR2Object(env: Env, path: string): Promise<Response> {
-  const startTime = Date.now();
-
-  try {
-    const object = await env.R2_BUCKET.get(path);
-
-    if (!object) {
-      return new Response('Not found', { status: 404 });
-    }
-
-    const latencyMs = Date.now() - startTime;
-
-    // Get observed metrics from cache (aggregated from D1)
-    const metrics = await getObservedMetrics(env, path);
-
-    return new Response(object.body, {
-      headers: {
-        'Content-Type': object.httpMetadata?.contentType || 'application/json',
-        'Content-Length': object.size.toString(),
-        'ETag': object.etag,
-        // Observable metrics headers
-        'X-OAAS-Observed-Accuracy-Delta': metrics.accuracyDelta.toString(),
-        'X-OAAS-Observed-Tokens-Saved': metrics.tokensSaved.toString(),
-        'X-OAAS-Latency-MS': latencyMs.toString(),
-        'X-OAAS-Offer-Id': 'one:offer/core-6d@v2.0.0',
-        'X-OAAS-Provenance-Hash': object.customMetadata?.provenanceHash || '',
-      },
-    });
-  } catch (error) {
-    console.error('Failed to serve R2 object:', error);
-    return new Response('Internal error', { status: 500 });
-  }
-}
-
-/**
- * Get observed metrics for a pack (from D1 aggregates)
- */
-async function getObservedMetrics(
-  env: Env,
-  path: string
-): Promise<{ accuracyDelta: number; tokensSaved: number }> {
-  const cacheKey = `metrics:${path}`;
-
-  // Try cache first (15min TTL)
-  const cached = await env.KV_NAMESPACE.get(cacheKey);
-  if (cached) {
-    return JSON.parse(cached);
-  }
-
-  // Query D1 for aggregates
-  try {
-    const result = await env.D1_DATABASE.prepare(
-      `SELECT AVG(observedAcc) as avgAcc, AVG(tokensSaved) as avgTokens
-       FROM usage_events
-       WHERE layer = ? AND status = 'granted' AND ts > ?`
-    )
-      .bind(path, Date.now() - 7 * 24 * 60 * 60 * 1000) // Last 7 days
-      .first();
-
-    const metrics = {
-      accuracyDelta: result?.avgAcc || 0.36,
-      tokensSaved: result?.avgTokens || 0.24,
-    };
-
-    // Cache for 15 minutes
-    await env.KV_NAMESPACE.put(cacheKey, JSON.stringify(metrics), {
-      expirationTtl: 900,
-    });
-
-    return metrics;
-  } catch (error) {
-    console.error('Failed to query observed metrics:', error);
-    // Return defaults
-    return { accuracyDelta: 0.36, tokensSaved: 0.24 };
-  }
-}
-
-/**
- * Log usage event to D1
- */
-async function logUsageEvent(
-  env: Env,
-  event: {
-    ts: number;
-    payer: string;
-    layer: string;
-    price: number;
-    status: string;
-    txHash?: string;
-    userId?: string;
-    roles?: string;
-    observedAcc?: number;
-    tokensSaved?: number;
-    latencyMs?: number;
-  }
-): Promise<void> {
-  try {
-    await env.D1_DATABASE.prepare(
-      `INSERT INTO usage_events (ts, payer, userId, roles, layer, price, status, observedAcc, tokensSaved, latencyMs, txHash)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    )
-      .bind(
-        event.ts,
-        event.payer,
-        event.userId || null,
-        event.roles || null,
-        event.layer,
-        event.price,
-        event.status,
-        event.observedAcc || null,
-        event.tokensSaved || null,
-        event.latencyMs || null,
-        event.txHash || null
-      )
-      .run();
-
-    console.log(`Logged usage event: ${event.status} for ${event.layer}`);
-  } catch (error) {
-    console.error('Failed to log usage event:', error);
-  }
-}
+// Offer, Sui, R2, and usage functions moved to lib/
 
 // Export worker
 export default app;
