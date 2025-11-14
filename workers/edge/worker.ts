@@ -13,6 +13,7 @@ import { parsePaymentHeader, verifyX402, checkIdempotency, cacheGrant } from './
 import { guardReplay, consumeNonce } from './lib/nonce';
 import { settlePayment } from './lib/settle';
 import { getOffer, getOfferForPath, applyRolePricing, applySurgePricing } from './lib/offers';
+import { enforceRight, checkSuiRight, applyPremiumDiscount } from './lib/sui';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -101,6 +102,20 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
     // 3. Apply surge pricing (based on demand)
     offer = await applySurgePricing(env, offer);
 
+    // 3a. Check Sui rights for premium routes (if required)
+    const agent = c.req.header('X-Agent');
+    if (offer.rightsRequired && agent) {
+      const rightCheck = await checkSuiRight(env, agent, offer.rightsRequired);
+      if (rightCheck.valid) {
+        // Apply premium discount (50% off per-call)
+        offer = {
+          ...offer,
+          price: applyPremiumDiscount(offer.price, true),
+        };
+        console.log(`Premium discount applied for agent: ${agent}`);
+      }
+    }
+
     // 4. Check for X-Payment header
     const paymentHeader = c.req.header('X-Payment');
     const proof = parsePaymentHeader(paymentHeader);
@@ -114,6 +129,18 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
     if (!proof) {
       // No payment provided, emit 402 challenge
       return emit402(env, offer, path);
+    }
+
+    // 4b. Enforce Sui right requirement (if specified and no right owned)
+    if (offer.rightsRequired) {
+      const agentAddr = agent || proof.recipient;
+      const enforcement = await enforceRight(env, agentAddr, offer.rightsRequired);
+      if (!enforcement.authorized) {
+        return emit403(
+          'right_required',
+          `This premium resource requires Sui right: ${offer.rightsRequired}. ${enforcement.reason}`
+        );
+      }
     }
 
     // 5. Check idempotency (already processed?)
