@@ -1,0 +1,360 @@
+---
+/**
+ * OaaS Pack Detail Page (Cycles 89-90)
+ *
+ * Detailed view of a specific pack with:
+ * - Full description and what's included
+ * - Pricing tiers (per-call, monthly, annual)
+ * - Observable metrics from real usage
+ * - Reviews and social proof
+ * - Try free / Buy now buttons
+ */
+
+import Layout from "@/layouts/Layout.astro";
+import { getSession } from "@/lib/auth/session";
+import { PaywallDebugger } from "@/components/features/oaas/PaywallDebugger";
+import { ObservedMetricsComparison } from "@/components/features/oaas/ObservedMetrics";
+import type { OaasPack } from "@/components/features/oaas/OaasPackCard";
+
+const { packId } = Astro.params;
+const session = await getSession(Astro.cookies);
+const isTrial = Astro.url.searchParams.get("trial") === "true";
+
+// Mock pack data (will be fetched from Convex in production)
+const packs: Record<string, OaasPack> = {
+  "ontology-core-6d": {
+    id: "ontology-core-6d",
+    name: "Core 6D Ontology",
+    description:
+      "Complete reality-aware ontology modeling groups, people, things, connections, events, and knowledge. Battle-tested in production on the ONE Platform serving thousands of users.",
+    category: "ontology",
+    image: "/images/ontology-pack-large.png",
+    offer: {
+      id: "one:offer/core-6d@v2.0.0",
+      price_usdc: 15.0,
+      monthly_unlimited: 30.0,
+      free_trial_calls: 3,
+      expected_gains: {
+        accuracy_pct: 0.34,
+        token_efficiency_pct: 0.22,
+        cost_savings_usd: 300,
+        time_saved_hours: 3.2,
+        roi_multiple: 20,
+      },
+      whats_included: [
+        "Complete 6-dimension schema (JSON-LD with full constraints)",
+        "1536-dim embeddings optimized for Claude Sonnet 4.5 and GPT-4",
+        "Working Effect-TS service patterns (production-ready)",
+        "Convex schema templates (multi-tenant ready)",
+        "Validation rules & constraints (prevent bugs)",
+        "Real-world examples (lemonade stand → enterprise CRM)",
+        "Observable metrics headers (prove the 34% accuracy gain)",
+        "Hierarchical group modeling (friend circles → governments)",
+        "Event-driven architecture patterns (complete audit trail)",
+        "Knowledge graph construction (RAG-ready embeddings)",
+      ],
+      proof_of_value: {
+        agents_using: 127,
+        avg_observed_savings: 420,
+        avg_observed_accuracy: 0.36,
+        satisfaction_score: 4.8,
+      },
+    },
+  },
+  "marketing-playbook": {
+    id: "marketing-playbook",
+    name: "Marketing Playbook v1.0",
+    description:
+      "Complete go-to-market framework with proven templates for ICP, positioning, messaging, and content operations. Tested on 50+ real campaigns.",
+    category: "playbook",
+    offer: {
+      id: "one:offer/marketing-playbook@v1.0.0",
+      price_usdc: 10.0,
+      monthly_unlimited: 20.0,
+      free_trial_calls: 3,
+      expected_gains: {
+        accuracy_pct: 0.31,
+        token_efficiency_pct: 0.18,
+        cost_savings_usd: 150,
+        time_saved_hours: 8.0,
+        roi_multiple: 15,
+      },
+      whats_included: [
+        "ICP definition templates (psychographics + demographics)",
+        "POV positioning framework (unique mechanism)",
+        "Offer ladder (lead magnet → core → premium)",
+        "Messaging architecture (problem-agitate-solve)",
+        "Editorial calendar templates (6-month planning)",
+        "Content frameworks (AIDA, PAS, storytelling)",
+        "Distribution playbooks (organic + paid channels)",
+        "Conversion funnels (awareness → purchase)",
+      ],
+      proof_of_value: {
+        agents_using: 83,
+        avg_observed_savings: 175,
+        avg_observed_accuracy: 0.33,
+        satisfaction_score: 4.6,
+      },
+    },
+  },
+  "ontology-premium-3072": {
+    id: "ontology-premium-3072",
+    name: "Premium Ontology 3072-dim",
+    description:
+      "Enterprise-grade ontology with 2× embedding precision (3072-dim vs 1536-dim). Includes all base features plus priority support and custom SLO. Requires Premium Access NFT ($299).",
+    category: "premium",
+    offer: {
+      id: "one:offer/premium-3072@v1.0.0",
+      price_usdc: 30.0,
+      monthly_unlimited: 60.0,
+      free_trial_calls: 1,
+      expected_gains: {
+        accuracy_pct: 0.42,
+        token_efficiency_pct: 0.28,
+        cost_savings_usd: 500,
+        time_saved_hours: 4.5,
+        roi_multiple: 16,
+      },
+      whats_included: [
+        "3072-dim embeddings (2× precision vs base tier)",
+        "Priority support (24hr response time)",
+        "Early access to new packs (30 days before public)",
+        "Custom SLO (99.95% uptime guarantee)",
+        "All base ontology features included",
+        "Dedicated account manager (enterprise tier)",
+      ],
+      proof_of_value: {
+        agents_using: 42,
+        avg_observed_savings: 580,
+        avg_observed_accuracy: 0.44,
+        satisfaction_score: 4.9,
+      },
+    },
+  },
+};
+
+const pack = packs[packId || ""];
+
+if (!pack) {
+  return Astro.redirect("/404");
+}
+
+// Mock observed metrics (will come from Worker response in production)
+const mockObservedMetrics = {
+  "x-oaas-observed-accuracy-delta": "0.36",
+  "x-oaas-observed-tokens-saved": "0.24",
+  "x-oaas-latency-ms": "320",
+  "x-oaas-offer-id": pack.offer.id,
+};
+---
+
+<Layout title={`${pack.name} - OaaS Marketplace`} description={pack.description}>
+  <div class="container mx-auto px-4 py-12 max-w-5xl">
+    <!-- Breadcrumbs -->
+    <div class="mb-6 text-sm text-muted-foreground">
+      <a href="/oaas" class="hover:text-foreground">Marketplace</a>
+      <span class="mx-2">→</span>
+      <span class="text-foreground font-medium">{pack.name}</span>
+    </div>
+
+    <!-- Pack Header -->
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <!-- Image -->
+      <div class="aspect-square bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg overflow-hidden">
+        {
+          pack.image ? (
+            <img src={pack.image} alt={pack.name} class="w-full h-full object-cover" />
+          ) : (
+            <div class="flex items-center justify-center h-full text-6xl">📦</div>
+          )
+        }
+      </div>
+
+      <!-- Info -->
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-4xl font-bold mb-2">{pack.name}</h1>
+          <p class="text-lg text-muted-foreground">{pack.description}</p>
+        </div>
+
+        <!-- Pricing -->
+        <div class="space-y-3 p-6 border rounded-lg bg-muted/20">
+          <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-bold">${pack.offer.price_usdc}</span>
+            <span class="text-muted-foreground">/call</span>
+          </div>
+
+          {
+            pack.offer.monthly_unlimited && (
+              <div class="text-sm text-muted-foreground">
+                or <strong>${pack.offer.monthly_unlimited}/mo</strong> unlimited calls
+              </div>
+            )
+          }
+
+          {
+            pack.offer.free_trial_calls && (
+              <div class="px-3 py-2 bg-green-100 text-green-700 rounded-md text-sm font-semibold">
+                🎁 Try {pack.offer.free_trial_calls} calls free - No payment required!
+              </div>
+            )
+          }
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          {
+            isTrial && pack.offer.free_trial_calls ? (
+              <a
+                href={`/api/oaas/packs/${pack.category}/${packId}/schema`}
+                class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold text-center hover:bg-green-700 transition-colors"
+              >
+                Start Free Trial →
+              </a>
+            ) : (
+              <>
+                <a
+                  href={`/oaas/packs/${packId}?trial=true`}
+                  class="flex-1 px-6 py-3 border border-blue-600 text-blue-600 rounded-lg font-semibold text-center hover:bg-blue-50 transition-colors"
+                >
+                  Try Free
+                </a>
+                <button class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                  Buy Now
+                </button>
+              </>
+            )
+          }
+        </div>
+
+        <!-- Social Proof -->
+        {
+          pack.offer.proof_of_value && (
+            <div class="flex items-center gap-6 pt-4 border-t text-sm">
+              <div>
+                <div class="font-semibold">
+                  {pack.offer.proof_of_value.agents_using} agents
+                </div>
+                <div class="text-muted-foreground">using this pack</div>
+              </div>
+              <div>
+                <div class="font-semibold flex items-center gap-1">
+                  {pack.offer.proof_of_value.satisfaction_score.toFixed(1)}
+                  <span class="text-yellow-500">★</span>
+                </div>
+                <div class="text-muted-foreground">satisfaction</div>
+              </div>
+              <div>
+                <div class="font-semibold">
+                  ${pack.offer.proof_of_value.avg_observed_savings}
+                </div>
+                <div class="text-muted-foreground">avg savings</div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- What's Included -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-4">What's Included</h2>
+      <div class="grid md:grid-cols-2 gap-3">
+        {
+          pack.offer.whats_included?.map((item) => (
+            <div class="flex items-start gap-2 p-3 border rounded-lg">
+              <span class="text-green-600 flex-shrink-0">✓</span>
+              <span class="text-sm">{item}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Expected vs Observed Metrics -->
+    {
+      pack.offer.expected_gains && (
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Proven Performance</h2>
+          <ObservedMetricsComparison
+            client:load
+            expected={pack.offer.expected_gains}
+            observed={mockObservedMetrics}
+          />
+        </section>
+      )
+    }
+
+    <!-- Use Cases -->
+    <section class="mb-12 p-8 bg-muted/20 rounded-lg">
+      <h2 class="text-2xl font-bold mb-4">Perfect For</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        {
+          pack.category === "ontology" && (
+            <>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Multi-tenant SaaS Platforms</div>
+                <div class="text-sm text-muted-foreground">
+                  Save $300-500 in architectural mistakes with production-ready ontology
+                </div>
+              </div>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Hierarchical Group Modeling</div>
+                <div class="text-sm text-muted-foreground">
+                  Friend circles → DAOs → Enterprises with one schema
+                </div>
+              </div>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Event-Driven Architecture</div>
+                <div class="text-sm text-muted-foreground">
+                  Complete audit trail with temporal validity
+                </div>
+              </div>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Knowledge Graph Construction</div>
+                <div class="text-sm text-muted-foreground">
+                  RAG-ready embeddings for semantic search
+                </div>
+              </div>
+            </>
+          )
+        }
+        {
+          pack.category === "playbook" && (
+            <>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Product Launch Campaigns</div>
+                <div class="text-sm text-muted-foreground">
+                  45% faster GTM with proven frameworks
+                </div>
+              </div>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">ICP Refinement</div>
+                <div class="text-sm text-muted-foreground">
+                  31% better message-fit with templates
+                </div>
+              </div>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Messaging Workshops</div>
+                <div class="text-sm text-muted-foreground">
+                  18% conversion lift with PAS framework
+                </div>
+              </div>
+              <div class="p-4 border rounded-lg bg-background">
+                <div class="font-semibold mb-1">Content Strategy</div>
+                <div class="text-sm text-muted-foreground">
+                  Save $75-150 in failed ad campaigns
+                </div>
+              </div>
+            </>
+          )
+        }
+      </div>
+    </section>
+
+    <!-- Back to Marketplace -->
+    <div class="text-center">
+      <a href="/oaas" class="text-blue-600 hover:underline">← Back to Marketplace</a>
+    </div>
+  </div>
+</Layout>

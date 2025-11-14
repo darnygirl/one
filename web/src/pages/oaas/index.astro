@@ -1,0 +1,252 @@
+---
+/**
+ * OaaS Marketplace Page (Cycles 89-90)
+ *
+ * Main landing page for OaaS intelligence marketplace
+ * Lists all available packs with filtering and sorting
+ */
+
+import Layout from "@/layouts/Layout.astro";
+import { getSession } from "@/lib/auth/session";
+import { OaasPackCard } from "@/components/features/oaas/OaasPackCard";
+import type { OaasPack } from "@/components/features/oaas/OaasPackCard";
+
+// Get session for role-based pricing display
+const session = await getSession(Astro.cookies);
+
+// Mock packs data (will be fetched from Convex in production)
+const packs: OaasPack[] = [
+  {
+    id: "ontology-core-6d",
+    name: "Core 6D Ontology",
+    description:
+      "Complete reality-aware ontology: groups, people, things, connections, events, knowledge. Production-tested on ONE Platform.",
+    category: "ontology",
+    image: "/images/ontology-pack.png",
+    offer: {
+      id: "one:offer/core-6d@v2.0.0",
+      price_usdc: 15.0,
+      monthly_unlimited: 30.0,
+      free_trial_calls: 3,
+      expected_gains: {
+        accuracy_pct: 0.34,
+        token_efficiency_pct: 0.22,
+        cost_savings_usd: 300,
+        time_saved_hours: 3.2,
+        roi_multiple: 20,
+      },
+      whats_included: [
+        "Complete 6-dimension schema (JSON-LD)",
+        "1536-dim embeddings (Claude/GPT-4 optimized)",
+        "Working Effect-TS patterns",
+        "Convex schema templates",
+        "Real-world examples (lemonade stand → enterprise CRM)",
+        "Observable metrics proving value",
+      ],
+      proof_of_value: {
+        agents_using: 127,
+        avg_observed_savings: 420,
+        avg_observed_accuracy: 0.36,
+        satisfaction_score: 4.8,
+      },
+    },
+  },
+  {
+    id: "marketing-playbook",
+    name: "Marketing Playbook v1.0",
+    description:
+      "Complete GTM framework: ICP, positioning, messaging, content ops. Proven on 50+ real campaigns.",
+    category: "playbook",
+    image: "/images/marketing-playbook.png",
+    offer: {
+      id: "one:offer/marketing-playbook@v1.0.0",
+      price_usdc: 10.0,
+      monthly_unlimited: 20.0,
+      free_trial_calls: 3,
+      expected_gains: {
+        accuracy_pct: 0.31,
+        token_efficiency_pct: 0.18,
+        cost_savings_usd: 150,
+        time_saved_hours: 8.0,
+        roi_multiple: 15,
+      },
+      whats_included: [
+        "ICP definition templates",
+        "POV positioning framework",
+        "Messaging architecture (problem-agitate-solve)",
+        "Editorial calendar templates (6-month planning)",
+        "Content frameworks (AIDA, PAS, storytelling)",
+        "Conversion funnels (awareness → purchase)",
+      ],
+      proof_of_value: {
+        agents_using: 83,
+        avg_observed_savings: 175,
+        avg_observed_accuracy: 0.33,
+        satisfaction_score: 4.6,
+      },
+    },
+  },
+  {
+    id: "ontology-premium-3072",
+    name: "Premium Ontology 3072-dim",
+    description:
+      "Enterprise-grade precision with 2× embedding dimension. Requires Premium Access NFT.",
+    category: "premium",
+    image: "/images/premium-ontology.png",
+    offer: {
+      id: "one:offer/premium-3072@v1.0.0",
+      price_usdc: 30.0,
+      monthly_unlimited: 60.0,
+      free_trial_calls: 1,
+      expected_gains: {
+        accuracy_pct: 0.42,
+        token_efficiency_pct: 0.28,
+        cost_savings_usd: 500,
+        time_saved_hours: 4.5,
+        roi_multiple: 16,
+      },
+      whats_included: [
+        "3072-dim embeddings (2× precision)",
+        "Priority support (24hr response)",
+        "Early access to new packs",
+        "Custom SLO (99.95% uptime)",
+        "All base ontology features",
+      ],
+      proof_of_value: {
+        agents_using: 42,
+        avg_observed_savings: 580,
+        avg_observed_accuracy: 0.44,
+        satisfaction_score: 4.9,
+      },
+    },
+  },
+];
+---
+
+<Layout
+  title="OaaS Marketplace - Buy Intelligence, Not Compute"
+  description="Premium intelligence marketplace for AI agents. Purchase ontology packs and marketing playbooks with proven ROI."
+>
+  <div class="container mx-auto px-4 py-12 max-w-7xl">
+    <!-- Hero Section -->
+    <section class="text-center mb-16">
+      <h1 class="text-5xl font-bold tracking-tight mb-4">
+        Buy Intelligence, Not Compute
+      </h1>
+      <p class="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
+        Premium ontology packs and marketing playbooks that save agents $300+ in mistakes.
+        Try 3 free calls, then pay only for proven value.
+      </p>
+
+      {
+        session.user && (
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg">
+            <span class="font-semibold">Logged in as {session.user.email}</span>
+            <span class="text-sm">
+              ({session.user.role === "staff" || session.user.role === "platform_owner"
+                ? "Free access"
+                : session.user.role === "pro"
+                  ? "50% discount"
+                  : "Full price"})
+            </span>
+          </div>
+        )
+      }
+    </section>
+
+    <!-- Value Proposition -->
+    <section class="grid md:grid-cols-3 gap-6 mb-16">
+      <div class="text-center p-6 border rounded-lg">
+        <div class="text-4xl font-bold text-green-600 mb-2">$15</div>
+        <div class="text-sm text-muted-foreground">per call</div>
+        <div class="text-xs text-muted-foreground mt-2">vs. $300+ in mistakes</div>
+      </div>
+
+      <div class="text-center p-6 border rounded-lg">
+        <div class="text-4xl font-bold text-blue-600 mb-2">34%</div>
+        <div class="text-sm text-muted-foreground">accuracy gain</div>
+        <div class="text-xs text-muted-foreground mt-2">proven by 127+ agents</div>
+      </div>
+
+      <div class="text-center p-6 border rounded-lg">
+        <div class="text-4xl font-bold text-purple-600 mb-2">20×</div>
+        <div class="text-sm text-muted-foreground">ROI</div>
+        <div class="text-xs text-muted-foreground mt-2">observable metrics</div>
+      </div>
+    </section>
+
+    <!-- Packs Grid -->
+    <section>
+      <h2 class="text-3xl font-bold mb-8">Available Intelligence Packs</h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          packs.map((pack) => (
+            <OaasPackCard
+              client:load
+              pack={pack}
+              onTryFree={(packId) => {
+                window.location.href = `/oaas/packs/${packId}?trial=true`;
+              }}
+              onBuy={(packId) => {
+                window.location.href = `/oaas/packs/${packId}`;
+              }}
+              showDetails={(packId) => {
+                window.location.href = `/oaas/packs/${packId}`;
+              }}
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="mt-16 p-8 bg-muted/20 rounded-lg">
+      <h2 class="text-2xl font-bold mb-6 text-center">How It Works</h2>
+
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-blue-600 mb-2">1</div>
+          <div class="font-semibold mb-1">Browse Packs</div>
+          <div class="text-sm text-muted-foreground">
+            Explore ontology and playbook packs
+          </div>
+        </div>
+
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-600 mb-2">2</div>
+          <div class="font-semibold mb-1">Try Free</div>
+          <div class="text-sm text-muted-foreground">3 free calls to prove value</div>
+        </div>
+
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600 mb-2">3</div>
+          <div class="font-semibold mb-1">Pay with USDC</div>
+          <div class="text-sm text-muted-foreground">$15/call or $30/mo unlimited</div>
+        </div>
+
+        <div class="text-center">
+          <div class="text-3xl font-bold text-orange-600 mb-2">4</div>
+          <div class="font-semibold mb-1">Observe ROI</div>
+          <div class="text-sm text-muted-foreground">
+            See actual accuracy gains and savings
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="mt-16 text-center">
+      <h2 class="text-3xl font-bold mb-4">Ready to boost your agent's intelligence?</h2>
+      <p class="text-lg text-muted-foreground mb-6">
+        Start with 3 free calls. No payment required.
+      </p>
+      <a
+        href="/oaas/packs/ontology-core-6d?trial=true"
+        class="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+      >
+        Try Core Ontology Free →
+      </a>
+    </section>
+  </div>
+</Layout>

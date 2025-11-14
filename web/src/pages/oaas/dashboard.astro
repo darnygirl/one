@@ -1,0 +1,271 @@
+---
+/**
+ * OaaS Dashboard Page (Cycles 89-90)
+ *
+ * User dashboard showing:
+ * - Usage analytics (calls made, $ spent, $ saved)
+ * - ROI calculation (observable metrics)
+ * - Pack performance (which packs delivered best results)
+ * - Session management (active sessions, remaining credits)
+ */
+
+import Layout from "@/layouts/Layout.astro";
+import { getSession } from "@/lib/auth/session";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+const session = await getSession(Astro.cookies);
+
+if (!session.user) {
+  return Astro.redirect("/account/login?redirect=/oaas/dashboard");
+}
+
+// Mock usage data (will be fetched from Convex in production)
+const usageStats = {
+  callsMade: 47,
+  totalSpent: 225.0,
+  totalSaved: 6300.0,
+  roi: 28,
+  currentMonth: {
+    calls: 12,
+    spent: 60.0,
+    saved: 1680.0,
+  },
+  packPerformance: [
+    {
+      packName: "Core 6D Ontology",
+      calls: 28,
+      spent: 140.0,
+      savedUsd: 3920.0,
+      observedAccuracy: 0.37,
+      expectedAccuracy: 0.34,
+      satisfaction: 5,
+    },
+    {
+      packName: "Marketing Playbook",
+      calls: 19,
+      spent: 95.0,
+      savedUsd: 2380.0,
+      observedAccuracy: 0.33,
+      expectedAccuracy: 0.31,
+      satisfaction: 4,
+    },
+  ],
+  recentCalls: [
+    {
+      timestamp: "2025-11-14T10:23:00Z",
+      packName: "Core 6D Ontology",
+      cost: 15.0,
+      saved: 420.0,
+      accuracy: 0.38,
+    },
+    {
+      timestamp: "2025-11-13T15:42:00Z",
+      packName: "Marketing Playbook",
+      cost: 10.0,
+      saved: 175.0,
+      accuracy: 0.32,
+    },
+    {
+      timestamp: "2025-11-12T09:15:00Z",
+      packName: "Core 6D Ontology",
+      cost: 15.0,
+      saved: 380.0,
+      accuracy: 0.36,
+    },
+  ],
+};
+
+const freeTrialRemaining = 3 - (session.user.role === "customer" ? 3 : 0); // Mock
+---
+
+<Layout title="OaaS Dashboard" description="Track your OaaS usage, spending, and ROI">
+  <div class="container mx-auto px-4 py-12 max-w-7xl">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">Your OaaS Dashboard</h1>
+      <p class="text-muted-foreground">
+        Track your intelligence purchases, ROI, and performance metrics
+      </p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid md:grid-cols-4 gap-6 mb-8">
+      <div class="p-6 border rounded-lg bg-blue-50">
+        <div class="text-sm text-muted-foreground mb-1">Total Calls</div>
+        <div class="text-3xl font-bold text-blue-600">{usageStats.callsMade}</div>
+        <div class="text-xs text-muted-foreground mt-1">
+          +{usageStats.currentMonth.calls} this month
+        </div>
+      </div>
+
+      <div class="p-6 border rounded-lg bg-red-50">
+        <div class="text-sm text-muted-foreground mb-1">Total Spent</div>
+        <div class="text-3xl font-bold text-red-600">${usageStats.totalSpent}</div>
+        <div class="text-xs text-muted-foreground mt-1">
+          ${usageStats.currentMonth.spent} this month
+        </div>
+      </div>
+
+      <div class="p-6 border rounded-lg bg-green-50">
+        <div class="text-sm text-muted-foreground mb-1">Total Saved</div>
+        <div class="text-3xl font-bold text-green-600">${usageStats.totalSaved}</div>
+        <div class="text-xs text-muted-foreground mt-1">
+          ${usageStats.currentMonth.saved} this month
+        </div>
+      </div>
+
+      <div class="p-6 border rounded-lg bg-orange-50">
+        <div class="text-sm text-muted-foreground mb-1">ROI Multiple</div>
+        <div class="text-3xl font-bold text-orange-600">{usageStats.roi}×</div>
+        <div class="text-xs text-muted-foreground mt-1">
+          You spent ${usageStats.totalSpent}, saved ${usageStats.totalSaved}
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Trial Status -->
+    {
+      freeTrialRemaining > 0 && (
+        <div class="mb-8 p-6 border rounded-lg bg-green-50 border-green-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-semibold text-green-900">
+                🎁 {freeTrialRemaining} free calls remaining
+              </div>
+              <div class="text-sm text-green-700 mt-1">
+                Try any pack without payment. Experience the value first!
+              </div>
+            </div>
+            <a
+              href="/oaas"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+            >
+              Browse Packs
+            </a>
+          </div>
+        </div>
+      )
+    }
+
+    <!-- Pack Performance -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Pack Performance</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        {
+          usageStats.packPerformance.map((pack) => {
+            const roiMultiple = (pack.savedUsd / pack.spent).toFixed(1);
+            const accuracyDelta = ((pack.observedAccuracy - pack.expectedAccuracy) * 100).toFixed(
+              1
+            );
+            const exceededExpectations = pack.observedAccuracy > pack.expectedAccuracy;
+
+            return (
+              <div class="p-6 border rounded-lg">
+                <div class="flex items-start justify-between mb-4">
+                  <div>
+                    <div class="font-bold text-lg">{pack.packName}</div>
+                    <div class="text-sm text-muted-foreground">{pack.calls} calls made</div>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <span
+                        class={
+                          i < pack.satisfaction ? "text-yellow-400" : "text-gray-300"
+                        }
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-muted-foreground">Spent:</span>
+                    <span class="font-semibold">${pack.spent}</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-muted-foreground">Saved:</span>
+                    <span class="font-semibold text-green-600">${pack.savedUsd}</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-muted-foreground">ROI:</span>
+                    <span class="font-semibold text-orange-600">{roiMultiple}×</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm pt-2 border-t">
+                    <span class="text-muted-foreground">Accuracy:</span>
+                    <span
+                      class={
+                        exceededExpectations ? "text-green-600 font-semibold" : "text-muted-foreground"
+                      }
+                    >
+                      {(pack.observedAccuracy * 100).toFixed(1)}%
+                      {exceededExpectations && (
+                        <span class="text-xs ml-1">(+{accuracyDelta}% vs expected)</span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section>
+      <h2 class="text-2xl font-bold mb-4">Recent Calls</h2>
+
+      <div class="border rounded-lg overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-muted">
+            <tr>
+              <th class="text-left p-4 font-semibold">Timestamp</th>
+              <th class="text-left p-4 font-semibold">Pack</th>
+              <th class="text-right p-4 font-semibold">Cost</th>
+              <th class="text-right p-4 font-semibold">Saved</th>
+              <th class="text-right p-4 font-semibold">Accuracy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              usageStats.recentCalls.map((call, i) => (
+                <tr class={i % 2 === 0 ? "bg-background" : "bg-muted/20"}>
+                  <td class="p-4 text-sm text-muted-foreground">
+                    {new Date(call.timestamp).toLocaleString()}
+                  </td>
+                  <td class="p-4 text-sm font-medium">{call.packName}</td>
+                  <td class="p-4 text-sm text-right">${call.cost}</td>
+                  <td class="p-4 text-sm text-right text-green-600 font-semibold">
+                    ${call.saved}
+                  </td>
+                  <td class="p-4 text-sm text-right font-semibold">
+                    {(call.accuracy * 100).toFixed(1)}%
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <div class="mt-8 flex gap-4">
+      <a
+        href="/oaas"
+        class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+      >
+        Browse More Packs
+      </a>
+      <a
+        href="/oaas/billing"
+        class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+      >
+        Upgrade to Monthly
+      </a>
+    </div>
+  </div>
+</Layout>
