@@ -1,4 +1,10 @@
 import type { APIRoute } from 'astro';
+import { toolRegistry } from '@/lib/ai-tools/registry';
+import { registerAllTools } from '@/lib/ai-tools/registerAllTools';
+import { convertToolsForOpenRouter } from '@/lib/ai-tools/openrouter-adapter';
+
+// Initialize tools on first import
+registerAllTools();
 
 /**
  * Unified Chat API Endpoint (OpenRouter)
@@ -8,7 +14,7 @@ import type { APIRoute } from 'astro';
  * 2. No key provided → Use backend default key from env (OPENROUTER_API_KEY)
  *
  * Access to all models: Gemini Flash Lite (free), GPT-4, Claude, Llama, etc.
- * Enhanced with chart/table generation capabilities
+ * Enhanced with AI tool calling (calculator, weather, etc.)
  */
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -46,17 +52,22 @@ export const POST: APIRoute = async ({ request }) => {
     // Use messages as-is without system prompts
     const messagesWithSystem = messages;
 
+    // Get all registered AI tools and convert to OpenRouter format
+    const registeredTools = toolRegistry.list();
+    const tools = convertToolsForOpenRouter(registeredTools);
+
     // Log the request for debugging
     console.log('OpenRouter request:', {
       model,
       messageCount: messagesWithSystem.length,
       premium,
+      toolsCount: tools.length,
       usingClientKey: !!apiKey,
       usingBackendKey: !apiKey,
       keyPrefix: effectiveApiKey.substring(0, 10) + '...'
     });
 
-    // Call OpenRouter API directly
+    // Call OpenRouter API directly with tool definitions
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -68,6 +79,8 @@ export const POST: APIRoute = async ({ request }) => {
       body: JSON.stringify({
         model: model,
         messages: messagesWithSystem,
+        tools: tools, // Include AI tool definitions
+        tool_choice: 'auto', // Let the model decide when to use tools
         stream: true, // Enable streaming
       }),
     });
@@ -233,7 +246,13 @@ async function handleFreeTier(messages: any[], premium: boolean, model: string =
   }
 
   try {
-    // Call OpenRouter API directly (same as premium tier)
+    // Get all registered AI tools and convert to OpenRouter format
+    const registeredTools = toolRegistry.list();
+    const tools = convertToolsForOpenRouter(registeredTools);
+
+    console.log('[FREE TIER] Calling OpenRouter with', tools.length, 'tools');
+
+    // Call OpenRouter API directly (same as premium tier) with tools
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -245,6 +264,8 @@ async function handleFreeTier(messages: any[], premium: boolean, model: string =
       body: JSON.stringify({
         model: model,
         messages: messages,
+        tools: tools, // Include AI tool definitions
+        tool_choice: 'auto', // Let the model decide when to use tools
         stream: true,
       }),
     });
