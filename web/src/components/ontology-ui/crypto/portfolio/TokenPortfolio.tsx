@@ -10,7 +10,9 @@
  */
 
 import { useState, useMemo, useEffect } from "react";
-import { FixedSizeList as List } from "react-window";
+import ReactWindow from "react-window";
+
+const List = ReactWindow.FixedSizeList;
 import {
   Card,
   CardContent,

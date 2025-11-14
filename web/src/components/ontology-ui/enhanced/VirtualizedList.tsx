@@ -10,8 +10,11 @@
  */
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { FixedSizeList, VariableSizeList } from "react-window";
+import ReactWindow from "react-window";
 import type { ListChildComponentProps } from "react-window";
+
+const FixedSizeList = ReactWindow.FixedSizeList;
+const VariableSizeList = ReactWindow.VariableSizeList;
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

@@ -6,7 +6,9 @@
  */
 
 import React, { useState, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import ReactWindow from "react-window";
+
+const List = ReactWindow.FixedSizeList;
 import { Button } from "@/components/ui/button";
 import {
   Card,

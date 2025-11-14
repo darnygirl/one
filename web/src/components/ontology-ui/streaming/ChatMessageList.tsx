@@ -7,7 +7,9 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { FixedSizeList } from "react-window";
+import ReactWindow from "react-window";
+
+const FixedSizeList = ReactWindow.FixedSizeList;
 import type { ChatMessageData } from "./ChatMessage";
 import { ChatMessage } from "./ChatMessage";
 import { Button } from "@/components/ui/button";
