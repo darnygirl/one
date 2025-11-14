@@ -20,6 +20,7 @@
 !/.nvmrc
 !/.mcp.json.backup
 !/scripts/push.sh
+!/package.json
 
 # Ensure directories are tracked
 !*/

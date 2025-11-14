@@ -1,0 +1,25 @@
+{
+  "name": "one-platform-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.2.19",
+  "workspaces": [
+    "web",
+    "backend",
+    "workers/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "cd web && bun install && bun run build",
+    "dev": "cd web && bun run dev",
+    "install:web": "cd web && bun install",
+    "install:backend": "cd backend && npm install",
+    "deploy:web": "cd web && bun run deploy"
+  },
+  "description": "ONE Platform - Monorepo root for Cloudflare Pages deployment",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/one-ie/one.git"
+  }
+}
