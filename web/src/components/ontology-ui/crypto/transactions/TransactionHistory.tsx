@@ -6,7 +6,6 @@
  */
 
 import React, { useState, useMemo } from "react";
-import ReactWindow from "react-window";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,8 +33,6 @@ import {
   type TransactionType,
   type TransactionStatus,
 } from "@/lib/services/crypto/TransactionService";
-
-const List = ReactWindow.FixedSizeList;
 
 interface TransactionHistoryProps {
   transactions: Transaction[];
@@ -160,16 +157,6 @@ export function TransactionHistory({
     </div>
   );
 
-  // Virtualized list row renderer
-  const VirtualRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-    const tx = paginatedTransactions[index];
-    return (
-      <div style={style}>
-        <TransactionRow tx={tx} />
-      </div>
-    );
-  };
-
   return (
     <Card className={className}>
       <CardHeader>
@@ -258,17 +245,8 @@ export function TransactionHistory({
           <div className="text-center py-12 text-muted-foreground">
             No transactions found
           </div>
-        ) : enableVirtualization && paginatedTransactions.length > 20 ? (
-          <List
-            height={600}
-            itemCount={paginatedTransactions.length}
-            itemSize={100}
-            width="100%"
-          >
-            {VirtualRow}
-          </List>
         ) : (
-          <div>
+          <div className="max-h-[600px] overflow-y-auto">
             {paginatedTransactions.map((tx) => (
               <TransactionRow key={tx.hash} tx={tx} />
             ))}

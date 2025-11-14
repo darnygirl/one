@@ -10,7 +10,6 @@
  */
 
 import { useState, useMemo, useEffect } from "react";
-import ReactWindow from "react-window";
 import {
   Card,
   CardContent,
@@ -37,8 +36,6 @@ import {
   sortTokensByValue,
 } from "@/lib/services/CryptoService";
 import { TokenBalance as TokenBalanceComponent } from "./TokenBalance";
-
-const List = ReactWindow.FixedSizeList;
 
 export interface TokenPortfolioProps {
   balances: TokenBalance[];
@@ -133,20 +130,6 @@ export function TokenPortfolio({
       setSortBy(newSortBy);
       setSortDirection("desc");
     }
-  };
-
-  // Virtualized list row renderer
-  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-    const balance = filteredAndSorted[index];
-    return (
-      <div style={style} className="px-4">
-        <TokenBalanceComponent
-          balance={balance}
-          onClick={() => onTokenSelect?.(balance.token.id)}
-          compact
-        />
-      </div>
-    );
   };
 
   if (loading) {
@@ -269,7 +252,7 @@ export function TokenPortfolio({
           </div>
         </div>
 
-        {/* Virtualized Token List */}
+        {/* Token List */}
         {filteredAndSorted.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
             <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -285,15 +268,17 @@ export function TokenPortfolio({
             )}
           </div>
         ) : (
-          <List
-            height={600}
-            itemCount={filteredAndSorted.length}
-            itemSize={88}
-            width="100%"
-            className="border rounded-lg"
-          >
-            {Row}
-          </List>
+          <div className="border rounded-lg max-h-[600px] overflow-y-auto">
+            {filteredAndSorted.map((balance, index) => (
+              <div key={balance.token.id} className="px-4">
+                <TokenBalanceComponent
+                  balance={balance}
+                  onClick={() => onTokenSelect?.(balance.token.id)}
+                  compact
+                />
+              </div>
+            ))}
+          </div>
         )}
       </CardContent>
     </Card>
