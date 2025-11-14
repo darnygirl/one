@@ -208,4 +208,17 @@ export function Dashboard() {
 
 ---
 
-**Total:** 100 components across 8 categories, all mapped to the 6-dimension ontology.
+## 9. GENERATIVE Components (7 components)
+*AI-powered UI generation for chat interfaces*
+
+101. **UIComponentPreview** - Preview generated UI components in sandbox with iframe isolation
+102. **UIComponentEditor** - Edit component code with syntax highlighting and live preview
+103. **UIComponentLibrary** - Browse and manage generated components with search/filter
+104. **DynamicForm** - AI-generated forms with validation and multi-step support
+105. **DynamicTable** - Data tables with sorting, filtering, and CSV export
+106. **DynamicChart** - Charts from natural language with multiple visualization types
+107. **DynamicDashboard** - Full dashboards with drag-drop widgets and real-time data
+
+---
+
+**Total:** 107 components across 9 categories, all mapped to the 6-dimension ontology.

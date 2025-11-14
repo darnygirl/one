@@ -18,7 +18,8 @@ Built on top of shadcn/ui with 100 production-ready components mapped to the 6-d
 | **KNOWLEDGE** | 10 | Labels, vectors, and semantic search |
 | **UNIVERSAL** | 8 | Cross-dimensional components |
 | **LAYOUT** | 8 | Navigation and layout components |
-| **TOTAL** | **100** | Complete UI toolkit |
+| **GENERATIVE** | 7 | AI-powered UI generation |
+| **TOTAL** | **107** | Complete UI toolkit |
 
 ---
 
@@ -282,6 +283,84 @@ import { OntologyHeader, OntologySidebar, CommandPalette } from '@/components/on
 
 ---
 
+## 🤖 9. GENERATIVE Components (7 components)
+
+**AI-powered UI generation for chat interfaces**
+
+| # | Component | Description |
+|---|-----------|-------------|
+| 101 | **UIComponentPreview** | Preview generated UI components in sandbox |
+| 102 | **UIComponentEditor** | Edit component code with syntax highlighting |
+| 103 | **UIComponentLibrary** | Browse generated UI components |
+| 104 | **DynamicForm** | Forms generated from AI |
+| 105 | **DynamicTable** | Tables generated from data |
+| 106 | **DynamicChart** | Charts from natural language queries |
+| 107 | **DynamicDashboard** | Full dashboards from natural language |
+
+```tsx
+import {
+  UIComponentPreview,
+  UIComponentEditor,
+  UIComponentLibrary,
+  DynamicForm,
+  DynamicTable,
+  DynamicChart,
+  DynamicDashboard,
+} from '@/components/ontology-ui/generative';
+
+// Preview a generated component
+<UIComponentPreview
+  componentCode={generatedCode}
+  componentName="CustomButton"
+  initialProps={{ label: "Click me", variant: "primary" }}
+/>
+
+// Edit component with live preview
+<UIComponentEditor
+  initialCode={code}
+  componentName="MyComponent"
+  language="tsx"
+  onSave={handleSave}
+/>
+
+// Browse component library
+<UIComponentLibrary
+  components={savedComponents}
+  onComponentSelect={handleSelect}
+/>
+
+// Dynamic form from AI
+<DynamicForm
+  title="Contact Form"
+  fields={aiGeneratedFields}
+  onSubmit={handleSubmit}
+/>
+
+// Dynamic table with sorting/filtering
+<DynamicTable
+  title="User Data"
+  data={users}
+  columns={columns}
+  exportable
+/>
+
+// Charts from natural language
+<DynamicChart
+  title="Sales by Region"
+  data={salesData}
+  defaultType="bar"
+/>
+
+// Full dashboard with drag-drop
+<DynamicDashboard
+  title="Analytics Dashboard"
+  initialWidgets={widgets}
+  realtime
+/>
+```
+
+---
+
 ## 🏗️ Architecture
 
 ### Directory Structure
@@ -296,6 +375,7 @@ import { OntologyHeader, OntologySidebar, CommandPalette } from '@/components/on
 ├── knowledge/        # KNOWLEDGE dimension (10 components)
 ├── universal/        # Universal components (8 components)
 ├── layouts/          # Layout components (8 components)
+├── generative/       # Generative UI components (7 components)
 ├── types/            # Shared TypeScript types
 ├── hooks/            # Shared React hooks
 ├── utils/            # Shared utilities
@@ -714,4 +794,4 @@ MIT License - Built for the ONE Platform
 
 **Built with clarity, simplicity, and infinite scale in mind.**
 
-100 components. 6 dimensions. 1 unified system.
+107 components. 6 dimensions. 1 unified system. AI-powered UI generation.
