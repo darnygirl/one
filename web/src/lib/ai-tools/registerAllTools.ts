@@ -22,6 +22,11 @@ import { regexTool } from './tools/regex';
 import { qrCodeTool } from './tools/qr-code';
 import { urlShortenerTool } from './tools/url-shortener';
 import { colorToolsTool } from './tools/color-tools';
+// Advanced tools (Phase 5)
+import { fileProcessorTool } from './tools/file-processor';
+import { imageGenTool } from './tools/image-gen';
+import { codeExecutorTool } from './tools/code-executor';
+import { voiceTool } from './tools/voice';
 
 // Metadata for each tool
 const toolMetadata: Record<string, ToolMetadata> = {
@@ -230,6 +235,94 @@ const toolMetadata: Record<string, ToolMetadata> = {
       },
     ],
   },
+  // Advanced tools metadata
+  process_file: {
+    version: '1.0.0',
+    author: 'ONE Platform',
+    tags: ['file', 'upload', 'ocr', 'image', 'document', 'csv', 'pdf'],
+    examples: [
+      {
+        description: 'Process image with analysis',
+        params: { file: 'File object', tier: 'free', analyze_image: true, generate_preview: true },
+      },
+      {
+        description: 'Parse CSV file',
+        params: { file: 'File object', tier: 'premium' },
+      },
+    ],
+  },
+  generate_image: {
+    version: '1.0.0',
+    author: 'ONE Platform',
+    tags: ['image', 'ai', 'generation', 'dalle', 'stable-diffusion', 'art', 'creative'],
+    examples: [
+      {
+        description: 'Generate with Stable Diffusion (free)',
+        params: {
+          prompt: 'A serene mountain landscape at sunset',
+          provider: 'stable-diffusion',
+          size: '1024x1024',
+          style: 'photorealistic',
+        },
+      },
+      {
+        description: 'Generate with DALL-E (requires API key)',
+        params: {
+          prompt: 'A futuristic city with flying cars',
+          provider: 'dalle',
+          size: '1024x1024',
+          quality: 'hd',
+          style: 'vivid',
+        },
+      },
+    ],
+  },
+  execute_code: {
+    version: '1.0.0',
+    author: 'ONE Platform',
+    tags: ['code', 'execution', 'sandbox', 'javascript', 'python', 'dev', 'programming'],
+    examples: [
+      {
+        description: 'Execute JavaScript',
+        params: {
+          code: 'const result = [1, 2, 3].map(x => x * 2);\nconsole.log(result);\nreturn result;',
+          language: 'javascript',
+        },
+      },
+      {
+        description: 'Execute Python',
+        params: {
+          code: 'import math\nresult = [math.sqrt(x) for x in range(1, 10)]\nprint(result)\nresult',
+          language: 'python',
+        },
+      },
+    ],
+  },
+  voice_tools: {
+    version: '1.0.0',
+    author: 'ONE Platform',
+    tags: ['voice', 'tts', 'speech', 'audio', 'accessibility', 'multilingual'],
+    examples: [
+      {
+        description: 'Speak text',
+        params: {
+          action: 'speak',
+          text: 'Hello, how can I help you today?',
+          language: 'en-US',
+          rate: 1,
+          pitch: 1,
+        },
+      },
+      {
+        description: 'List available voices',
+        params: { action: 'list_voices' },
+      },
+      {
+        description: 'Voice recognition',
+        params: { action: 'recognize', language: 'en-US' },
+      },
+    ],
+  },
 };
 
 // Helper to add metadata to a tool
@@ -261,7 +354,12 @@ export function registerAllTools() {
     withMetadata(regexTool, 'regex'),
     withMetadata(qrCodeTool, 'qr_code'),
     withMetadata(urlShortenerTool, 'url_shortener'),
-    withMetadata(colorToolsTool, 'color_tools')
+    withMetadata(colorToolsTool, 'color_tools'),
+    // Advanced tools (Phase 5)
+    withMetadata(fileProcessorTool, 'process_file'),
+    withMetadata(imageGenTool, 'generate_image'),
+    withMetadata(codeExecutorTool, 'execute_code'),
+    withMetadata(voiceTool, 'voice_tools')
   );
 }
 

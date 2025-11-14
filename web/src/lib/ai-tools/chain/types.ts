@@ -26,12 +26,43 @@ export interface ParameterMapping {
   transform?: (value: any) => any; // Optional transformation function
 }
 
+export type ChainCategory =
+  | 'productivity'
+  | 'development'
+  | 'design'
+  | 'data'
+  | 'security'
+  | 'international'
+  | 'finance'
+  | 'marketing';
+
+export type ChainDifficulty = 'beginner' | 'intermediate' | 'advanced';
+
+export interface ChainParameterTemplate {
+  key: string;
+  label: string;
+  type: 'string' | 'number' | 'boolean' | 'select';
+  required: boolean;
+  defaultValue?: any;
+  options?: Array<{ label: string; value: any }>;
+  validation?: {
+    min?: number;
+    max?: number;
+    pattern?: string;
+    message?: string;
+  };
+}
+
 export interface Chain {
   id: string;
   name: string;
   description: string;
   nodes: ChainNode[];
   edges: ChainEdge[];
+  category?: ChainCategory;
+  difficulty?: ChainDifficulty;
+  version?: string;
+  parameterTemplates?: ChainParameterTemplate[];
   metadata?: {
     created: string;
     updated: string;
