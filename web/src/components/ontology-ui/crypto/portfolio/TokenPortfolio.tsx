@@ -11,8 +11,6 @@
 
 import { useState, useMemo, useEffect } from "react";
 import ReactWindow from "react-window";
-
-const List = ReactWindow.FixedSizeList;
 import {
   Card,
   CardContent,
@@ -39,6 +37,8 @@ import {
   sortTokensByValue,
 } from "@/lib/services/CryptoService";
 import { TokenBalance as TokenBalanceComponent } from "./TokenBalance";
+
+const List = ReactWindow.FixedSizeList;
 
 export interface TokenPortfolioProps {
   balances: TokenBalance[];

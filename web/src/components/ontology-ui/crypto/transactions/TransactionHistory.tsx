@@ -7,8 +7,6 @@
 
 import React, { useState, useMemo } from "react";
 import ReactWindow from "react-window";
-
-const List = ReactWindow.FixedSizeList;
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -36,6 +34,8 @@ import {
   type TransactionType,
   type TransactionStatus,
 } from "@/lib/services/crypto/TransactionService";
+
+const List = ReactWindow.FixedSizeList;
 
 interface TransactionHistoryProps {
   transactions: Transaction[];

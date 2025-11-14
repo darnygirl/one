@@ -8,13 +8,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import ReactWindow from "react-window";
-
-const FixedSizeList = ReactWindow.FixedSizeList;
 import type { ChatMessageData } from "./ChatMessage";
 import { ChatMessage } from "./ChatMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import { cn } from "../utils";
+
+const FixedSizeList = ReactWindow.FixedSizeList;
 
 interface ChatMessageListProps {
   messages: ChatMessageData[];
