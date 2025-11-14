@@ -213,7 +213,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
-// Free tier handler - Simulates free model responses
+// Free tier handler - Direct passthrough to OpenRouter (no fake responses)
 async function handleFreeTier(messages: any[], premium: boolean, model: string = 'google/gemini-2.5-flash-lite') {
   if (!messages || messages.length === 0) {
     return new Response(
@@ -222,14 +222,135 @@ async function handleFreeTier(messages: any[], premium: boolean, model: string =
     );
   }
 
-  const lastMessage = messages[messages.length - 1];
-  if (!lastMessage || !lastMessage.content) {
+  // Get backend API key for free models
+  const backendKey = import.meta.env.OPENROUTER_API_KEY;
+
+  if (!backendKey) {
     return new Response(
-      JSON.stringify({ error: 'Invalid message format' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Backend API key not configured' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
+  try {
+    // Call OpenRouter API directly (same as premium tier)
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${backendKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'http://localhost:4321',
+        'X-Title': 'ONE Platform Chat'
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: messages,
+        stream: true,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return new Response(
+        JSON.stringify({ error: `OpenRouter API error: ${errorText}` }),
+        { status: response.status, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Forward the streaming response directly
+    return new Response(response.body, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to call API' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
+
+// Legacy functions for genui page (keep for backward compatibility)
+function generateDataVisualization(message: string): string {
+  const lower = message.toLowerCase();
+
+  if (lower.includes('sales') || lower.includes('revenue')) {
+    return `I'll create a sales visualization for you!
+
+Here's a comprehensive sales analysis:
+
+\`\`\`ui-chart
+{
+  "title": "Monthly Sales Performance",
+  "chartType": "line",
+  "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+  "datasets": [
+    { "label": "Revenue 2024", "data": [42000, 48000, 45000, 52000, 58000, 61000, 67000, 72000], "color": "#3b82f6" },
+    { "label": "Revenue 2023", "data": [38000, 41000, 42000, 43000, 47000, 49000, 51000, 54000], "color": "#10b981" }
+  ]
+}
+\`\`\`
+
+Key insights:
+- Revenue is up 33% year-over-year`;
+  }
+
+  return `\`\`\`ui-chart
+{
+  "title": "Sample Data",
+  "chartType": "line",
+  "labels": ["Week 1", "Week 2", "Week 3", "Week 4"],
+  "datasets": [{ "label": "Data", "data": [65, 78, 82, 91], "color": "#3b82f6" }]
+}
+\`\`\``;
+}
+
+function generateTableResponse(message: string): string {
+  return `\`\`\`ui-table
+{
+  "title": "Data Table",
+  "columns": ["ID", "Name", "Value"],
+  "rows": [["001", "Item A", "$1,250"], ["002", "Item B", "$980"]]
+}
+\`\`\``;
+}
+
+function generateCodeResponse(message: string): string {
+  return `\`\`\`javascript
+function example() {
+  console.log("Example code");
+}
+\`\`\``;
+}
+
+function generateConversationalResponse(message: string, modelName: string = 'AI'): string {
+  const lower = message.toLowerCase();
+
+  if (lower.includes('hello') || lower.includes('hi')) {
+    return `Hello! How can I help you today?`;
+  }
+
+  if (lower.includes('help')) {
+    return `I can help with various tasks. What would you like to do?`;
+  }
+
+  return `I understand. How can I assist you with that?`;
+}
+
+function generateExplanation(message: string): string {
+  return "Let me explain that concept for you.";
+}
+
+function generateContextualResponse(message: string): string {
+  return "Here's some information about that topic.";
+}
+
+// Legacy streaming function (not used anymore, but keep for genui compatibility)
+async function legacyHandleFreeTier(messages: any[], premium: boolean, model: string = 'google/gemini-2.5-flash-lite') {
+  const lastMessage = messages[messages.length - 1];
   const userMessage = typeof lastMessage.content === 'string'
     ? lastMessage.content
     : Array.isArray(lastMessage.content) && lastMessage.content[0]?.text
@@ -238,39 +359,27 @@ async function handleFreeTier(messages: any[], premium: boolean, model: string =
 
   const encoder = new TextEncoder();
 
-  // Create streaming response
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        // Generate appropriate response based on message content
         let response = '';
         const lowerMessage = userMessage.toLowerCase();
 
-        // Get friendly model name
-        const modelNames: Record<string, string> = {
-          'google/gemini-2.5-flash-lite': 'Gemini Flash Lite',
-          'openrouter/polaris-alpha': 'Polaris Alpha',
-          'tngtech/deepseek-r1t2-chimera:free': 'DeepSeek R1T2 Chimera',
-          'z-ai/glm-4.5-air:free': 'GLM 4.5 Air',
-          'tngtech/deepseek-r1t-chimera:free': 'DeepSeek R1T Chimera'
-        };
-        const modelName = modelNames[model] || 'AI Assistant';
-
         // Check for chart/visualization requests
-        if (premium && (lowerMessage.includes('chart') || lowerMessage.includes('graph') || lowerMessage.includes('visualiz') || lowerMessage.includes('data'))) {
+        if (premium && (lowerMessage.includes('chart') || lowerMessage.includes('graph'))) {
           response = generateDataVisualization(userMessage);
         }
         // Check for table requests
-        else if (premium && (lowerMessage.includes('table') || lowerMessage.includes('list') || lowerMessage.includes('spreadsheet'))) {
+        else if (premium && lowerMessage.includes('table')) {
           response = generateTableResponse(userMessage);
         }
         // Programming/code requests
-        else if (lowerMessage.includes('code') || lowerMessage.includes('function') || lowerMessage.includes('component') || lowerMessage.includes('program')) {
+        else if (lowerMessage.includes('code')) {
           response = generateCodeResponse(userMessage);
         }
         // General conversation
         else {
-          response = generateConversationalResponse(userMessage, modelName);
+          response = generateConversationalResponse(userMessage, 'AI');
         }
 
         // Stream the response word by word for realistic typing effect
