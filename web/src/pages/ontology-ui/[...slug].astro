@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import { CryptoDemoWrapper } from '@/components/demos/CryptoDemoWrapper';
 
 // Get the slug from params
 const { slug } = Astro.params;
@@ -261,17 +262,17 @@ const breadcrumbs = [
           </div>
         )}
 
-        <!-- Live Demo Placeholder -->
-        <div class="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-xl border-2 border-dashed border-blue-200 dark:border-blue-800 p-12 text-center">
-          <svg class="w-16 h-16 text-blue-400 dark:text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-          </svg>
-          <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-            Live Demo Coming Soon
-          </h3>
-          <p class="text-slate-600 dark:text-slate-400">
-            Interactive demo with mock data will be available here
-          </p>
+        <!-- Live Demo -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Live Demo</h2>
+            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+              Interactive
+            </span>
+          </div>
+          <div class="rounded-lg p-4">
+            <CryptoDemoWrapper client:load component={componentId} />
+          </div>
         </div>
 
         <!-- Back to Components -->
