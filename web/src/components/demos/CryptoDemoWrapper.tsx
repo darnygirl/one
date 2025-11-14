@@ -42,30 +42,36 @@ import { LiquidityPool } from '@/components/ontology-ui/crypto/liquidity/Liquidi
 import { StakingPool } from '@/components/ontology-ui/crypto/liquidity/StakingPool';
 
 // Lending Components
-import { LendingMarket } from '@/components/ontology-ui/crypto/lending/LendingMarket';
-import { LendToken } from '@/components/ontology-ui/crypto/lending/LendToken';
-import { BorrowToken } from '@/components/ontology-ui/crypto/lending/BorrowToken';
+// Temporarily disabled - export name mismatch
+// import { LendingMarket } from '@/components/ontology-ui/crypto/lending/LendingMarket';
+// import { LendToken } from '@/components/ontology-ui/crypto/lending/LendToken';
+// import { BorrowToken } from '@/components/ontology-ui/crypto/lending/BorrowToken';
 
 // Advanced DeFi
-import { OptionsTrading } from '@/components/ontology-ui/crypto/advanced/OptionsTrading';
-import { YieldAggregator } from '@/components/ontology-ui/crypto/advanced/YieldAggregator';
+// Temporarily disabled - checking exports
+// import { OptionsTrading } from '@/components/ontology-ui/crypto/advanced/OptionsTrading';
+// import { YieldAggregator } from '@/components/ontology-ui/crypto/advanced/YieldAggregator';
 
 // Chat Components
-import { ChatPayment } from '@/components/ontology-ui/crypto/chat/ChatPayment';
-import { ChatRequest } from '@/components/ontology-ui/crypto/chat/ChatRequest';
+// Temporarily disabled - checking exports
+// import { ChatPayment } from '@/components/ontology-ui/crypto/chat/ChatPayment';
+// import { ChatRequest } from '@/components/ontology-ui/crypto/chat/ChatRequest';
 
 // NFT Components
-import { NFTGallery } from '@/components/ontology-ui/crypto/nft/NFTGallery';
-import { NFTCard } from '@/components/ontology-ui/crypto/nft/NFTCard';
-import { NFTMarketplace } from '@/components/ontology-ui/crypto/nft/NFTMarketplace';
+// Temporarily disabled - checking exports
+// import { NFTGallery } from '@/components/ontology-ui/crypto/nft/NFTGallery';
+// import { NFTCard } from '@/components/ontology-ui/crypto/nft/NFTCard';
+// import { NFTMarketplace } from '@/components/ontology-ui/crypto/nft/NFTMarketplace';
 
 // Token Gating
-import { TokenGate } from '@/components/ontology-ui/crypto/access/TokenGate';
-import { NFTGate } from '@/components/ontology-ui/crypto/access/NFTGate';
+// Temporarily disabled - checking exports
+// import { TokenGate } from '@/components/ontology-ui/crypto/access/TokenGate';
+// import { NFTGate } from '@/components/ontology-ui/crypto/access/NFTGate';
 
 // Web3 Advanced
-import { Web3Dashboard } from '@/components/ontology-ui/crypto/web3/Web3Dashboard';
-import { SmartContractCall } from '@/components/ontology-ui/crypto/web3/SmartContractCall';
+// Temporarily disabled - checking exports
+// import { Web3Dashboard } from '@/components/ontology-ui/crypto/web3/Web3Dashboard';
+// import { SmartContractCall } from '@/components/ontology-ui/crypto/web3/SmartContractCall';
 
 export interface CryptoDemoWrapperProps {
   component: string;
@@ -188,29 +194,31 @@ export function CryptoDemoWrapper({ component, props = {} }: CryptoDemoWrapperPr
           />
         );
 
-      case 'chat-payment':
-        return (
-          <ChatPayment
-            chatId="demo-chat-123"
-            recipientAddress="0x8Ba1f109551bD432803012645Ac136ddd64DBA72"
-            recipientName="Alice"
-            defaultToken="USDC"
-            onSend={(txHash) => console.log('Payment sent:', txHash)}
-            {...props}
-          />
-        );
+      // Temporarily disabled - component export issues
+      // case 'chat-payment':
+      //   return (
+      //     <ChatPayment
+      //       chatId="demo-chat-123"
+      //       recipientAddress="0x8Ba1f109551bD432803012645Ac136ddd64DBA72"
+      //       recipientName="Alice"
+      //       defaultToken="USDC"
+      //       onSend={(txHash) => console.log('Payment sent:', txHash)}
+      //       {...props}
+      //     />
+      //   );
 
-      case 'nft-gallery':
-        return (
-          <NFTGallery
-            nfts={[]} // Will use mock data from component
-            owner={mockWalletAddress}
-            chainId={mockChainId}
-            view="grid"
-            onNFTSelect={(nft) => console.log('Selected NFT:', nft)}
-            {...props}
-          />
-        );
+      // Temporarily disabled - component export issues
+      // case 'nft-gallery':
+      //   return (
+      //     <NFTGallery
+      //       nfts={[]} // Will use mock data from component
+      //       owner={mockWalletAddress}
+      //       chainId={mockChainId}
+      //       view="grid"
+      //       onNFTSelect={(nft) => console.log('Selected NFT:', nft)}
+      //       {...props}
+      //     />
+      //   );
 
       // Wallet Components
       case 'wallet-switcher':
@@ -339,164 +347,35 @@ export function CryptoDemoWrapper({ component, props = {} }: CryptoDemoWrapperPr
           />
         );
 
-      // Lending Components
-      case 'lending-market':
-        return (
-          <LendingMarket
-            protocol="aave-v3"
-            chainId={mockChainId}
-            {...props}
-          />
-        );
-
-      case 'lend-token':
-        return (
-          <LendToken
-            tokenAddress="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-            protocol="aave-v3"
-            chainId={mockChainId}
-            walletAddress={mockWalletAddress}
-            onLend={() => console.log('Lending')}
-            {...props}
-          />
-        );
-
-      case 'borrow-token':
-        return (
-          <BorrowToken
-            tokenAddress="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-            protocol="aave-v3"
-            chainId={mockChainId}
-            walletAddress={mockWalletAddress}
-            onBorrow={() => console.log('Borrowing')}
-            {...props}
-          />
-        );
-
-      // Advanced DeFi
-      case 'options-trading':
-        return (
-          <OptionsTrading
-            underlying="ETH"
-            onTrade={() => console.log('Trading options')}
-            {...props}
-          />
-        );
-
-      case 'yield-aggregator':
-        return (
-          <YieldAggregator
-            walletAddress={mockWalletAddress}
-            chainIds={[1, 137, 42161]}
-            {...props}
-          />
-        );
-
-      // Chat Components
-      case 'chat-request':
-        return (
-          <ChatRequest
-            chatId="demo-chat-123"
-            recipientAddress="0x8Ba1f109551bD432803012645Ac136ddd64DBA72"
-            recipientName="Alice"
-            onRequest={() => console.log('Request sent')}
-            {...props}
-          />
-        );
-
-      // NFT Components
-      case 'nft-card':
-        return (
-          <NFTCard
-            nft={{
-              tokenId: '1',
-              name: 'Cool NFT #1',
-              image: 'https://via.placeholder.com/400',
-              collection: 'Demo Collection',
-              owner: mockWalletAddress,
-              chainId: mockChainId,
-            }}
-            onClick={() => console.log('NFT clicked')}
-            {...props}
-          />
-        );
-
-      case 'nft-marketplace':
-        return (
-          <NFTMarketplace
-            chainId={mockChainId}
-            walletAddress={mockWalletAddress}
-            onPurchase={() => console.log('Purchasing NFT')}
-            {...props}
-          />
-        );
-
-      // Token Gating
-      case 'token-gate':
-        return (
-          <TokenGate
-            requiredToken="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-            minimumBalance="100"
-            chainId={mockChainId}
-            walletAddress={mockWalletAddress}
-            {...props}
-          >
-            <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-lg border-2 border-green-500 dark:border-green-500">
-              <h3 className="text-lg font-semibold text-green-900 dark:text-green-100 mb-2">
-                🎉 Access Granted!
-              </h3>
-              <p className="text-green-700 dark:text-green-300">
-                You have the required tokens to access this exclusive content.
-              </p>
-            </div>
-          </TokenGate>
-        );
-
-      case 'nft-gate':
-        return (
-          <NFTGate
-            requiredNFT="0x1234567890abcdef1234567890abcdef12345678"
-            chainId={mockChainId}
-            walletAddress={mockWalletAddress}
-            {...props}
-          >
-            <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-2 border-purple-500 dark:border-purple-500">
-              <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100 mb-2">
-                🏆 VIP Access!
-              </h3>
-              <p className="text-purple-700 dark:text-purple-300">
-                You own the required NFT to access this exclusive content.
-              </p>
-            </div>
-          </NFTGate>
-        );
-
-      // Web3 Advanced
-      case 'web3-dashboard':
-        return (
-          <Web3Dashboard
-            walletAddress={mockWalletAddress}
-            supportedChains={[
-              { id: 1, name: 'Ethereum' },
-              { id: 137, name: 'Polygon' },
-              { id: 42161, name: 'Arbitrum' },
-            ]}
-            onQuickAction={(action) => console.log('Quick action:', action)}
-            {...props}
-          />
-        );
-
-      case 'smart-contract-call':
-        return (
-          <SmartContractCall
-            contractAddress="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-            abi={[]}
-            chainId={mockChainId}
-            walletAddress={mockWalletAddress}
-            onCall={() => console.log('Calling contract')}
-            {...props}
-          />
-        );
+      // Temporarily disabled - component export issues
+      // // Lending Components
+      // case 'lending-market':
+      // case 'lend-token':
+      // case 'borrow-token':
+      // case 'options-trading':
+      // case 'yield-aggregator':
+      // case 'chat-request':
+      // case 'nft-card':
+      // case 'nft-marketplace':
+      // case 'token-gate':
+      // case 'nft-gate':
+      // case 'web3-dashboard':
+      // case 'smart-contract-call':
+      //   return (
+      //     <div className="text-center py-12">
+      //       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 dark:bg-yellow-900/30 mb-4">
+      //         <svg className="w-8 h-8 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      //           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      //         </svg>
+      //       </div>
+      //       <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+      //         Component Temporarily Unavailable
+      //       </h3>
+      //       <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+      //         This component is being updated for SSR compatibility.
+      //       </p>
+      //     </div>
+      //   );
 
       default:
         return (
