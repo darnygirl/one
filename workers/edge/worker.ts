@@ -12,6 +12,7 @@ import { emit402, emit403, emit410, emit500 } from './lib/challenge';
 import { parsePaymentHeader, verifyX402, checkIdempotency, cacheGrant } from './lib/x402';
 import { guardReplay, consumeNonce } from './lib/nonce';
 import { settlePayment } from './lib/settle';
+import { getOffer, getOfferForPath, applyRolePricing, applySurgePricing } from './lib/offers';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -81,22 +82,41 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
   const env = c.env as Env;
 
   try {
-    // 1. Load offer for this path
-    const offer = await getOfferForPath(env, path);
+    // 1. Load offer for this path (with caching)
+    let offer = await getOfferForPath(env, path);
     if (!offer) {
       return c.json({ error: 'offer_not_found', path }, 404);
     }
 
-    // 2. Check for X-Payment header
+    // 2. Apply role-based pricing (if Better Auth session exists)
+    const userId = c.req.header('X-Auth-User');
+    const rolesHeader = c.req.header('X-Auth-Roles');
+    const session = userId && rolesHeader ? {
+      userId,
+      roles: rolesHeader.split(','),
+    } : undefined;
+
+    offer = applyRolePricing(offer, session);
+
+    // 3. Apply surge pricing (based on demand)
+    offer = await applySurgePricing(env, offer);
+
+    // 4. Check for X-Payment header
     const paymentHeader = c.req.header('X-Payment');
     const proof = parsePaymentHeader(paymentHeader);
+
+    // 4a. If staff role, bypass payment (free access)
+    if (session?.roles.includes('staff') || session?.roles.includes('platform_owner')) {
+      console.log(`Staff access granted for user: ${userId}`);
+      return serveR2Object(env, path);
+    }
 
     if (!proof) {
       // No payment provided, emit 402 challenge
       return emit402(env, offer, path);
     }
 
-    // 3. Check idempotency (already processed?)
+    // 5. Check idempotency (already processed?)
     const idempotency = await checkIdempotency(env, proof.txHash);
     if (idempotency.processed) {
       console.log(`Request already processed: ${proof.txHash}`);
@@ -104,13 +124,13 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
       return serveR2Object(env, path);
     }
 
-    // 4. Verify nonce (anti-replay)
+    // 6. Verify nonce (anti-replay)
     const nonceCheck = await guardReplay(env, proof.nonce);
     if (!nonceCheck.valid) {
       return emit410(proof.nonce);
     }
 
-    // 5. Verify payment
+    // 7. Verify payment (use final offer.price after role/surge adjustments)
     const verification = await verifyX402(
       env,
       proof,
@@ -122,21 +142,23 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
       return emit403('invalid_payment', verification.reason || 'Unknown error');
     }
 
-    // 6. Consume nonce (mark as used)
+    // 8. Consume nonce (mark as used)
     const payer = c.req.header('X-Agent') || proof.recipient;
     const consumption = await consumeNonce(env, proof.nonce, payer);
     if (!consumption.consumed) {
       return emit410(proof.nonce);
     }
 
-    // 7. Cache grant for idempotency
+    // 9. Cache grant for idempotency
     await cacheGrant(env, proof.txHash, proof.nonce);
 
-    // 8. Log usage event to D1 (async, non-blocking)
+    // 10. Log usage event to D1 (async, non-blocking)
     c.executionCtx.waitUntil(
       logUsageEvent(env, {
         ts: Date.now(),
         payer,
+        userId,
+        roles: rolesHeader,
         layer: path,
         price: offer.price,
         status: 'granted',
@@ -144,10 +166,10 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
       })
     );
 
-    // 9. Settle payment (async, non-blocking)
+    // 11. Settle payment (async, non-blocking)
     c.executionCtx.waitUntil(settlePayment(env, proof));
 
-    // 10. Serve R2 object
+    // 12. Serve R2 object
     return serveR2Object(env, path);
   } catch (error) {
     console.error('Pack request failed:', error);
@@ -155,60 +177,7 @@ async function handlePackRequest(c: any, path: string): Promise<Response> {
   }
 }
 
-/**
- * Load offer from KV cache, fallback to R2
- */
-async function getOffer(env: Env, offerId: string): Promise<PricingOffer | null> {
-  const cacheKey = `offer:${offerId}`;
-
-  // Try KV cache first
-  const cached = await env.KV_NAMESPACE.get(cacheKey);
-  if (cached) {
-    return JSON.parse(cached);
-  }
-
-  // Fallback to R2
-  const r2Path = `offers/${offerId}.json`;
-  const object = await env.R2_BUCKET.get(r2Path);
-
-  if (!object) {
-    return null;
-  }
-
-  const offer = await object.json<PricingOffer>();
-
-  // Cache for 60 seconds
-  await env.KV_NAMESPACE.put(cacheKey, JSON.stringify(offer), {
-    expirationTtl: 60,
-  });
-
-  return offer;
-}
-
-/**
- * Get offer for a specific pack path
- * Maps path to offerId
- */
-async function getOfferForPath(env: Env, path: string): Promise<PricingOffer | null> {
-  // Extract pack name from path
-  // Example: packs/ontology/core-6d/schema → core-6d-v2
-  const parts = path.split('/');
-  const packName = parts[2]; // e.g., "core-6d"
-
-  // Map pack to offer ID
-  const offerIdMap: Record<string, string> = {
-    'core-6d': 'core-6d-v2',
-    'marketing': 'marketing-playbook-v1',
-    'premium-3072': 'premium-3072-v1',
-  };
-
-  const offerId = offerIdMap[packName];
-  if (!offerId) {
-    return null;
-  }
-
-  return getOffer(env, offerId);
-}
+// Offer loading functions moved to lib/offers.ts
 
 /**
  * Serve R2 object with observed metrics headers

@@ -1,0 +1,60 @@
+{
+  "@context": "https://one.ie/oaas/context.json",
+  "@type": "OntologyPricingOffer",
+  "offerId": "core-6d-v2",
+  "packId": "pack_ontology_core_6d",
+  "name": "Core 6-Dimension Ontology v2.0.0",
+  "description": "Complete reality-aware ontology: groups, people, things, connections, events, knowledge",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ONE Intelligence",
+    "url": "https://one.ie"
+  },
+  "bundle": [
+    {
+      "id": "one:packs/ontology/core-6d/schema",
+      "layer": "ontology",
+      "embeddingDim": 1536,
+      "r2Path": "packs/ontology/core-6d/schema.jsonld",
+      "sizeBytes": 45678
+    },
+    {
+      "id": "one:packs/ontology/core-6d/signals",
+      "layer": "signals",
+      "refresh": "hourly",
+      "r2Path": "packs/ontology/core-6d/signals.jsonld",
+      "sizeBytes": 12345
+    }
+  ],
+  "price": 15.0,
+  "monthlyUnlimited": 30.0,
+  "annual": 300.0,
+  "chain": "base",
+  "recipient": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "freeTrialCalls": 3,
+  "expectedGains": {
+    "accuracyPct": 0.34,
+    "tokenEfficiencyPct": 0.22,
+    "costSavingsUsd": 300,
+    "timeSavedHours": 3.2,
+    "roiMultiple": 20,
+    "coverageScore": 0.78
+  },
+  "whatsIncluded": [
+    "6-dimension schema (JSON-LD with complete constraints)",
+    "Embeddings (1536-dim, optimized for Claude/GPT-4)",
+    "Working code patterns (Effect-TS services)",
+    "Convex schema templates (multi-tenant ready)",
+    "Validation rules & constraints (prevent bugs)",
+    "Real-world examples (lemonade stand → enterprise CRM)",
+    "Observable metrics (prove the 34% accuracy gain)"
+  ],
+  "slo": {
+    "p95LatencyMs": 400,
+    "uptimePct": 99.9,
+    "maxAgeHours": 1
+  },
+  "provenanceHash": "0xabc123def456...",
+  "version": "2025-11-14",
+  "sig": "ed25519:def456ghi789..."
+}

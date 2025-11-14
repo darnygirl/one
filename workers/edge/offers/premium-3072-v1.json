@@ -1,0 +1,62 @@
+{
+  "@context": "https://one.ie/oaas/context.json",
+  "@type": "OntologyPricingOffer",
+  "offerId": "premium-3072-v1",
+  "packId": "pack_ontology_premium_3072",
+  "name": "Premium Ontology 3072-dim",
+  "description": "Enterprise-grade ontology with 2× embedding precision and priority support",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ONE Intelligence",
+    "url": "https://one.ie"
+  },
+  "bundle": [
+    {
+      "id": "one:packs/ontology/premium-3072/schema",
+      "layer": "ontology",
+      "embeddingDim": 3072,
+      "r2Path": "packs/ontology/premium-3072/schema.jsonld",
+      "sizeBytes": 87654
+    },
+    {
+      "id": "one:packs/ontology/premium-3072/signals",
+      "layer": "signals",
+      "refresh": "hourly",
+      "r2Path": "packs/ontology/premium-3072/signals.jsonld",
+      "sizeBytes": 23456
+    }
+  ],
+  "price": 30.0,
+  "monthlyUnlimited": 60.0,
+  "annual": 600.0,
+  "chain": "base",
+  "recipient": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "freeTrialCalls": 1,
+  "rightsRequired": "one:rights/oaas-premium-v1",
+  "expectedGains": {
+    "accuracyPct": 0.42,
+    "tokenEfficiencyPct": 0.28,
+    "costSavingsUsd": 500,
+    "timeSavedHours": 4.5,
+    "roiMultiple": 16,
+    "coverageScore": 0.85
+  },
+  "whatsIncluded": [
+    "All Core 6D features",
+    "2× embedding precision (3072-dim vs 1536-dim)",
+    "8% higher accuracy gain (42% vs 34%)",
+    "Priority support (24hr response time)",
+    "Early access to new packs",
+    "Custom SLO (99.95% uptime)",
+    "Premium signals stream access",
+    "Observable metrics with confidence intervals"
+  ],
+  "slo": {
+    "p95LatencyMs": 350,
+    "uptimePct": 99.95,
+    "maxAgeHours": 0.5
+  },
+  "provenanceHash": "0xfedcba987654...",
+  "version": "2025-11-14",
+  "sig": "ed25519:mno678pqr901..."
+}

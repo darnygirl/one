@@ -1,0 +1,72 @@
+{
+  "@context": "https://one.ie/oaas/context.json",
+  "@type": "PlaybookPricingOffer",
+  "offerId": "marketing-playbook-v1",
+  "packId": "pack_marketing_playbook_v1",
+  "name": "Marketing Playbook v1.0.0",
+  "description": "Complete GTM framework: ICP, positioning, messaging, content ops",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ONE Intelligence",
+    "url": "https://one.ie"
+  },
+  "bundle": [
+    {
+      "id": "one:packs/playbook/marketing/strategy",
+      "layer": "strategy",
+      "frameworks": [
+        "ICP definition",
+        "POV positioning",
+        "Offer ladder",
+        "Messaging architecture"
+      ],
+      "r2Path": "packs/playbook/marketing/strategy.jsonld",
+      "sizeBytes": 34567
+    },
+    {
+      "id": "one:packs/playbook/marketing/content-ops",
+      "layer": "content_ops",
+      "frameworks": [
+        "Editorial calendar",
+        "Content frameworks",
+        "Distribution channels",
+        "Conversion funnels"
+      ],
+      "r2Path": "packs/playbook/marketing/content-ops.jsonld",
+      "sizeBytes": 23456
+    }
+  ],
+  "price": 10.0,
+  "monthlyUnlimited": 20.0,
+  "annual": 200.0,
+  "chain": "base",
+  "recipient": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "freeTrialCalls": 3,
+  "expectedGains": {
+    "accuracyPct": 0.31,
+    "tokenEfficiencyPct": 0.18,
+    "costSavingsUsd": 150,
+    "timeSavedHours": 8,
+    "roiMultiple": 15,
+    "coverageScore": 0.65
+  },
+  "whatsIncluded": [
+    "ICP definition templates (psychographics + demographics)",
+    "POV positioning framework (unique mechanism)",
+    "Offer ladder (lead magnet → core → premium)",
+    "Messaging architecture (problem-agitate-solve)",
+    "Editorial calendar templates (6-month planning)",
+    "Content frameworks (AIDA, PAS, storytelling)",
+    "Distribution playbooks (organic + paid channels)",
+    "Conversion funnels (awareness → purchase)",
+    "Observable metrics (track the 45% speed improvement)"
+  ],
+  "slo": {
+    "p95LatencyMs": 450,
+    "uptimePct": 99.5,
+    "maxAgeHours": 24
+  },
+  "provenanceHash": "0xdef789abc012...",
+  "version": "2025-11-14",
+  "sig": "ed25519:ghi012jkl345..."
+}
