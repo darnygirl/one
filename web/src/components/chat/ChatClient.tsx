@@ -411,10 +411,24 @@ export function ChatClient() {
               </div>
 
               <div className="flex items-center gap-2">
+                {/* Settings Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettings(true)}
+                  className="gap-2"
+                >
+                  <Unlock className="h-4 w-4" />
+                  {hasApiKey ? 'Premium' : 'Free'}
+                </Button>
+
                 <ModelSelector onOpenChange={setModelSelectorOpen} open={modelSelectorOpen}>
                   <ModelSelectorTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
                       {selectedModelData?.name || 'Select Model'}
+                      {!isModelFree(selectedModel) && !hasApiKey && (
+                        <Badge variant="destructive" className="ml-1 text-xs">Requires Key</Badge>
+                      )}
                     </Button>
                   </ModelSelectorTrigger>
                   <ModelSelectorContent>
@@ -423,7 +437,7 @@ export function ChatClient() {
                       <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
 
                       {/* Free Models */}
-                      <ModelSelectorGroup heading="Free Models">
+                      <ModelSelectorGroup heading="Free Models (No Key Needed)">
                         {FREE_MODELS.map((m) => (
                           <ModelSelectorItem
                             key={m.id}
@@ -436,6 +450,28 @@ export function ChatClient() {
                             <ModelSelectorLogo provider={m.chefSlug} />
                             <ModelSelectorName>{m.name}</ModelSelectorName>
                             <Badge variant="secondary" className="ml-2 text-xs">Free</Badge>
+                          </ModelSelectorItem>
+                        ))}
+                      </ModelSelectorGroup>
+
+                      {/* Premium Models */}
+                      <ModelSelectorGroup heading="Premium Models (API Key Required)">
+                        {ALL_MODELS.filter(m => !isModelFree(m.id)).map((m) => (
+                          <ModelSelectorItem
+                            key={m.id}
+                            onSelect={() => {
+                              setSelectedModel(m.id);
+                              setModelSelectorOpen(false);
+                              if (!hasApiKey) {
+                                setShowSettings(true);
+                              }
+                            }}
+                            value={m.id}
+                            disabled={!hasApiKey}
+                          >
+                            <ModelSelectorLogo provider={m.chefSlug} />
+                            <ModelSelectorName>{m.name}</ModelSelectorName>
+                            {!hasApiKey && <Badge variant="outline" className="ml-2 text-xs">🔒</Badge>}
                           </ModelSelectorItem>
                         ))}
                       </ModelSelectorGroup>
