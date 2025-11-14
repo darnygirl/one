@@ -109,7 +109,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Parse streaming response for UI components
+    // Parse streaming response for UI components and tool calls
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
 
@@ -122,6 +122,7 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         let fullContent = '';
+        let toolCalls: any[] = [];
 
         try {
           console.log('[CHAT API] Stream started');
@@ -156,8 +157,38 @@ export const POST: APIRoute = async ({ request }) => {
                 try {
                   const parsed = JSON.parse(data);
                   const content = parsed.choices?.[0]?.delta?.content;
+                  const delta_tool_calls = parsed.choices?.[0]?.delta?.tool_calls;
+
                   if (content) {
                     fullContent += content;
+                  }
+
+                  // Handle tool calls
+                  if (delta_tool_calls) {
+                    console.log('[CHAT API] Received tool calls:', delta_tool_calls);
+
+                    // Accumulate tool calls (they may come in chunks)
+                    for (const tc of delta_tool_calls) {
+                      const index = tc.index;
+                      if (!toolCalls[index]) {
+                        toolCalls[index] = {
+                          id: tc.id,
+                          type: tc.type,
+                          function: {
+                            name: tc.function?.name || '',
+                            arguments: tc.function?.arguments || '',
+                          },
+                        };
+                      } else {
+                        // Append to existing tool call
+                        if (tc.function?.name) {
+                          toolCalls[index].function.name += tc.function.name;
+                        }
+                        if (tc.function?.arguments) {
+                          toolCalls[index].function.arguments += tc.function.arguments;
+                        }
+                      }
+                    }
                   }
                 } catch (e) {
                   // Ignore parse errors
@@ -167,12 +198,55 @@ export const POST: APIRoute = async ({ request }) => {
 
             // Check if this chunk contains [DONE]
             const hasDone = chunk.includes('[DONE]');
-            console.log('[CHAT API] Chunk check - hasDone:', hasDone, 'fullContent length:', fullContent.length);
+            console.log('[CHAT API] Chunk check - hasDone:', hasDone, 'fullContent length:', fullContent.length, 'toolCalls:', toolCalls.length);
 
             if (hasDone) {
-              console.log('[CHAT API] Detected [DONE] in chunk, processing UI components now');
+              console.log('[CHAT API] Detected [DONE] in chunk, processing tool calls and UI components');
 
-              // Send UI messages BEFORE [DONE]
+              // Execute tool calls if any
+              if (toolCalls.length > 0) {
+                console.log('[CHAT API] Executing', toolCalls.length, 'tool calls');
+
+                for (const toolCall of toolCalls) {
+                  try {
+                    const toolName = toolCall.function.name;
+                    const toolArgs = JSON.parse(toolCall.function.arguments);
+
+                    console.log('[CHAT API] Executing tool:', toolName, 'with args:', toolArgs);
+
+                    // Execute the tool
+                    const result = await toolRegistry.execute(toolName, toolArgs);
+
+                    console.log('[CHAT API] Tool result:', result);
+
+                    // Send tool call message to client
+                    const toolMessage = {
+                      type: 'tool_call',
+                      payload: {
+                        name: toolName,
+                        args: toolArgs,
+                        result: result,
+                        status: 'completed',
+                      }
+                    };
+
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolMessage)}\n\n`));
+                  } catch (error) {
+                    console.error('[CHAT API] Tool execution error:', error);
+                    const errorMessage = {
+                      type: 'tool_call',
+                      payload: {
+                        name: toolCall.function.name,
+                        args: JSON.parse(toolCall.function.arguments || '{}'),
+                        result: { error: error instanceof Error ? error.message : 'Tool execution failed' },
+                        status: 'failed',
+                      }
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
+                  }
+                }
+              }
+
               // Check for UI components in the complete response
               const chartMatches = [...fullContent.matchAll(/```ui-chart\s*\n([\s\S]*?)\n```/g)];
               console.log('[CHAT API] Found', chartMatches.length, 'charts in content');
