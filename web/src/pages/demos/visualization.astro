@@ -1,0 +1,321 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import {
+  HeatmapChart,
+  NetworkDiagram,
+  TreemapChart,
+  GanttChart,
+} from "@/components/ontology-ui/visualization";
+
+// Sample data for each visualization
+
+// Heatmap data - User activity by day/hour
+const heatmapData = [
+  { x: "Mon", y: "9AM", value: 23 },
+  { x: "Mon", y: "12PM", value: 45 },
+  { x: "Mon", y: "3PM", value: 67 },
+  { x: "Mon", y: "6PM", value: 34 },
+  { x: "Tue", y: "9AM", value: 28 },
+  { x: "Tue", y: "12PM", value: 52 },
+  { x: "Tue", y: "3PM", value: 71 },
+  { x: "Tue", y: "6PM", value: 39 },
+  { x: "Wed", y: "9AM", value: 31 },
+  { x: "Wed", y: "12PM", value: 58 },
+  { x: "Wed", y: "3PM", value: 74 },
+  { x: "Wed", y: "6PM", value: 42 },
+  { x: "Thu", y: "9AM", value: 26 },
+  { x: "Thu", y: "12PM", value: 49 },
+  { x: "Thu", y: "3PM", value: 68 },
+  { x: "Thu", y: "6PM", value: 36 },
+  { x: "Fri", y: "9AM", value: 35 },
+  { x: "Fri", y: "12PM", value: 61 },
+  { x: "Fri", y: "3PM", value: 79 },
+  { x: "Fri", y: "6PM", value: 47 },
+];
+
+// Network data - User connections
+const networkNodes = [
+  { id: "1", label: "Alice", type: "creator", cluster: "cluster1" },
+  { id: "2", label: "Bob", type: "user", cluster: "cluster1" },
+  { id: "3", label: "Charlie", type: "user", cluster: "cluster2" },
+  { id: "4", label: "Diana", type: "admin", cluster: "cluster2" },
+  { id: "5", label: "Eve", type: "user", cluster: "cluster3" },
+  { id: "6", label: "Frank", type: "creator", cluster: "cluster3" },
+  { id: "7", label: "Grace", type: "user", cluster: "cluster1" },
+  { id: "8", label: "Henry", type: "admin", cluster: "cluster2" },
+];
+
+const networkLinks = [
+  { source: "1", target: "2", label: "follows", strength: 0.9 },
+  { source: "1", target: "3", label: "follows", strength: 0.7 },
+  { source: "2", target: "4", label: "collaborates", strength: 0.8 },
+  { source: "3", target: "5", label: "follows", strength: 0.6 },
+  { source: "4", target: "6", label: "mentors", strength: 0.9 },
+  { source: "5", target: "7", label: "follows", strength: 0.5 },
+  { source: "6", target: "8", label: "collaborates", strength: 0.8 },
+  { source: "7", target: "1", label: "follows", strength: 0.7 },
+  { source: "8", target: "2", label: "mentors", strength: 0.9 },
+];
+
+// Treemap data - Content hierarchy
+const treemapData = [
+  {
+    name: "Courses",
+    value: 0,
+    children: [
+      {
+        name: "Web Development",
+        value: 450,
+        children: [
+          { name: "React Basics", value: 120 },
+          { name: "Advanced TypeScript", value: 180 },
+          { name: "Next.js Guide", value: 150 },
+        ],
+      },
+      {
+        name: "Data Science",
+        value: 380,
+        children: [
+          { name: "Python Fundamentals", value: 140 },
+          { name: "Machine Learning", value: 160 },
+          { name: "Data Visualization", value: 80 },
+        ],
+      },
+      {
+        name: "Design",
+        value: 270,
+        children: [
+          { name: "UI/UX Basics", value: 100 },
+          { name: "Figma Mastery", value: 90 },
+          { name: "Design Systems", value: 80 },
+        ],
+      },
+    ],
+  },
+];
+
+// Gantt data - Project timeline
+const ganttTasks = [
+  {
+    id: "1",
+    name: "Project Planning",
+    start: new Date(2025, 10, 1),
+    end: new Date(2025, 10, 7),
+    progress: 1,
+    status: "completed" as const,
+    assignee: "Alice",
+  },
+  {
+    id: "2",
+    name: "Design Phase",
+    start: new Date(2025, 10, 8),
+    end: new Date(2025, 10, 21),
+    progress: 0.8,
+    status: "in-progress" as const,
+    dependencies: ["1"],
+    assignee: "Bob",
+  },
+  {
+    id: "3",
+    name: "Development",
+    start: new Date(2025, 10, 15),
+    end: new Date(2025, 11, 5),
+    progress: 0.4,
+    status: "in-progress" as const,
+    dependencies: ["2"],
+    assignee: "Charlie",
+  },
+  {
+    id: "4",
+    name: "Testing",
+    start: new Date(2025, 11, 6),
+    end: new Date(2025, 11, 15),
+    progress: 0,
+    status: "pending" as const,
+    dependencies: ["3"],
+    assignee: "Diana",
+  },
+  {
+    id: "5",
+    name: "Launch Milestone",
+    start: new Date(2025, 11, 16),
+    end: new Date(2025, 11, 16),
+    milestone: true,
+    status: "pending" as const,
+    dependencies: ["4"],
+  },
+  {
+    id: "6",
+    name: "Post-Launch Support",
+    start: new Date(2025, 11, 17),
+    end: new Date(2025, 11, 31),
+    progress: 0,
+    status: "pending" as const,
+    dependencies: ["5"],
+    assignee: "Eve",
+  },
+];
+---
+
+<Layout title="Visualization Components Demo">
+  <div class="container mx-auto py-12 px-4 space-y-12">
+    <div class="space-y-2">
+      <h1 class="text-4xl font-bold">Advanced Visualization Components</h1>
+      <p class="text-muted-foreground text-lg">
+        Powerful data visualization tools for the 6-dimension ontology
+      </p>
+    </div>
+
+    <!-- Heatmap Chart -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-2xl font-semibold mb-2">Heatmap Chart</h2>
+        <p class="text-muted-foreground">
+          Visualize activity patterns across two dimensions with color-coded intensity.
+        </p>
+      </div>
+      <HeatmapChart
+        client:load
+        data={heatmapData}
+        title="User Activity by Day and Hour"
+        cellWidth={80}
+        cellHeight={50}
+        exportable={true}
+      />
+      <div class="p-4 bg-muted rounded-lg">
+        <h3 class="font-medium mb-2">Features:</h3>
+        <ul class="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          <li>Interactive zoom controls</li>
+          <li>Configurable color scales</li>
+          <li>Cell tooltips on hover</li>
+          <li>Export to CSV and PNG</li>
+          <li>Responsive design</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Network Diagram -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-2xl font-semibold mb-2">Network Diagram</h2>
+        <p class="text-muted-foreground">
+          Visualize relationships and connections with force-directed graphs.
+        </p>
+      </div>
+      <NetworkDiagram
+        client:load
+        nodes={networkNodes}
+        links={networkLinks}
+        title="User Connection Network"
+        showClusters={true}
+        layoutType="force"
+      />
+      <div class="p-4 bg-muted rounded-lg">
+        <h3 class="font-medium mb-2">Features:</h3>
+        <ul class="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          <li>Multiple layout algorithms (force, hierarchical, radial, circular)</li>
+          <li>Interactive node clustering</li>
+          <li>Link strength visualization</li>
+          <li>Drag and zoom controls</li>
+          <li>Real-time network statistics</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Treemap Chart -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-2xl font-semibold mb-2">Treemap Chart</h2>
+        <p class="text-muted-foreground">
+          Display hierarchical data as nested rectangles with drill-down navigation.
+        </p>
+      </div>
+      <TreemapChart
+        client:load
+        data={treemapData}
+        title="Content Hierarchy"
+        enableDrilldown={true}
+        showTooltip={true}
+      />
+      <div class="p-4 bg-muted rounded-lg">
+        <h3 class="font-medium mb-2">Features:</h3>
+        <ul class="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          <li>Click to drill down into nested data</li>
+          <li>Breadcrumb navigation</li>
+          <li>Responsive rectangle sizing</li>
+          <li>Hover details and tooltips</li>
+          <li>Hierarchical statistics</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Gantt Chart -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-2xl font-semibold mb-2">Gantt Chart</h2>
+        <p class="text-muted-foreground">
+          Plan and track project timelines with task dependencies and milestones.
+        </p>
+      </div>
+      <GanttChart
+        client:load
+        tasks={ganttTasks}
+        title="Project Timeline"
+        showProgress={true}
+        showDependencies={true}
+        showMilestones={true}
+        enableDrag={true}
+      />
+      <div class="p-4 bg-muted rounded-lg">
+        <h3 class="font-medium mb-2">Features:</h3>
+        <ul class="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          <li>Task progress tracking</li>
+          <li>Dependency visualization</li>
+          <li>Milestone markers</li>
+          <li>Drag to reschedule tasks</li>
+          <li>Status indicators (pending, in-progress, completed, blocked)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Usage Example -->
+    <section class="space-y-4">
+      <h2 class="text-2xl font-semibold">Usage Example</h2>
+      <div class="p-6 bg-muted rounded-lg">
+        <pre class="text-sm overflow-x-auto"><code>{`import {
+  HeatmapChart,
+  NetworkDiagram,
+  TreemapChart,
+  GanttChart,
+} from "@/components/ontology-ui/visualization";
+
+// Heatmap
+<HeatmapChart
+  data={heatmapData}
+  title="Activity Heatmap"
+  exportable={true}
+/>
+
+// Network
+<NetworkDiagram
+  nodes={nodes}
+  links={links}
+  layoutType="force"
+/>
+
+// Treemap
+<TreemapChart
+  data={hierarchicalData}
+  enableDrilldown={true}
+/>
+
+// Gantt
+<GanttChart
+  tasks={projectTasks}
+  showProgress={true}
+  showDependencies={true}
+/>`}</code></pre>
+      </div>
+    </section>
+  </div>
+</Layout>

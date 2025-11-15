@@ -1,0 +1,243 @@
+---
+/**
+ * Ontology UI Demo Page
+ *
+ * Demonstrates the universal Card component rendering different thing types:
+ * - Courses
+ * - Products
+ * - Posts
+ *
+ * This page showcases how ONE component (Card) can render ALL thing types
+ * using the 6-dimension ontology configuration system.
+ */
+
+import type { Thing } from "@/lib/ontology/types";
+
+// Mock data for demonstration
+const mockCourse: Thing = {
+  _id: "course-1",
+  _creationTime: Date.now(),
+  type: "course",
+  name: "Introduction to TypeScript",
+  groupId: "org-1",
+  properties: {
+    title: "Introduction to TypeScript",
+    description:
+      "Learn TypeScript from scratch and build type-safe applications with confidence. Perfect for JavaScript developers.",
+    thumbnail: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800",
+    price: 99,
+    level: "beginner",
+    duration: 180,
+    instructor: "Sarah Johnson",
+    tags: ["typescript", "javascript", "web-development"],
+    enrolled: 1248,
+    rating: 4.8,
+  },
+};
+
+const mockProduct: Thing = {
+  _id: "product-1",
+  _creationTime: Date.now(),
+  type: "product",
+  name: "Premium Wireless Headphones",
+  groupId: "org-1",
+  properties: {
+    name: "Premium Wireless Headphones",
+    description:
+      "Experience crystal-clear audio with our flagship wireless headphones. 30-hour battery life and active noise cancellation.",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+    price: 299,
+    compareAtPrice: 399,
+    inventory: 42,
+    sku: "WH-PRO-001",
+    tags: ["audio", "wireless", "premium"],
+    category: "Electronics",
+    featured: true,
+  },
+};
+
+const mockPost: Thing = {
+  _id: "post-1",
+  _creationTime: Date.now(),
+  type: "post",
+  name: "Building Scalable AI Applications",
+  groupId: "org-1",
+  properties: {
+    title: "Building Scalable AI Applications with the 6-Dimension Ontology",
+    excerpt:
+      "Discover how the ONE Platform's ontology enables 98% AI code generation accuracy through compound structure and pattern convergence.",
+    content:
+      "<p>The future of software development is here. By modeling reality itself through a 6-dimension ontology, we've created a system where AI agents achieve 98% accuracy...</p>",
+    coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800",
+    author: "Alex Chen",
+    publishedAt: Date.now() - 86400000 * 2, // 2 days ago
+    readTime: 8,
+    tags: ["ai", "ontology", "architecture", "development"],
+    views: 3421,
+    likes: 187,
+    comments: 24,
+    featured: true,
+  },
+};
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Ontology UI Demo - ONE Platform</title>
+  </head>
+  <body class="min-h-screen bg-background">
+    <div class="container mx-auto px-4 py-16">
+      <div class="max-w-6xl mx-auto space-y-16">
+        <!-- Header -->
+        <div class="text-center space-y-4">
+          <h1 class="text-4xl font-bold">Ontology UI System Demo</h1>
+          <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+            One component. ALL thing types. Powered by the 6-dimension ontology.
+          </p>
+        </div>
+
+        <!-- Course Card -->
+        <section class="space-y-4">
+          <div>
+            <h2 class="text-2xl font-semibold mb-2">Course</h2>
+            <p class="text-muted-foreground">
+              Educational content with pricing, instructor, and enrollment data.
+            </p>
+          </div>
+          <div class="max-w-md">
+            <div id="course-card"></div>
+          </div>
+        </section>
+
+        <!-- Product Card -->
+        <section class="space-y-4">
+          <div>
+            <h2 class="text-2xl font-semibold mb-2">Product</h2>
+            <p class="text-muted-foreground">
+              E-commerce product with inventory, pricing, and SKU information.
+            </p>
+          </div>
+          <div class="max-w-md">
+            <div id="product-card"></div>
+          </div>
+        </section>
+
+        <!-- Post Card -->
+        <section class="space-y-4">
+          <div>
+            <h2 class="text-2xl font-semibold mb-2">Blog Post</h2>
+            <p class="text-muted-foreground">
+              Content article with author, publish date, and engagement metrics.
+            </p>
+          </div>
+          <div class="max-w-2xl">
+            <div id="post-card"></div>
+          </div>
+        </section>
+
+        <!-- Grid View -->
+        <section class="space-y-4">
+          <div>
+            <h2 class="text-2xl font-semibold mb-2">Grid View</h2>
+            <p class="text-muted-foreground">
+              All three thing types rendered in a responsive grid.
+            </p>
+          </div>
+          <div id="grid-view"></div>
+        </section>
+
+        <!-- Code Example -->
+        <section class="space-y-4">
+          <div>
+            <h2 class="text-2xl font-semibold mb-2">How It Works</h2>
+            <p class="text-muted-foreground mb-4">
+              The same <code class="text-sm bg-muted px-2 py-1 rounded">Card</code> component
+              renders all thing types by reading their UI configuration from the ontology.
+            </p>
+          </div>
+          <div class="bg-muted p-6 rounded-lg">
+            <pre class="text-sm"><code>{`import { Card } from "@/components/ontology/Card";
+
+// Render ANY thing type with the same component
+<Card thing={course} />
+<Card thing={product} />
+<Card thing={post} />
+
+// That's it! No type-specific components needed.`}</code></pre>
+          </div>
+        </section>
+
+        <!-- Features -->
+        <section class="grid md:grid-cols-3 gap-6">
+          <div class="p-6 border rounded-lg">
+            <h3 class="font-semibold mb-2">✨ Universal</h3>
+            <p class="text-sm text-muted-foreground">
+              One component renders all 66+ thing types automatically.
+            </p>
+          </div>
+          <div class="p-6 border rounded-lg">
+            <h3 class="font-semibold mb-2">♿ Accessible</h3>
+            <p class="text-sm text-muted-foreground">
+              Built on shadcn/ui and Radix UI for WCAG AA compliance.
+            </p>
+          </div>
+          <div class="p-6 border rounded-lg">
+            <h3 class="font-semibold mb-2">🎨 Customizable</h3>
+            <p class="text-sm text-muted-foreground">
+              Configure fields, actions, and layouts via ontology config.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      import { Card } from "@/components/ontology/Card";
+      import { ThingGrid } from "@/components/ontology/ThingGrid";
+      import { createRoot } from "react-dom/client";
+      import { createElement } from "react";
+
+      // Get mock data from Astro
+      const mockCourse = JSON.parse(document.getElementById("course-data")?.textContent || "{}");
+      const mockProduct = JSON.parse(document.getElementById("product-data")?.textContent || "{}");
+      const mockPost = JSON.parse(document.getElementById("post-data")?.textContent || "{}");
+
+      // Render individual cards
+      const courseContainer = document.getElementById("course-card");
+      if (courseContainer) {
+        const root = createRoot(courseContainer);
+        root.render(createElement(Card, { thing: mockCourse }));
+      }
+
+      const productContainer = document.getElementById("product-card");
+      if (productContainer) {
+        const root = createRoot(productContainer);
+        root.render(createElement(Card, { thing: mockProduct }));
+      }
+
+      const postContainer = document.getElementById("post-card");
+      if (postContainer) {
+        const root = createRoot(postContainer);
+        root.render(createElement(Card, { thing: mockPost }));
+      }
+
+      // Render grid view
+      const gridContainer = document.getElementById("grid-view");
+      if (gridContainer) {
+        const root = createRoot(gridContainer);
+        root.render(
+          createElement(ThingGrid, {
+            things: [mockCourse, mockProduct, mockPost],
+          })
+        );
+      }
+    </script>
+
+    <!-- Hidden data elements -->
+    <script id="course-data" type="application/json" set:html={JSON.stringify(mockCourse)} />
+    <script id="product-data" type="application/json" set:html={JSON.stringify(mockProduct)} />
+    <script id="post-data" type="application/json" set:html={JSON.stringify(mockPost)} />
+  </body>
+</html>

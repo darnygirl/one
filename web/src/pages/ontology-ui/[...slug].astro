@@ -1,0 +1,293 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { CryptoDemoWrapper } from '@/components/demos/CryptoDemoWrapper';
+
+// Get the slug from params
+const { slug } = Astro.params;
+const slugParts = slug?.split('/') || [];
+const categoryId = slugParts[0];
+const componentId = slugParts[1];
+
+// Component metadata
+const componentData: Record<string, any> = {
+  'wallet': {
+    'wallet-connect-button': {
+      name: 'WalletConnectButton',
+      description: 'Multi-chain wallet connection with support for MetaMask, WalletConnect, and Coinbase Wallet',
+      import: "import { WalletConnectButton } from '@/components/ontology-ui/crypto/wallet';",
+      usage: `<WalletConnectButton
+  showBalance={true}
+  onConnect={(address) => console.log('Connected:', address)}
+/>`,
+      props: [
+        { name: 'showBalance', type: 'boolean', default: 'false', description: 'Show wallet balance after connection' },
+        { name: 'onConnect', type: '(address: string) => void', description: 'Callback when wallet connects' },
+        { name: 'onDisconnect', type: '() => void', description: 'Callback when wallet disconnects' },
+      ],
+      features: [
+        'Multi-chain support (Ethereum, Polygon, Arbitrum, etc.)',
+        'MetaMask, WalletConnect, Coinbase Wallet',
+        'Auto-reconnect on page reload',
+        'Connection status indicator',
+        'Error handling and user feedback',
+      ]
+    },
+    'wallet-balance': {
+      name: 'WalletBalance',
+      description: 'Display native token balance with real-time updates and USD value',
+      import: "import { WalletBalance } from '@/components/ontology-ui/crypto/wallet';",
+      usage: `<WalletBalance
+  address="0x742d35Cc6..."
+  showUsd={true}
+  refreshInterval={30000}
+/>`,
+      props: [
+        { name: 'address', type: 'string', required: true, description: 'Wallet address to display balance for' },
+        { name: 'showUsd', type: 'boolean', default: 'true', description: 'Show USD value' },
+        { name: 'refreshInterval', type: 'number', default: '30000', description: 'Auto-refresh interval in ms' },
+      ],
+      features: [
+        'Real-time balance updates',
+        'USD value conversion',
+        'Loading states',
+        'Error handling',
+        'Responsive design',
+      ]
+    },
+  },
+  'dex': {
+    'token-swap': {
+      name: 'TokenSwap',
+      description: 'Swap tokens via Uniswap, Sushiswap, 1inch, or Jupiter with best rate finder',
+      import: "import { TokenSwap } from '@/components/ontology-ui/crypto/dex';",
+      usage: `<TokenSwap
+  walletAddress="0x..."
+  chainId={1}
+  onSwap={(txHash) => console.log('Swapped:', txHash)}
+/>`,
+      props: [
+        { name: 'walletAddress', type: 'string', required: true, description: 'User wallet address' },
+        { name: 'chainId', type: 'number', required: true, description: 'Blockchain network ID' },
+        { name: 'onSwap', type: '(txHash: string) => void', description: 'Callback when swap completes' },
+        { name: 'defaultFromToken', type: 'string', description: 'Default "from" token address' },
+        { name: 'defaultToToken', type: 'string', description: 'Default "to" token address' },
+      ],
+      features: [
+        'Multi-DEX quote comparison',
+        'Best rate automatic selection',
+        'Slippage protection',
+        'Price impact warnings',
+        'Gas estimation',
+        'MEV protection option',
+      ]
+    },
+  },
+  'chat': {
+    'chat-payment': {
+      name: 'ChatPayment',
+      description: 'Send cryptocurrency payments directly in chat messages',
+      import: "import { ChatPayment } from '@/components/ontology-ui/crypto/chat';",
+      usage: `<ChatPayment
+  chatId="chat_123"
+  recipientAddress="0x..."
+  recipientName="Alice"
+  onSend={(txHash) => console.log('Sent:', txHash)}
+/>`,
+      props: [
+        { name: 'chatId', type: 'string', required: true, description: 'Chat conversation ID' },
+        { name: 'recipientAddress', type: 'string', required: true, description: 'Recipient wallet address' },
+        { name: 'recipientName', type: 'string', description: 'Recipient display name' },
+        { name: 'defaultToken', type: 'string', description: 'Default token to send' },
+        { name: 'onSend', type: '(txHash: string) => void', description: 'Callback when payment sent' },
+      ],
+      features: [
+        'Inline chat payment UI',
+        'Token selection (USDC, USDT, ETH, etc.)',
+        'Amount input with USD preview',
+        'Quick confirmation',
+        'Payment receipt in chat bubble',
+        'Transaction status tracking',
+      ]
+    },
+  },
+  'nft': {
+    'nft-gallery': {
+      name: 'NFTGallery',
+      description: 'Display NFT collections with grid/list views, filtering, and sorting',
+      import: "import { NFTGallery } from '@/components/ontology-ui/crypto/nft';",
+      usage: `<NFTGallery
+  nfts={myNFTs}
+  owner="0x..."
+  chainId={1}
+  view="grid"
+  onNFTSelect={(nft) => console.log(nft)}
+/>`,
+      props: [
+        { name: 'nfts', type: 'NFT[]', required: true, description: 'Array of NFT objects' },
+        { name: 'owner', type: 'string', description: 'Wallet address of owner' },
+        { name: 'chainId', type: 'number', description: 'Blockchain network ID' },
+        { name: 'view', type: '"grid" | "list"', default: '"grid"', description: 'Display mode' },
+        { name: 'onNFTSelect', type: '(nft: NFT) => void', description: 'Callback when NFT selected' },
+      ],
+      features: [
+        'Grid and list view modes',
+        'Filter by collection, traits, price',
+        'Sort by rarity, price, date',
+        'Pagination with infinite scroll',
+        'Multi-chain support',
+        'Loading skeletons',
+      ]
+    },
+  },
+};
+
+// Get current component
+const category = componentData[categoryId];
+const component = category?.[componentId];
+
+// If component not found, show 404
+if (!component) {
+  return Astro.redirect('/404');
+}
+
+const breadcrumbs = [
+  { name: 'Components', href: '/ontology-ui' },
+  { name: categoryId.charAt(0).toUpperCase() + categoryId.slice(1), href: `/ontology-ui#${categoryId}` },
+  { name: component.name, href: '' },
+];
+---
+
+<Layout title={`${component.name} - Ontology-UI Components`}>
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <!-- Breadcrumbs -->
+    <div class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div class="container mx-auto px-4 py-4">
+        <nav class="flex items-center space-x-2 text-sm">
+          {breadcrumbs.map((crumb, index) => (
+            <div class="flex items-center">
+              {index > 0 && (
+                <svg class="w-4 h-4 text-slate-400 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+              {crumb.href ? (
+                <a href={crumb.href} class="text-blue-600 dark:text-blue-400 hover:underline">
+                  {crumb.name}
+                </a>
+              ) : (
+                <span class="text-slate-600 dark:text-slate-400">{crumb.name}</span>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+            {component.name}
+          </h1>
+          <p class="text-lg text-slate-600 dark:text-slate-400">
+            {component.description}
+          </p>
+        </div>
+
+        <!-- Installation -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Import</h2>
+          <pre class="bg-slate-900 dark:bg-slate-950 text-slate-100 p-4 rounded-lg overflow-x-auto"><code>{component.import}</code></pre>
+        </div>
+
+        <!-- Usage Example -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Usage</h2>
+          <pre class="bg-slate-900 dark:bg-slate-950 text-slate-100 p-4 rounded-lg overflow-x-auto"><code>{component.usage}</code></pre>
+        </div>
+
+        <!-- Props -->
+        {component.props && (
+          <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Props</h2>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-700">
+                    <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-white">Name</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-white">Type</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-white">Default</th>
+                    <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-white">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {component.props.map((prop: any) => (
+                    <tr class="border-b border-slate-100 dark:border-slate-800">
+                      <td class="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-400">
+                        {prop.name}
+                        {prop.required && <span class="text-red-500 ml-1">*</span>}
+                      </td>
+                      <td class="py-3 px-4 font-mono text-sm text-slate-600 dark:text-slate-400">
+                        {prop.type}
+                      </td>
+                      <td class="py-3 px-4 font-mono text-sm text-slate-500 dark:text-slate-500">
+                        {prop.default || '-'}
+                      </td>
+                      <td class="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">
+                        {prop.description}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        <!-- Features -->
+        {component.features && (
+          <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Features</h2>
+            <ul class="space-y-2">
+              {component.features.map((feature: string) => (
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span class="text-slate-600 dark:text-slate-400">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Live Demo -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Live Demo</h2>
+            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+              Interactive
+            </span>
+          </div>
+          <div class="rounded-lg p-4">
+            <CryptoDemoWrapper client:load component={componentId} />
+          </div>
+        </div>
+
+        <!-- Back to Components -->
+        <div class="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+          <a
+            href="/ontology-ui"
+            class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to all components
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

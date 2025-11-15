@@ -1,0 +1,330 @@
+---
+/**
+ * Quiz System Demo Page
+ * Showcases Quiz, QuizResults, and all question type components
+ */
+
+import Layout from '@/layouts/Layout.astro';
+import { Quiz } from '@/components/course/interactive/Quiz';
+import { QuizMultipleChoice } from '@/components/course/interactive/QuizMultipleChoice';
+import { QuizTrueFalse } from '@/components/course/interactive/QuizTrueFalse';
+import { QuizShortAnswer } from '@/components/course/interactive/QuizShortAnswer';
+import type { Quiz as QuizData, QuizQuestionData } from '@/types/course';
+
+// Mock quiz data
+const sampleQuiz: QuizData = {
+  id: 'sample-quiz-1',
+  lessonId: 'lesson-1',
+  title: 'React Fundamentals Quiz',
+  description: 'Test your knowledge of React basics and concepts',
+  passingScore: 70,
+  timeLimit: 10, // 10 minutes
+  attemptsAllowed: 3,
+  questions: [
+    // Multiple Choice Question
+    {
+      id: 'q1',
+      type: 'multiple-choice',
+      question: 'What is the primary purpose of React?',
+      options: [
+        { id: 'a', text: 'To style web pages', isCorrect: false },
+        { id: 'b', text: 'To build user interfaces', isCorrect: true },
+        { id: 'c', text: 'To manage databases', isCorrect: false },
+        { id: 'd', text: 'To handle server requests', isCorrect: false },
+      ],
+      correctAnswer: 'b',
+      explanation:
+        'React is a JavaScript library for building user interfaces, particularly for single-page applications where you need a fast, interactive user experience.',
+      points: 10,
+    },
+    // True/False Question
+    {
+      id: 'q2',
+      type: 'true-false',
+      question: 'React components can only be written as classes.',
+      correctAnswer: false,
+      explanation:
+        'React components can be written as both class components and functional components. Modern React development primarily uses functional components with hooks.',
+      points: 10,
+    },
+    // Short Answer Question
+    {
+      id: 'q3',
+      type: 'short-answer',
+      question: 'What hook is used to manage state in functional components?',
+      correctAnswer: 'useState',
+      explanation:
+        'The useState hook is the primary way to add state to functional components in React. It returns a state value and a function to update it.',
+      points: 10,
+    },
+    // Multiple Choice Question
+    {
+      id: 'q4',
+      type: 'multiple-choice',
+      question: 'Which of these is NOT a valid React hook?',
+      options: [
+        { id: 'a', text: 'useState', isCorrect: false },
+        { id: 'b', text: 'useEffect', isCorrect: false },
+        { id: 'c', text: 'useComponent', isCorrect: true },
+        { id: 'd', text: 'useContext', isCorrect: false },
+      ],
+      correctAnswer: 'c',
+      explanation:
+        'useComponent is not a real React hook. Common hooks include useState, useEffect, useContext, useRef, useMemo, and useCallback.',
+      points: 10,
+    },
+    // True/False Question
+    {
+      id: 'q5',
+      type: 'true-false',
+      question: 'Props in React are immutable.',
+      correctAnswer: true,
+      explanation:
+        'Props are read-only and should never be modified by the component receiving them. This is a fundamental principle of React that ensures predictable component behavior.',
+      points: 10,
+    },
+  ],
+};
+
+// Individual question examples
+const mcqExample: QuizQuestionData = {
+  id: 'mcq-example',
+  type: 'multiple-choice',
+  question: 'What does JSX stand for?',
+  options: [
+    { id: 'a', text: 'JavaScript XML', isCorrect: true },
+    { id: 'b', text: 'Java Syntax Extension', isCorrect: false },
+    { id: 'c', text: 'JSON Extended', isCorrect: false },
+    { id: 'd', text: 'JavaScript Extra', isCorrect: false },
+  ],
+  correctAnswer: 'a',
+  explanation:
+    'JSX stands for JavaScript XML. It allows you to write HTML-like code in JavaScript, which React transforms into JavaScript.',
+  points: 5,
+};
+
+const tfExample: QuizQuestionData = {
+  id: 'tf-example',
+  type: 'true-false',
+  question: 'Virtual DOM is faster than directly manipulating the real DOM.',
+  correctAnswer: true,
+  explanation:
+    'The Virtual DOM is a lightweight copy of the actual DOM. React uses it to minimize expensive DOM operations by batching updates and only changing what needs to be updated.',
+  points: 5,
+};
+
+const saExample: QuizQuestionData = {
+  id: 'sa-example',
+  type: 'short-answer',
+  question: 'What method is used to render a React component to the DOM?',
+  correctAnswer: 'render',
+  explanation:
+    'ReactDOM.render() is the method used to render React components to the DOM. In React 18+, createRoot().render() is the new approach.',
+  points: 5,
+};
+---
+
+<Layout title="Quiz Demo - ONE Platform" description="Interactive quiz system with multiple question types">
+  <div class="min-h-screen">
+    <header class="border-b border-border bg-card mb-8">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold">Quiz System Demo</h1>
+            <p class="text-muted-foreground mt-1">Quiz, QuizResults, QuizMultipleChoice, QuizTrueFalse, QuizShortAnswer</p>
+          </div>
+          <a href="/demos" class="text-primary hover:underline">← Back to Demos</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto px-4 pb-16 space-y-12">
+        <!-- Full Quiz Demo -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Complete Quiz Experience</h2>
+            <p class="text-muted-foreground">
+              A full quiz with multiple question types, timer, navigation, and results
+            </p>
+          </div>
+
+          <Quiz
+            client:load
+            quiz={sampleQuiz}
+            onComplete={(score, percentage, answers) => {
+              console.log('Quiz completed:', { score, percentage, answers });
+            }}
+            onProgress={(progress) => {
+              console.log('Quiz progress:', progress);
+            }}
+          />
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-border"></div>
+
+        <!-- Individual Question Type Examples -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Individual Question Types</h2>
+            <p class="text-muted-foreground">
+              Standalone examples of each question component
+            </p>
+          </div>
+
+          <div class="space-y-8">
+            <!-- Multiple Choice Example -->
+            <div>
+              <h3 class="text-xl font-semibold mb-4">Multiple Choice Question</h3>
+              <QuizMultipleChoice
+                client:load
+                question={mcqExample}
+                onAnswer={(answer, isCorrect) => {
+                  console.log('MCQ Answer:', { answer, isCorrect });
+                }}
+              />
+            </div>
+
+            <!-- True/False Example -->
+            <div>
+              <h3 class="text-xl font-semibold mb-4">True/False Question</h3>
+              <QuizTrueFalse
+                client:load
+                question={tfExample}
+                onAnswer={(answer, isCorrect) => {
+                  console.log('T/F Answer:', { answer, isCorrect });
+                }}
+              />
+            </div>
+
+            <!-- Short Answer Example -->
+            <div>
+              <h3 class="text-xl font-semibold mb-4">Short Answer Question</h3>
+              <QuizShortAnswer
+                client:load
+                question={saExample}
+                onAnswer={(answer, isCorrect) => {
+                  console.log('Short Answer:', { answer, isCorrect });
+                }}
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Features List -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Quiz System Features</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Feature Cards -->
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🎯 Multiple Question Types</h3>
+              <p class="text-sm text-muted-foreground">
+                Support for multiple choice, true/false, and short answer questions
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">⏱️ Time Limits</h3>
+              <p class="text-sm text-muted-foreground">
+                Optional time limits with countdown timer and auto-submit
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">📊 Detailed Results</h3>
+              <p class="text-sm text-muted-foreground">
+                Comprehensive scoring with grade calculation and question review
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🔄 Retry Attempts</h3>
+              <p class="text-sm text-muted-foreground">
+                Configurable retry attempts to help learners improve
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">📈 Progress Tracking</h3>
+              <p class="text-sm text-muted-foreground">
+                Real-time progress updates and question navigation
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">💡 Explanations</h3>
+              <p class="text-sm text-muted-foreground">
+                Detailed explanations for each question to enhance learning
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🎨 Visual Feedback</h3>
+              <p class="text-sm text-muted-foreground">
+                Color-coded correct/incorrect indicators with icons
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">🎯 Point System</h3>
+              <p class="text-sm text-muted-foreground">
+                Flexible point allocation and passing score configuration
+              </p>
+            </div>
+
+            <div class="p-6 border border-border rounded-lg bg-card">
+              <h3 class="font-semibold text-lg mb-2">⌨️ Keyboard Support</h3>
+              <p class="text-sm text-muted-foreground">
+                Enter key to submit answers for better accessibility
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Technical Details -->
+        <section>
+          <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-2">Technical Implementation</h2>
+          </div>
+
+          <div class="p-6 border border-border rounded-lg bg-card space-y-4">
+            <div>
+              <h3 class="font-semibold mb-2">Components:</h3>
+              <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                <li><code>Quiz</code> - Main wrapper managing quiz flow and state</li>
+                <li><code>QuizMultipleChoice</code> - Multiple choice questions with RadioGroup</li>
+                <li><code>QuizTrueFalse</code> - True/false questions with large buttons</li>
+                <li><code>QuizShortAnswer</code> - Text input with fuzzy matching</li>
+                <li><code>QuizResults</code> - Score display and detailed question review</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold mb-2">Features:</h3>
+              <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                <li>Time tracking per question and overall quiz</li>
+                <li>Answer persistence and navigation between questions</li>
+                <li>Visual progress indicators (progress bar + question dots)</li>
+                <li>Grade calculation (A+ to F) and percentage scoring</li>
+                <li>Passing/failing status based on configurable threshold</li>
+                <li>Auto-submit on time expiry</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold mb-2">UI Components:</h3>
+              <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                <li>shadcn/ui: Button, Card, RadioGroup, Progress, Label, Input</li>
+                <li>lucide-react icons for visual feedback</li>
+                <li>Responsive design with mobile-friendly layout</li>
+                <li>Dark mode support</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+    </main>
+  </div>
+</Layout>

@@ -1,0 +1,282 @@
+---
+/**
+ * Course Catalog Demo Page
+ * Showcases CourseCard, CourseGrid, and CourseFilters components
+ */
+
+import Layout from '@/layouts/Layout.astro';
+import { CourseCard } from '@/components/course/interactive/CourseCard';
+import { CourseGrid } from '@/components/course/static/CourseGrid';
+import { CourseFilters } from '@/components/course/interactive/CourseFilters';
+import type { CourseCatalog } from '@/types/course';
+
+// Mock course data
+const mockCourses: CourseCatalog[] = [
+  {
+    id: '1',
+    slug: 'react-masterclass',
+    title: 'React Masterclass: Build Modern Web Applications',
+    description: 'Learn React from scratch and build production-ready applications',
+    price: 89.99,
+    compareAtPrice: 149.99,
+    thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'John Doe',
+    instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+    category: 'web-development',
+    tags: ['react', 'javascript', 'frontend'],
+    level: 'intermediate' as const,
+    duration: 480,
+    lessonsCount: 45,
+    enrolled: 12453,
+    rating: 4.8,
+    reviewCount: 2341,
+    featured: true,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-01-15'),
+    createdAt: new Date('2023-06-01'),
+    updatedAt: new Date('2024-01-15'),
+  },
+  {
+    id: '2',
+    slug: 'python-data-science',
+    title: 'Complete Python Data Science Bootcamp',
+    description: 'Master Python for data analysis, visualization, and machine learning',
+    price: 0,
+    thumbnail: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'Jane Smith',
+    instructorAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
+    category: 'data-science',
+    tags: ['python', 'data-science', 'machine-learning'],
+    level: 'beginner' as const,
+    duration: 360,
+    lessonsCount: 32,
+    enrolled: 24567,
+    rating: 4.9,
+    reviewCount: 4532,
+    featured: true,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-02-01'),
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-02-01'),
+  },
+  {
+    id: '3',
+    slug: 'ui-ux-design-fundamentals',
+    title: 'UI/UX Design Fundamentals: From Beginner to Pro',
+    description: 'Learn the principles of great design and create stunning user interfaces',
+    price: 69.99,
+    thumbnail: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'Mike Johnson',
+    instructorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
+    category: 'design',
+    tags: ['ui', 'ux', 'design', 'figma'],
+    level: 'beginner' as const,
+    duration: 240,
+    lessonsCount: 28,
+    enrolled: 8934,
+    rating: 4.7,
+    reviewCount: 1245,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2023-12-15'),
+    createdAt: new Date('2023-08-01'),
+    updatedAt: new Date('2023-12-15'),
+  },
+  {
+    id: '4',
+    slug: 'advanced-typescript',
+    title: 'Advanced TypeScript: Master Type-Safe Development',
+    description: 'Deep dive into TypeScript advanced features and patterns',
+    price: 129.99,
+    thumbnail: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'Sarah Williams',
+    category: 'web-development',
+    tags: ['typescript', 'javascript', 'programming'],
+    level: 'advanced' as const,
+    duration: 420,
+    lessonsCount: 38,
+    enrolled: 5623,
+    rating: 4.9,
+    reviewCount: 892,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-02-10'),
+    createdAt: new Date('2023-09-01'),
+    updatedAt: new Date('2024-02-10'),
+    inventory: 15,
+  },
+  {
+    id: '5',
+    slug: 'web3-blockchain-basics',
+    title: 'Web3 & Blockchain Development for Beginners',
+    description: 'Start your journey into blockchain and decentralized applications',
+    price: 99.99,
+    thumbnail: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'Alex Chen',
+    category: 'blockchain',
+    tags: ['blockchain', 'web3', 'ethereum', 'smart-contracts'],
+    level: 'beginner' as const,
+    duration: 540,
+    lessonsCount: 52,
+    enrolled: 6789,
+    rating: 4.6,
+    reviewCount: 1124,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-01-20'),
+    createdAt: new Date('2023-10-15'),
+    updatedAt: new Date('2024-01-20'),
+  },
+  {
+    id: '6',
+    slug: 'mobile-app-development',
+    title: 'Mobile App Development with React Native',
+    description: 'Build cross-platform mobile apps for iOS and Android',
+    price: 109.99,
+    compareAtPrice: 179.99,
+    thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'David Lee',
+    category: 'mobile-development',
+    tags: ['react-native', 'mobile', 'ios', 'android'],
+    level: 'intermediate' as const,
+    duration: 600,
+    lessonsCount: 58,
+    enrolled: 9876,
+    rating: 4.7,
+    reviewCount: 1987,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-02-05'),
+    createdAt: new Date('2023-07-15'),
+    updatedAt: new Date('2024-02-05'),
+  },
+  {
+    id: '7',
+    slug: 'ai-machine-learning',
+    title: 'AI & Machine Learning Masterclass',
+    description: 'Deep dive into AI, ML algorithms, and neural networks',
+    price: 149.99,
+    thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'Dr. Emily Zhang',
+    category: 'ai-ml',
+    tags: ['ai', 'machine-learning', 'deep-learning'],
+    level: 'advanced' as const,
+    duration: 720,
+    lessonsCount: 65,
+    enrolled: 3245,
+    rating: 4.9,
+    reviewCount: 567,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-02-14'),
+    createdAt: new Date('2023-11-01'),
+    updatedAt: new Date('2024-02-14'),
+  },
+  {
+    id: '8',
+    slug: 'devops-kubernetes',
+    title: 'DevOps & Kubernetes: From Zero to Hero',
+    description: 'Master containerization, orchestration, and cloud infrastructure',
+    price: 119.99,
+    thumbnail: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=450&fit=crop',
+    images: [],
+    instructor: 'James Park',
+    category: 'devops',
+    tags: ['devops', 'kubernetes', 'docker', 'cloud'],
+    level: 'intermediate' as const,
+    duration: 480,
+    lessonsCount: 42,
+    enrolled: 7890,
+    rating: 4.8,
+    reviewCount: 1432,
+    certificate: true,
+    language: 'English',
+    lastUpdated: new Date('2024-02-08'),
+    createdAt: new Date('2023-09-15'),
+    updatedAt: new Date('2024-02-08'),
+  },
+];
+
+const categories = [
+  { id: 'web-development', name: 'Web Development', count: 2 },
+  { id: 'data-science', name: 'Data Science', count: 1 },
+  { id: 'design', name: 'Design', count: 1 },
+  { id: 'blockchain', name: 'Blockchain', count: 1 },
+  { id: 'mobile-development', name: 'Mobile Development', count: 1 },
+  { id: 'ai-ml', name: 'AI & Machine Learning', count: 1 },
+  { id: 'devops', name: 'DevOps', count: 1 },
+];
+---
+
+<Layout title="Course Catalog Demo - ONE Platform" description="Browse and filter courses with advanced search capabilities">
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-border bg-card mb-8">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold">Course Catalog Demo</h1>
+            <p class="text-muted-foreground mt-1">
+              CourseCard, CourseGrid, CourseFilters
+            </p>
+          </div>
+          <a href="/demos" class="text-primary hover:underline">← Back to Demos</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-4 pb-16">
+      <div class="flex gap-8">
+        <!-- Filters Sidebar (Desktop) -->
+        <aside class="hidden lg:block flex-shrink-0">
+          <CourseFilters
+            client:load
+            categories={categories}
+            onFilterChange={(filters) => {
+              console.log('Filters changed:', filters);
+            }}
+          />
+        </aside>
+
+        <!-- Course Grid -->
+        <div class="flex-1">
+          <!-- Mobile Filters -->
+          <div class="lg:hidden mb-6">
+            <CourseFilters
+              client:load
+              categories={categories}
+              isMobile={true}
+              onFilterChange={(filters) => {
+                console.log('Filters changed:', filters);
+              }}
+            />
+          </div>
+
+          <!-- Results Header -->
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold">
+              {mockCourses.length} Courses Available
+            </h2>
+          </div>
+
+          <!-- Course Grid -->
+          <CourseGrid courses={mockCourses}>
+            {mockCourses.map((course) => (
+              <CourseCard client:load course={course} />
+            ))}
+          </CourseGrid>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>

@@ -1,0 +1,408 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { CryptoDemoWrapper } from '@/components/demos/CryptoDemoWrapper';
+
+// Component demo configurations
+const componentDemos = {
+  'wallet-connect-button': {
+    category: 'wallet',
+    name: 'WalletConnectButton',
+    description: 'Multi-chain wallet connection with MetaMask, WalletConnect, and Coinbase Wallet',
+    demoCode: `import { WalletConnectButton } from '@/components/ontology-ui/crypto/wallet';
+
+<WalletConnectButton
+  showBalance={true}
+  onConnect={(address) => console.log('Connected:', address)}
+  onDisconnect={() => console.log('Disconnected')}
+/>`,
+    hasDemo: true,
+  },
+  'wallet-balance': {
+    category: 'wallet',
+    name: 'WalletBalance',
+    description: 'Display native token balance with real-time updates and USD value',
+    demoCode: `import { WalletBalance } from '@/components/ontology-ui/crypto/wallet';
+
+<WalletBalance
+  address="0x742d35Cc..."
+  showUsd={true}
+  refreshInterval={30000}
+/>`,
+    hasDemo: true,
+  },
+  'token-portfolio': {
+    category: 'portfolio',
+    name: 'TokenPortfolio',
+    description: 'Display all tokens in wallet with balances, prices, and USD values',
+    demoCode: `import { TokenPortfolio } from '@/components/ontology-ui/crypto/portfolio';
+
+<TokenPortfolio
+  walletAddress="0x742d35Cc..."
+  chainId={1}
+  onTokenSelect={(token) => console.log('Selected:', token)}
+/>`,
+    hasDemo: true,
+  },
+  'token-price': {
+    category: 'portfolio',
+    name: 'TokenPrice',
+    description: 'Real-time token price display with 24h change and chart',
+    demoCode: `import { TokenPrice } from '@/components/ontology-ui/crypto/portfolio';
+
+<TokenPrice
+  coinId="bitcoin"
+  showChart={true}
+  showChange={true}
+  refreshInterval={30000}
+/>`,
+    hasDemo: true,
+  },
+  'token-chart': {
+    category: 'portfolio',
+    name: 'TokenChart',
+    description: 'Interactive price chart with multiple timeframes (1h, 1d, 7d, 30d, 1y)',
+    demoCode: `import { TokenChart } from '@/components/ontology-ui/crypto/portfolio';
+
+<TokenChart
+  coinId="ethereum"
+  timeRange="7d"
+  showVolume={true}
+  height={400}
+/>`,
+    hasDemo: true,
+  },
+  'currency-converter': {
+    category: 'multi-currency',
+    name: 'CurrencyConverter',
+    description: 'Convert between 50+ cryptocurrencies and 20+ fiat currencies with real-time rates',
+    demoCode: `import { CurrencyConverter } from '@/components/ontology-ui/crypto/multi-currency';
+
+<CurrencyConverter
+  defaultFrom="bitcoin"
+  defaultTo="usd"
+  showChart={true}
+  refreshInterval={30000}
+/>`,
+    hasDemo: true,
+  },
+  'token-swap': {
+    category: 'dex',
+    name: 'TokenSwap',
+    description: 'Swap tokens via Uniswap, Sushiswap, 1inch, or Jupiter with best rate comparison',
+    demoCode: `import { TokenSwap } from '@/components/ontology-ui/crypto/dex';
+
+<TokenSwap
+  walletAddress="0x742d35Cc..."
+  chainId={1}
+  onSwap={(txHash) => console.log('Swapped:', txHash)}
+/>`,
+    hasDemo: true,
+  },
+  'send-token': {
+    category: 'payments',
+    name: 'SendToken',
+    description: 'Send ERC-20 tokens with ENS support, gas estimation, and confirmation',
+    demoCode: `import { SendToken } from '@/components/ontology-ui/crypto/payments';
+
+<SendToken
+  walletAddress="0x742d35Cc..."
+  chainId={1}
+  onSend={(txHash) => console.log('Sent:', txHash)}
+/>`,
+    hasDemo: true,
+  },
+  'checkout-widget': {
+    category: 'checkout',
+    name: 'CheckoutWidget',
+    description: 'Complete crypto checkout with QR code and multi-currency support',
+    demoCode: `import { CheckoutWidget } from '@/components/ontology-ui/crypto/checkout';
+
+<CheckoutWidget
+  amount={99.99}
+  currency="USD"
+  merchantName="Demo Store"
+  productName="Premium Subscription"
+  onPaymentComplete={(txHash) => console.log('Complete:', txHash)}
+/>`,
+    hasDemo: true,
+  },
+  'transaction-history': {
+    category: 'transactions',
+    name: 'TransactionHistory',
+    description: 'Complete transaction history with filtering, sorting, and export',
+    demoCode: `import { TransactionHistory } from '@/components/ontology-ui/crypto/transactions';
+
+<TransactionHistory
+  walletAddress="0x742d35Cc..."
+  chainId={1}
+  pageSize={10}
+/>`,
+    hasDemo: true,
+  },
+  'chat-payment': {
+    category: 'chat',
+    name: 'ChatPayment',
+    description: 'Send cryptocurrency payments directly in chat messages',
+    demoCode: `import { ChatPayment } from '@/components/ontology-ui/crypto/chat';
+
+<ChatPayment
+  chatId="chat_123"
+  recipientName="Alice"
+  recipientAddress="0x742d35Cc..."
+  defaultToken="USDC"
+/>`,
+    hasDemo: true,
+  },
+  'nft-gallery': {
+    category: 'nft',
+    name: 'NFTGallery',
+    description: 'Display NFT collections with grid/list views, filtering, and rarity scoring',
+    demoCode: `import { NFTGallery } from '@/components/ontology-ui/crypto/nft';
+
+<NFTGallery
+  nfts={myNFTs}
+  owner="0x742d35Cc..."
+  chainId={1}
+  view="grid"
+  onNFTSelect={(nft) => console.log('Selected:', nft)}
+/>`,
+    hasDemo: true,
+  },
+};
+
+const { slug } = Astro.params;
+const slugParts = slug?.split('/') || [];
+const categoryId = slugParts[0];
+const componentId = slugParts[1];
+
+// Find component demo
+const demoKey = componentId;
+const demo = componentDemos[demoKey];
+
+if (!demo) {
+  // Component exists but no demo yet - show coming soon
+}
+
+const breadcrumbs = [
+  { name: 'Components', href: '/ontology-ui' },
+  { name: categoryId?.charAt(0).toUpperCase() + categoryId?.slice(1), href: `/ontology-ui#${categoryId}` },
+  { name: demo?.name || 'Component', href: '' },
+];
+---
+
+<Layout title={`${demo?.name || 'Component'} - Ontology-UI`}>
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <!-- Breadcrumbs -->
+    <div class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div class="container mx-auto px-4 py-4">
+        <nav class="flex items-center space-x-2 text-sm">
+          {breadcrumbs.map((crumb, index) => (
+            <div class="flex items-center">
+              {index > 0 && (
+                <svg class="w-4 h-4 text-slate-400 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+              {crumb.href ? (
+                <a href={crumb.href} class="text-blue-600 dark:text-blue-400 hover:underline">
+                  {crumb.name}
+                </a>
+              ) : (
+                <span class="text-slate-600 dark:text-slate-400">{crumb.name}</span>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <div class="max-w-6xl mx-auto">
+        {demo ? (
+          <>
+            <!-- Header -->
+            <div class="mb-8">
+              <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                {demo.name}
+              </h1>
+              <p class="text-lg text-slate-600 dark:text-slate-400">
+                {demo.description}
+              </p>
+            </div>
+
+            <!-- Live Demo -->
+            {demo.hasDemo && (
+              <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="text-xl font-bold text-slate-900 dark:text-white">Live Demo</h2>
+                  <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+                    Interactive
+                  </span>
+                </div>
+
+                <!-- Demo Container -->
+                <div class="rounded-lg p-8">
+                  <div id="demo-root" class="min-h-[400px]">
+                    <!-- Component will be mounted here via client-side React -->
+                    <CryptoDemoWrapper client:load component={componentId} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <!-- Code Example -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6 mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Usage Example</h2>
+                <button
+                  onclick="navigator.clipboard.writeText(this.closest('div').nextElementSibling.textContent)"
+                  class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre class="bg-slate-900 dark:bg-slate-950 text-slate-100 p-4 rounded-lg overflow-x-auto"><code>{demo.demoCode}</code></pre>
+            </div>
+
+            <!-- Features -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Key Features</h2>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-slate-600 dark:text-slate-400">TypeScript type-safe</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-slate-600 dark:text-slate-400">Effect.ts error handling</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-slate-600 dark:text-slate-400">Responsive design</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-slate-600 dark:text-slate-400">Dark mode support</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-slate-600 dark:text-slate-400">Production ready</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-6">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Technology</h2>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                    React 19
+                  </span>
+                  <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                    TypeScript
+                  </span>
+                  <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-semibold">
+                    Effect.ts
+                  </span>
+                  <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+                    shadcn/ui
+                  </span>
+                  <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full text-xs font-semibold">
+                    Tailwind CSS v4
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documentation Link -->
+            <div class="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-xl border-2 border-blue-200 dark:border-blue-800 p-6">
+              <div class="flex items-start">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400 mr-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                    Full Documentation
+                  </h3>
+                  <p class="text-slate-600 dark:text-slate-400 mb-4">
+                    See the complete README for this component including all props, examples, and integration guides.
+                  </p>
+                  <a
+                    href={`https://github.com/one-ie/one/tree/main/web/src/components/ontology-ui/crypto/${demo.category}#${componentId}`}
+                    target="_blank"
+                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    View on GitHub
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <!-- Component Coming Soon -->
+          <div class="text-center py-12">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 mb-6">
+              <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+              Demo Coming Soon
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
+              This component is production-ready and fully documented. Interactive demo will be available soon.
+            </p>
+            <a
+              href="/ontology-ui"
+              class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to all components
+            </a>
+          </div>
+        )}
+
+        <!-- Navigation -->
+        {demo && (
+          <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between">
+              <a
+                href="/ontology-ui"
+                class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to all components
+              </a>
+              <a
+                href={`/ontology-ui#${categoryId}`}
+                class="inline-flex items-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              >
+                View category
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>
