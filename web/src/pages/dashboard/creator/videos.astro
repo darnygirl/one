@@ -242,48 +242,47 @@ import { Button } from '@/components/ui/button';
   const videoSort = document.getElementById('video-sort') as HTMLSelectElement;
   const retryLoadBtn = document.getElementById('retry-load-btn');
 
-  // Check if API is configured
+  // Check if API is configured and initialize
   if (!youtubeService.isConfigured()) {
     showConnectionError('YouTube API key not configured. Please set PUBLIC_YOUTUBE_API_KEY in your environment variables.');
     hideElement(connectionLoading);
-    return;
-  }
-
-  // Load stored channel ID on page load
-  const storedChannelId = localStorage.getItem('youtube_channel_id');
-  if (storedChannelId) {
-    connectChannel(storedChannelId);
   } else {
-    showConnectionState('disconnected');
+    // Load stored channel ID on page load
+    const storedChannelId = localStorage.getItem('youtube_channel_id');
+    if (storedChannelId) {
+      connectChannel(storedChannelId);
+    } else {
+      showConnectionState('disconnected');
+    }
+
+    // Event listeners
+    connectChannelBtn?.addEventListener('click', () => {
+      const channelId = channelIdInput.value.trim();
+      if (channelId) {
+        connectChannel(channelId);
+      }
+    });
+
+    disconnectChannelBtn?.addEventListener('click', () => {
+      disconnectChannel();
+    });
+
+    syncVideosBtn?.addEventListener('click', () => {
+      if (connectedChannel) {
+        loadVideos(connectedChannel.channelId);
+      }
+    });
+
+    videoSort?.addEventListener('change', () => {
+      sortAndRenderVideos();
+    });
+
+    retryLoadBtn?.addEventListener('click', () => {
+      if (connectedChannel) {
+        loadVideos(connectedChannel.channelId);
+      }
+    });
   }
-
-  // Event listeners
-  connectChannelBtn?.addEventListener('click', () => {
-    const channelId = channelIdInput.value.trim();
-    if (channelId) {
-      connectChannel(channelId);
-    }
-  });
-
-  disconnectChannelBtn?.addEventListener('click', () => {
-    disconnectChannel();
-  });
-
-  syncVideosBtn?.addEventListener('click', () => {
-    if (connectedChannel) {
-      loadVideos(connectedChannel.channelId);
-    }
-  });
-
-  videoSort?.addEventListener('change', () => {
-    sortAndRenderVideos();
-  });
-
-  retryLoadBtn?.addEventListener('click', () => {
-    if (connectedChannel) {
-      loadVideos(connectedChannel.channelId);
-    }
-  });
 
   // Functions
   function showConnectionState(state: 'loading' | 'disconnected' | 'connected') {
