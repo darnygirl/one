@@ -3,7 +3,7 @@
  * Demonstrates all streaming components working together
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   StreamingResponse,
   ThinkingIndicator,

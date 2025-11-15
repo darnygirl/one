@@ -10,7 +10,7 @@
  * - Transferable/non-transferable option
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAccount } from "wagmi";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
