@@ -180,6 +180,16 @@
       "cycle": 100,
       "lesson": "Completed Cycle 100",
       "timestamp": 1763117350
+    },
+    {
+      "cycle": 100,
+      "lesson": "Completed Cycle 100",
+      "timestamp": 1763117390
+    },
+    {
+      "cycle": 100,
+      "lesson": "Completed Cycle 100",
+      "timestamp": 1763187661
     }
   ],
   "feature_complete": true
