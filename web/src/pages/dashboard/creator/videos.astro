@@ -1,0 +1,486 @@
+---
+/**
+ * Creator Video Dashboard
+ *
+ * Manage YouTube videos for creators. Features:
+ * - Connect YouTube channel via OAuth
+ * - Display all videos from connected channel
+ * - Sync videos from YouTube
+ * - View video analytics (views, likes, comments)
+ * - Edit video metadata
+ * - Publish videos to ONE Platform
+ *
+ * This page uses the YouTubeService (client-side) to fetch videos
+ * without requiring backend storage initially.
+ *
+ * Future enhancements:
+ * - Store videos in Convex backend
+ * - Auto-sync on schedule
+ * - Video analytics dashboard
+ * - Bulk operations
+ */
+
+import Layout from '@/layouts/Layout.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+---
+
+<Layout
+  title="Video Manager - Creator Dashboard"
+  description="Manage your YouTube videos and sync them to ONE Platform"
+  sidebarInitialCollapsed={false}
+>
+  <div class="container mx-auto py-6 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <!-- Page Header -->
+    <header class="mb-8 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">
+            Video Manager
+          </h1>
+          <p class="text-base sm:text-lg text-muted-foreground mt-2">
+            Connect your YouTube channel and manage your video content
+          </p>
+        </div>
+        <Badge variant="secondary" class="h-fit">
+          Beta
+        </Badge>
+      </div>
+    </header>
+
+    <!-- YouTube Connection Status -->
+    <div id="youtube-connection-section">
+      <Card class="mb-8">
+        <CardHeader>
+          <CardTitle>YouTube Channel Connection</CardTitle>
+          <CardDescription>
+            Connect your YouTube channel to import and manage videos
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div id="connection-status-loading" class="flex items-center gap-3 text-muted-foreground">
+            <div class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+            <span>Checking connection...</span>
+          </div>
+
+          <!-- Not connected state -->
+          <div id="connection-status-disconnected" class="hidden space-y-4">
+            <div class="flex items-center gap-3 text-muted-foreground">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>No YouTube channel connected</span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <input
+                type="text"
+                id="youtube-channel-id-input"
+                placeholder="Enter YouTube Channel ID (e.g., UCXuqSBlHAE6Xw-yeJA0Tunw)"
+                class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <Button id="connect-channel-btn" class="sm:w-auto">
+                Connect Channel
+              </Button>
+            </div>
+            <p class="text-sm text-muted-foreground">
+              Don't have your channel ID?
+              <a href="https://www.youtube.com/account_advanced" target="_blank" rel="noopener" class="text-primary hover:underline">
+                Find it here
+              </a>
+            </p>
+          </div>
+
+          <!-- Connected state -->
+          <div id="connection-status-connected" class="hidden space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <img
+                  id="channel-thumbnail"
+                  src=""
+                  alt="Channel thumbnail"
+                  class="w-16 h-16 rounded-full"
+                />
+                <div>
+                  <h3 id="channel-title" class="font-semibold text-lg"></h3>
+                  <div class="flex flex-wrap gap-4 mt-1 text-sm text-muted-foreground">
+                    <span id="channel-subscribers"></span>
+                    <span id="channel-video-count"></span>
+                    <span id="channel-views"></span>
+                  </div>
+                </div>
+              </div>
+              <Button variant="outline" id="disconnect-channel-btn">
+                Disconnect
+              </Button>
+            </div>
+            <div class="flex gap-3">
+              <Button id="sync-videos-btn" class="flex items-center gap-2">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Sync Videos from YouTube
+              </Button>
+            </div>
+          </div>
+
+          <!-- Error state -->
+          <div id="connection-error" class="hidden p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p class="text-sm text-destructive" id="connection-error-message"></p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- Video Grid -->
+    <div id="videos-section">
+      <!-- Loading state -->
+      <div id="videos-loading" class="hidden py-12">
+        <div class="flex flex-col items-center gap-4">
+          <div class="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p class="text-muted-foreground">Loading videos from YouTube...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="videos-empty" class="hidden py-12">
+        <div class="flex flex-col items-center gap-4 text-center">
+          <div class="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+            <svg class="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-xl font-semibold">No videos found</h3>
+            <p class="text-muted-foreground max-w-md">
+              Connect your YouTube channel and sync videos to get started.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videos grid -->
+      <div id="videos-grid" class="hidden">
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-2xl font-bold">
+            <span id="video-count">0</span> Videos
+          </h2>
+          <div class="flex gap-3">
+            <select id="video-sort" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="date">Newest First</option>
+              <option value="views">Most Views</option>
+              <option value="title">Title (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="video-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Video cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div id="videos-error" class="hidden py-12">
+        <Card class="border-destructive/20 bg-destructive/5">
+          <CardContent class="pt-6">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-semibold text-destructive mb-2">Failed to load videos</h3>
+                <p class="text-sm text-muted-foreground mb-4" id="videos-error-message"></p>
+                <Button variant="outline" id="retry-load-btn">
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { YouTubeService, type YouTubeVideo, type YouTubeChannel } from '@/services/YouTubeService';
+
+  // Initialize YouTube service
+  const youtubeService = new YouTubeService();
+
+  // State
+  let connectedChannel: YouTubeChannel | null = null;
+  let videos: YouTubeVideo[] = [];
+
+  // DOM elements
+  const connectionLoading = document.getElementById('connection-status-loading');
+  const connectionDisconnected = document.getElementById('connection-status-disconnected');
+  const connectionConnected = document.getElementById('connection-status-connected');
+  const connectionError = document.getElementById('connection-error');
+  const connectionErrorMessage = document.getElementById('connection-error-message');
+
+  const channelIdInput = document.getElementById('youtube-channel-id-input') as HTMLInputElement;
+  const connectChannelBtn = document.getElementById('connect-channel-btn');
+  const disconnectChannelBtn = document.getElementById('disconnect-channel-btn');
+  const syncVideosBtn = document.getElementById('sync-videos-btn');
+
+  const channelThumbnail = document.getElementById('channel-thumbnail') as HTMLImageElement;
+  const channelTitle = document.getElementById('channel-title');
+  const channelSubscribers = document.getElementById('channel-subscribers');
+  const channelVideoCount = document.getElementById('channel-video-count');
+  const channelViews = document.getElementById('channel-views');
+
+  const videosLoading = document.getElementById('videos-loading');
+  const videosEmpty = document.getElementById('videos-empty');
+  const videosGrid = document.getElementById('videos-grid');
+  const videosError = document.getElementById('videos-error');
+  const videosErrorMessage = document.getElementById('videos-error-message');
+  const videoCards = document.getElementById('video-cards');
+  const videoCount = document.getElementById('video-count');
+  const videoSort = document.getElementById('video-sort') as HTMLSelectElement;
+  const retryLoadBtn = document.getElementById('retry-load-btn');
+
+  // Check if API is configured
+  if (!youtubeService.isConfigured()) {
+    showConnectionError('YouTube API key not configured. Please set PUBLIC_YOUTUBE_API_KEY in your environment variables.');
+    hideElement(connectionLoading);
+    return;
+  }
+
+  // Load stored channel ID on page load
+  const storedChannelId = localStorage.getItem('youtube_channel_id');
+  if (storedChannelId) {
+    connectChannel(storedChannelId);
+  } else {
+    showConnectionState('disconnected');
+  }
+
+  // Event listeners
+  connectChannelBtn?.addEventListener('click', () => {
+    const channelId = channelIdInput.value.trim();
+    if (channelId) {
+      connectChannel(channelId);
+    }
+  });
+
+  disconnectChannelBtn?.addEventListener('click', () => {
+    disconnectChannel();
+  });
+
+  syncVideosBtn?.addEventListener('click', () => {
+    if (connectedChannel) {
+      loadVideos(connectedChannel.channelId);
+    }
+  });
+
+  videoSort?.addEventListener('change', () => {
+    sortAndRenderVideos();
+  });
+
+  retryLoadBtn?.addEventListener('click', () => {
+    if (connectedChannel) {
+      loadVideos(connectedChannel.channelId);
+    }
+  });
+
+  // Functions
+  function showConnectionState(state: 'loading' | 'disconnected' | 'connected') {
+    hideElement(connectionLoading);
+    hideElement(connectionDisconnected);
+    hideElement(connectionConnected);
+    hideElement(connectionError);
+
+    if (state === 'loading') showElement(connectionLoading);
+    if (state === 'disconnected') showElement(connectionDisconnected);
+    if (state === 'connected') showElement(connectionConnected);
+  }
+
+  function showConnectionError(message: string) {
+    if (connectionErrorMessage) connectionErrorMessage.textContent = message;
+    showElement(connectionError);
+  }
+
+  function showVideosState(state: 'loading' | 'empty' | 'grid' | 'error') {
+    hideElement(videosLoading);
+    hideElement(videosEmpty);
+    hideElement(videosGrid);
+    hideElement(videosError);
+
+    if (state === 'loading') showElement(videosLoading);
+    if (state === 'empty') showElement(videosEmpty);
+    if (state === 'grid') showElement(videosGrid);
+    if (state === 'error') showElement(videosError);
+  }
+
+  async function connectChannel(channelId: string) {
+    showConnectionState('loading');
+
+    try {
+      // Fetch channel info
+      const channel = await youtubeService.getChannelInfo(channelId);
+      connectedChannel = channel;
+
+      // Store in localStorage
+      localStorage.setItem('youtube_channel_id', channelId);
+
+      // Update UI
+      if (channelThumbnail) channelThumbnail.src = channel.thumbnail;
+      if (channelTitle) channelTitle.textContent = channel.title;
+      if (channelSubscribers) channelSubscribers.textContent = `${formatNumber(channel.subscribers)} subscribers`;
+      if (channelVideoCount) channelVideoCount.textContent = `${formatNumber(channel.videoCount)} videos`;
+      if (channelViews) channelViews.textContent = `${formatNumber(channel.totalViews)} views`;
+
+      showConnectionState('connected');
+
+      // Auto-load videos
+      loadVideos(channelId);
+    } catch (error: any) {
+      showConnectionError(error.message || 'Failed to connect to YouTube channel');
+      showConnectionState('disconnected');
+    }
+  }
+
+  function disconnectChannel() {
+    connectedChannel = null;
+    videos = [];
+    localStorage.removeItem('youtube_channel_id');
+    showConnectionState('disconnected');
+    showVideosState('empty');
+  }
+
+  async function loadVideos(channelId: string) {
+    showVideosState('loading');
+
+    try {
+      // Fetch videos from YouTube
+      const fetchedVideos = await youtubeService.getChannelVideos(channelId, 50);
+      videos = fetchedVideos;
+
+      if (videos.length === 0) {
+        showVideosState('empty');
+      } else {
+        sortAndRenderVideos();
+        showVideosState('grid');
+      }
+    } catch (error: any) {
+      if (videosErrorMessage) {
+        videosErrorMessage.textContent = error.message || 'Failed to load videos from YouTube';
+      }
+      showVideosState('error');
+    }
+  }
+
+  function sortAndRenderVideos() {
+    const sortBy = videoSort?.value || 'date';
+
+    // Sort videos
+    const sortedVideos = [...videos].sort((a, b) => {
+      if (sortBy === 'date') {
+        return b.publishedAt.getTime() - a.publishedAt.getTime();
+      } else if (sortBy === 'views') {
+        return b.views - a.views;
+      } else if (sortBy === 'title') {
+        return a.title.localeCompare(b.title);
+      }
+      return 0;
+    });
+
+    renderVideos(sortedVideos);
+  }
+
+  function renderVideos(videosToRender: YouTubeVideo[]) {
+    if (!videoCards) return;
+
+    if (videoCount) videoCount.textContent = String(videosToRender.length);
+
+    videoCards.innerHTML = videosToRender.map(video => `
+      <div class="group block transition-transform md:hover:scale-[1.02] rounded-xl">
+        <div class="overflow-hidden h-full transition-shadow md:hover:shadow-xl border rounded-xl bg-card">
+          <!-- Thumbnail -->
+          <div class="relative aspect-video bg-muted overflow-hidden">
+            <img
+              src="${video.thumbnail}"
+              alt="${escapeHtml(video.title)}"
+              class="w-full h-full object-cover transition-transform md:group-hover:scale-105"
+              loading="lazy"
+            />
+            <!-- Play icon -->
+            <div class="absolute inset-0 flex items-center justify-center bg-black/20 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+              <div class="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm shadow-lg">
+                <svg class="w-8 h-8 text-primary-foreground fill-primary-foreground ml-1" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <!-- Duration -->
+            <div class="absolute bottom-2 right-2">
+              <span class="bg-black/90 text-white px-2 py-0.5 rounded text-xs font-mono">
+                ${video.durationFormatted}
+              </span>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="p-4 space-y-3">
+            <h3 class="font-semibold text-lg leading-tight line-clamp-2">
+              ${escapeHtml(video.title)}
+            </h3>
+            <p class="text-sm text-muted-foreground line-clamp-2">
+              ${escapeHtml(video.description)}
+            </p>
+            <div class="flex items-center justify-between text-sm text-muted-foreground">
+              <span>${formatNumber(video.views)} views</span>
+              <span>${formatDate(video.publishedAt)}</span>
+            </div>
+            <div class="flex gap-2 pt-2">
+              <a
+                href="https://www.youtube.com/watch?v=${video.videoId}"
+                target="_blank"
+                rel="noopener"
+                class="flex-1 px-3 py-2 text-sm border rounded-lg hover:bg-accent text-center"
+              >
+                View on YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Utility functions
+  function showElement(el: HTMLElement | null) {
+    if (el) el.classList.remove('hidden');
+  }
+
+  function hideElement(el: HTMLElement | null) {
+    if (el) el.classList.add('hidden');
+  }
+
+  function formatNumber(num: number): string {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return String(num);
+  }
+
+  function formatDate(date: Date): string {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return `${Math.floor(diffDays / 365)} years ago`;
+  }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+</script>
