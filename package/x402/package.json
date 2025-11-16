@@ -1,0 +1,58 @@
+{
+  "name": "@one/x402",
+  "version": "1.0.0",
+  "description": "X402 gasless crypto payment components for Astro + React",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components/*": "./src/components/*",
+    "./hooks/*": "./src/hooks/*",
+    "./lib/*": "./src/lib/*",
+    "./pages/*": "./src/pages/*"
+  },
+  "files": [
+    "src",
+    "docs",
+    "README.md",
+    ".env.example"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "x402",
+    "crypto",
+    "payments",
+    "usdc",
+    "base",
+    "eip-3009",
+    "gasless",
+    "web3",
+    "astro",
+    "react"
+  ],
+  "author": "ONE Platform",
+  "license": "MIT",
+  "peerDependencies": {
+    "wagmi": "^2.0.0",
+    "viem": "^2.0.0",
+    "@rainbow-me/rainbowkit": "^2.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/one-platform/x402"
+  },
+  "bugs": {
+    "url": "https://github.com/one-platform/x402/issues"
+  },
+  "homepage": "https://github.com/one-platform/x402#readme"
+}

@@ -1,0 +1,51 @@
+---
+/**
+ * Basic Payment Button Example
+ *
+ * Simplest way to add X402 payments to your site
+ */
+
+import { Web3Provider } from '@one/x402/components/Web3Provider';
+import { X402PaymentButton } from '@one/x402/components/X402PaymentButton';
+
+const MERCHANT_WALLET = import.meta.env.PUBLIC_MERCHANT_WALLET;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic Payment Example</title>
+</head>
+<body>
+  <Web3Provider client:load>
+    <div class="container">
+      <h1>Buy Premium Product</h1>
+      <p>Price: $99.99 USDC</p>
+
+      <X402PaymentButton
+        client:load
+        amount={99.99}
+        recipientAddress={MERCHANT_WALLET}
+        onSuccess={(txHash) => {
+          console.log('Payment successful!', txHash);
+          window.location.href = `/success?tx=${txHash}`;
+        }}
+        onError={(error) => {
+          console.error('Payment failed:', error);
+          alert('Payment failed. Please try again.');
+        }}
+      />
+    </div>
+  </Web3Provider>
+</body>
+</html>
+
+<style>
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: center;
+  }
+</style>

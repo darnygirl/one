@@ -8,6 +8,8 @@
 !/one/**
 !/web/
 !/web/**
+!/package/
+!/package/**
 
 # Whitelist specific files at root level
 !/.gitignore

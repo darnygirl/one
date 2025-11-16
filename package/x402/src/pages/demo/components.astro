@@ -1,0 +1,581 @@
+---
+/**
+ * Component Gallery - ONE E-Commerce Package
+ *
+ * Interactive showcase of all 40+ components with live examples.
+ */
+
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+import { TopBar } from '@/components/shop/TopBar';
+import { ProductHeader } from '@/components/shop/ProductHeader';
+import { ShopHero } from '@/components/shop/ShopHero';
+import { ProductHero } from '@/components/shop/ProductHero';
+import { ProductSpecs } from '@/components/shop/ProductSpecs';
+import { FeaturesList } from '@/components/shop/FeaturesList';
+import { FeaturesWithImages } from '@/components/shop/FeaturesWithImages';
+import { FragranceNotes } from '@/components/shop/FragranceNotes';
+import { ReviewsSection } from '@/components/shop/ReviewsSection';
+import { RecentPurchaseToast } from '@/components/shop/RecentPurchaseToast';
+import { ValueProposition } from '@/components/shop/ValueProposition';
+import { InlineUrgencyBanner } from '@/components/shop/InlineUrgencyBanner';
+import { StickyCartButton } from '@/components/shop/StickyCartButton';
+import { StickyBuyBar } from '@/components/shop/StickyBuyBar';
+import { FAQ } from '@/components/shop/FAQ';
+import { FAQMinimal } from '@/components/shop/FAQMinimal';
+---
+
+<ShopLayout
+  title="Component Gallery - ONE E-Commerce"
+  description="Interactive showcase of all components"
+>
+  <div class="bg-white dark:bg-black text-black dark:text-white min-h-screen">
+
+    <!-- Header -->
+    <section class="border-b-2 border-black dark:border-white sticky top-0 bg-white dark:bg-black z-50">
+      <div class="max-w-6xl mx-auto px-6 py-6">
+        <div class="flex items-center justify-between">
+          <a href="/shop/demo" class="text-sm font-bold tracking-wider uppercase hover:opacity-60">
+            ← Back to Demo
+          </a>
+          <h1 class="text-2xl font-light">Component Gallery</h1>
+          <div class="w-24"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table of Contents -->
+    <section class="border-b-2 border-black dark:border-white bg-black/5 dark:bg-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="text-center mb-6">
+          <h2 class="text-xl font-light mb-2">Jump to Section</h2>
+          <p class="text-sm opacity-60">40+ production-ready components</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-4 text-center">
+          <a href="#layout" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Layout (3)
+          </a>
+          <a href="#heroes" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Heroes (2)
+          </a>
+          <a href="#product" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Product (4)
+          </a>
+          <a href="#social" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Social (2)
+          </a>
+          <a href="#value" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Value (2)
+          </a>
+          <a href="#shopping" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Shopping (2)
+          </a>
+          <a href="#support" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Support (2)
+          </a>
+          <a href="#web3" class="px-4 py-2 border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-xs font-bold tracking-wider uppercase">
+            Web3 (5)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-6 py-12">
+
+      <!-- Layout & Navigation -->
+      <section id="layout" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Layout & Navigation</h2>
+          <p class="text-sm opacity-60">Site-wide navigation and headers</p>
+        </div>
+
+        <!-- TopBar -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">TopBar</h3>
+            <p class="text-sm opacity-60 mb-2">Site navigation with logo, search, and cart</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ TopBar }} from '@/components/shop/TopBar'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white p-4">
+            <TopBar client:load />
+          </div>
+        </div>
+
+        <!-- ProductHeader -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ProductHeader</h3>
+            <p class="text-sm opacity-60 mb-2">Product page header with breadcrumbs</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ProductHeader }} from '@/components/shop/ProductHeader'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white p-4">
+            <ProductHeader client:load productName="Demo Product" />
+          </div>
+        </div>
+
+        <!-- ThemeToggle -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ThemeToggle</h3>
+            <p class="text-sm opacity-60 mb-2">Dark/light mode switcher (see bottom-right)</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ThemeToggle }} from '@/components/shop/ThemeToggle'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white p-8 text-center">
+            <p class="text-sm opacity-60">Fixed button in bottom-right corner of screen</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Heroes -->
+      <section id="heroes" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Hero Sections</h2>
+          <p class="text-sm opacity-60">Large page headers and showcases</p>
+        </div>
+
+        <!-- ShopHero -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ShopHero</h3>
+            <p class="text-sm opacity-60 mb-2">Main shop homepage hero</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ShopHero }} from '@/components/shop/ShopHero'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <ShopHero client:load />
+          </div>
+        </div>
+
+        <!-- ProductHero -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ProductHero</h3>
+            <p class="text-sm opacity-60 mb-2">Product detail page hero with image and CTA</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ProductHero }} from '@/components/shop/ProductHero'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <ProductHero
+              client:load
+              productName="Premium Wireless Headphones"
+              price={299.99}
+              image="https://i.imgur.com/ZANVnHE.jpeg"
+              description="High-quality noise-canceling headphones with premium sound"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Product Display -->
+      <section id="product" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Product Display</h2>
+          <p class="text-sm opacity-60">Components for showing product information</p>
+        </div>
+
+        <!-- ProductSpecs -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ProductSpecs</h3>
+            <p class="text-sm opacity-60 mb-2">Technical specifications grid</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ProductSpecs }} from '@/components/shop/ProductSpecs'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <ProductSpecs
+              client:load
+              specs={{
+                "Battery Life": "30 hours",
+                "Bluetooth": "5.0",
+                "Weight": "250g",
+                "Charging": "USB-C",
+                "Noise Cancelling": "Active ANC",
+                "Driver Size": "40mm"
+              }}
+            />
+          </div>
+        </div>
+
+        <!-- FeaturesList -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">FeaturesList</h3>
+            <p class="text-sm opacity-60 mb-2">Bulleted feature list with icons</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ FeaturesList }} from '@/components/shop/FeaturesList'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <FeaturesList
+              client:load
+              features={[
+                "Active Noise Cancellation",
+                "30-hour battery life",
+                "Premium leather ear cushions",
+                "Bluetooth 5.0 connectivity",
+                "Foldable design with case"
+              ]}
+            />
+          </div>
+        </div>
+
+        <!-- FeaturesWithImages -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">FeaturesWithImages</h3>
+            <p class="text-sm opacity-60 mb-2">Rich feature showcase with images</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ FeaturesWithImages }} from '@/components/shop/FeaturesWithImages'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <FeaturesWithImages
+              client:load
+              features={[
+                {
+                  title: "Studio-Quality Sound",
+                  description: "40mm drivers deliver crisp highs and deep bass",
+                  image: "https://i.imgur.com/ZANVnHE.jpeg"
+                },
+                {
+                  title: "All-Day Comfort",
+                  description: "Premium leather cushions for extended listening",
+                  image: "https://i.imgur.com/Y54Bt8J.jpeg"
+                }
+              ]}
+            />
+          </div>
+        </div>
+
+        <!-- FragranceNotes -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">FragranceNotes</h3>
+            <p class="text-sm opacity-60 mb-2">Tiered product attributes (fragrance example)</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ FragranceNotes }} from '@/components/shop/FragranceNotes'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <FragranceNotes
+              client:load
+              topNotes={["Bergamot", "Lemon", "Pink Pepper"]}
+              middleNotes={["Lavender", "Geranium", "Sage"]}
+              baseNotes={["Vetiver", "Cedar", "Amber"]}
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Proof -->
+      <section id="social" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Social Proof</h2>
+          <p class="text-sm opacity-60">Reviews and purchase notifications</p>
+        </div>
+
+        <!-- ReviewsSection -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ReviewsSection</h3>
+            <p class="text-sm opacity-60 mb-2">Customer reviews with photos and ratings</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ReviewsSection }} from '@/components/shop/ReviewsSection'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <ReviewsSection
+              client:load
+              reviews={[
+                {
+                  name: "Sarah M.",
+                  rating: 5,
+                  date: "2025-01-10",
+                  comment: "Best headphones I've ever owned!",
+                  verified: true
+                },
+                {
+                  name: "John D.",
+                  rating: 5,
+                  date: "2025-01-08",
+                  comment: "Sound quality is incredible.",
+                  verified: true
+                }
+              ]}
+            />
+          </div>
+        </div>
+
+        <!-- RecentPurchaseToast -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">RecentPurchaseToast</h3>
+            <p class="text-sm opacity-60 mb-2">Social proof popup notifications</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ RecentPurchaseToast }} from '@/components/shop/RecentPurchaseToast'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white p-8">
+            <RecentPurchaseToast client:load />
+            <p class="text-sm text-center opacity-60 mt-4">
+              Watch bottom-left for popup notifications
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Value Proposition -->
+      <section id="value" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Value Proposition</h2>
+          <p class="text-sm opacity-60">Benefits and urgency messaging</p>
+        </div>
+
+        <!-- ValueProposition -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">ValueProposition</h3>
+            <p class="text-sm opacity-60 mb-2">Key benefits section</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ ValueProposition }} from '@/components/shop/ValueProposition'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <ValueProposition client:load />
+          </div>
+        </div>
+
+        <!-- InlineUrgencyBanner -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">InlineUrgencyBanner</h3>
+            <p class="text-sm opacity-60 mb-2">Scarcity and urgency messaging</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ InlineUrgencyBanner }} from '@/components/shop/InlineUrgencyBanner'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <InlineUrgencyBanner
+              client:load
+              message="Only 7 left in stock!"
+              type="stock"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Shopping Features -->
+      <section id="shopping" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Shopping Features</h2>
+          <p class="text-sm opacity-60">Cart and purchase functionality</p>
+        </div>
+
+        <!-- StickyCartButton -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">StickyCartButton</h3>
+            <p class="text-sm opacity-60 mb-2">Floating add-to-cart button</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ StickyCartButton }} from '@/components/shop/StickyCartButton'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white p-8 text-center">
+            <p class="text-sm opacity-60">Appears on scroll in product pages</p>
+          </div>
+        </div>
+
+        <!-- StickyBuyBar -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">StickyBuyBar</h3>
+            <p class="text-sm opacity-60 mb-2">Fixed bottom purchase bar (mobile)</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ StickyBuyBar }} from '@/components/shop/StickyBuyBar'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <StickyBuyBar
+              client:load
+              productName="Demo Product"
+              price={299.99}
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Support -->
+      <section id="support" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Support</h2>
+          <p class="text-sm opacity-60">FAQ and help sections</p>
+        </div>
+
+        <!-- FAQMinimal -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">FAQMinimal</h3>
+            <p class="text-sm opacity-60 mb-2">Compact FAQ for product pages</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ FAQMinimal }} from '@/components/shop/FAQMinimal'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <FAQMinimal
+              client:load
+              faqs={[
+                {
+                  question: "What's included in the box?",
+                  answer: "Headphones, USB-C cable, carrying case, and user manual."
+                },
+                {
+                  question: "Is there a warranty?",
+                  answer: "Yes, 2-year manufacturer warranty included."
+                }
+              ]}
+            />
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="mb-16">
+          <div class="mb-4">
+            <h3 class="text-xl font-light mb-1">FAQ</h3>
+            <p class="text-sm opacity-60 mb-2">Full FAQ section with search</p>
+            <code class="text-xs bg-black/5 dark:bg-white/5 px-2 py-1 font-mono">
+              import {{ FAQ }} from '@/components/shop/FAQ'
+            </code>
+          </div>
+          <div class="border-2 border-black dark:border-white">
+            <FAQ
+              client:load
+              faqs={[
+                {
+                  question: "What's your return policy?",
+                  answer: "30-day money-back guarantee, no questions asked.",
+                  category: "Returns"
+                },
+                {
+                  question: "Do you ship internationally?",
+                  answer: "Yes, we ship to over 100 countries worldwide.",
+                  category: "Shipping"
+                },
+                {
+                  question: "How long does shipping take?",
+                  answer: "3-5 business days for domestic, 7-14 days international.",
+                  category: "Shipping"
+                }
+              ]}
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Web3 Components -->
+      <section id="web3" class="mb-20">
+        <div class="mb-12">
+          <h2 class="text-3xl font-light mb-2">Web3 Components</h2>
+          <p class="text-sm opacity-60">Crypto payment functionality (requires wagmi)</p>
+        </div>
+
+        <div class="border-2 border-black dark:border-white p-8 bg-black/5 dark:bg-white/5">
+          <div class="text-center">
+            <h3 class="text-xl font-light mb-3">Web3 Components</h3>
+            <p class="text-sm opacity-60 mb-4">
+              These components require wagmi, viem, and @rainbow-me/rainbowkit to be installed.
+            </p>
+            <div class="space-y-4 max-w-2xl mx-auto">
+              <div class="text-left">
+                <div class="text-sm font-bold mb-1">1. Web3Provider</div>
+                <p class="text-xs opacity-60 mb-2">RainbowKit + wagmi provider setup</p>
+                <code class="text-xs bg-white dark:bg-black px-2 py-1 font-mono block">
+                  import {{ Web3Provider }} from '@/components/web3/Web3Provider'
+                </code>
+              </div>
+
+              <div class="text-left">
+                <div class="text-sm font-bold mb-1">2. WalletConnectButton</div>
+                <p class="text-xs opacity-60 mb-2">Connect wallet button (MetaMask, Coinbase, etc.)</p>
+                <code class="text-xs bg-white dark:bg-black px-2 py-1 font-mono block">
+                  import {{ WalletConnectButton }} from '@/components/web3/WalletConnectButton'
+                </code>
+              </div>
+
+              <div class="text-left">
+                <div class="text-sm font-bold mb-1">3. X402PaymentButton</div>
+                <p class="text-xs opacity-60 mb-2">Single X402 payment button</p>
+                <code class="text-xs bg-white dark:bg-black px-2 py-1 font-mono block">
+                  import {{ X402PaymentButton }} from '@/components/web3/X402PaymentButton'
+                </code>
+              </div>
+
+              <div class="text-left">
+                <div class="text-sm font-bold mb-1">4. ImprovedX402PaymentButton</div>
+                <p class="text-xs opacity-60 mb-2">Enhanced payment with session management</p>
+                <code class="text-xs bg-white dark:bg-black px-2 py-1 font-mono block">
+                  import {{ ImprovedX402PaymentButton }} from '@/components/web3/ImprovedX402PaymentButton'
+                </code>
+              </div>
+
+              <div class="text-left">
+                <div class="text-sm font-bold mb-1">5. X402CheckoutFlow</div>
+                <p class="text-xs opacity-60 mb-2">Complete checkout flow with cart</p>
+                <code class="text-xs bg-white dark:bg-black px-2 py-1 font-mono block">
+                  import {{ X402CheckoutFlow }} from '@/components/web3/X402CheckoutFlow'
+                </code>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t-2 border-black dark:border-white">
+              <p class="text-sm mb-4">To install web3 dependencies:</p>
+              <code class="text-xs bg-white dark:bg-black px-4 py-2 font-mono block">
+                bun add wagmi viem @rainbow-me/rainbowkit
+              </code>
+            </div>
+
+            <a
+              href="/shop/tutorial/x402"
+              class="inline-block mt-6 px-6 py-3 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+            >
+              <span class="text-xs font-bold tracking-wider uppercase">View X402 Tutorial →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <section class="border-t-2 border-black dark:border-white pt-12">
+        <div class="flex justify-between items-center">
+          <a
+            href="/shop/demo"
+            class="px-6 py-3 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+          >
+            <span class="text-xs font-bold tracking-wider uppercase">← Back to Demo Home</span>
+          </a>
+
+          <a
+            href="/shop/tutorial"
+            class="px-6 py-3 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white hover:opacity-80 transition-opacity"
+          >
+            <span class="text-xs font-bold tracking-wider uppercase">Setup Tutorial →</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Theme Toggle -->
+    <ThemeToggle client:load />
+
+  </div>
+</ShopLayout>

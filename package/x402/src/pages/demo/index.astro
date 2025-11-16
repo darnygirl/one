@@ -1,0 +1,425 @@
+---
+/**
+ * Main Demo Showcase - ONE E-Commerce Package
+ *
+ * This page demonstrates all components and features available in the package.
+ * Perfect for testing, showcasing, and understanding what's included.
+ */
+
+import ShopLayout from '@/layouts/ShopLayout.astro';
+import { ThemeToggle } from '@/components/shop/ThemeToggle';
+---
+
+<ShopLayout
+  title="Demo Showcase - ONE E-Commerce"
+  description="Explore all components and features in the ONE E-Commerce Package"
+>
+  <div class="bg-white dark:bg-black text-black dark:text-white min-h-screen">
+
+    <!-- Hero -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-20 text-center">
+        <div class="inline-block px-4 py-2 border-2 border-black dark:border-white mb-8">
+          <span class="text-xs font-bold tracking-[0.3em] uppercase">Live Demo</span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-light tracking-tight mb-6">
+          ONE E-Commerce
+        </h1>
+
+        <p class="text-xl md:text-2xl opacity-60 mb-12 max-w-3xl mx-auto">
+          Complete e-commerce system with 40+ components, Stripe + X402 payments,
+          and beautiful minimalist design.
+        </p>
+
+        <div class="flex flex-wrap gap-4 justify-center">
+          <a
+            href="#demos"
+            class="px-8 py-4 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white hover:opacity-80 transition-opacity"
+          >
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">View Demos</span>
+          </a>
+
+          <a
+            href="/shop/tutorial"
+            class="px-8 py-4 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+          >
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">Setup Tutorial</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="border-b-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="grid md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-4xl font-light mb-2">40+</div>
+            <div class="text-sm opacity-60 uppercase tracking-wider">Components</div>
+          </div>
+          <div>
+            <div class="text-4xl font-light mb-2">6</div>
+            <div class="text-sm opacity-60 uppercase tracking-wider">Demo Pages</div>
+          </div>
+          <div>
+            <div class="text-4xl font-light mb-2">2</div>
+            <div class="text-sm opacity-60 uppercase tracking-wider">Payment Methods</div>
+          </div>
+          <div>
+            <div class="text-4xl font-light mb-2">13K+</div>
+            <div class="text-sm opacity-60 uppercase tracking-wider">Lines of Code</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo Pages -->
+    <section id="demos" class="max-w-6xl mx-auto px-6 py-20">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-light tracking-tight mb-4">Demo Pages</h2>
+        <p class="text-lg opacity-60">Explore production-ready pages and flows</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+
+        <!-- Product Landing -->
+        <a
+          href="/shop/product-landing"
+          class="border-2 border-black dark:border-white p-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-xs font-bold tracking-[0.2em] uppercase opacity-60 group-hover:opacity-100">
+              Most Popular
+            </div>
+            <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-light mb-3">Product Landing Page</h3>
+          <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+            Complete single-product sales page with hero, features, specs, reviews, FAQ, and Stripe checkout.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Hero</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Features</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Reviews</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Stripe</span>
+          </div>
+        </a>
+
+        <!-- Marketplace -->
+        <a
+          href="/shop/marketplace"
+          class="border-2 border-black dark:border-white p-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-xs font-bold tracking-[0.2em] uppercase opacity-60 group-hover:opacity-100">
+              Multi-Product
+            </div>
+            <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-light mb-3">Marketplace Catalog</h3>
+          <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+            Product grid with filtering, search, categories, and quick add-to-cart functionality.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Grid</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Filters</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Search</span>
+          </div>
+        </a>
+
+        <!-- Checkout Stripe -->
+        <a
+          href="/shop/checkout"
+          class="border-2 border-black dark:border-white p-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-xs font-bold tracking-[0.2em] uppercase opacity-60 group-hover:opacity-100">
+              Payment Flow
+            </div>
+            <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-light mb-3">Checkout (Stripe)</h3>
+          <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+            Complete checkout with Stripe card payments and optional X402 crypto payments.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Stripe</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">X402</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Cart</span>
+          </div>
+        </a>
+
+        <!-- Checkout X402 -->
+        <a
+          href="/shop/checkout-x402"
+          class="border-2 border-black dark:border-white p-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-xs font-bold tracking-[0.2em] uppercase opacity-60 group-hover:opacity-100">
+              Crypto Only
+            </div>
+            <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-light mb-3">Checkout (X402 Crypto)</h3>
+          <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+            Crypto-only checkout with wallet connection and USDC payments on Base network.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">USDC</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Base</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Wallet</span>
+          </div>
+        </a>
+
+        <!-- Order Confirmation -->
+        <a
+          href="/shop/order-confirmation"
+          class="border-2 border-black dark:border-white p-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-xs font-bold tracking-[0.2em] uppercase opacity-60 group-hover:opacity-100">
+              Success Page
+            </div>
+            <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-light mb-3">Order Confirmation</h3>
+          <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+            Post-purchase success page with order details, shipping info, and next steps.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Success</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Receipt</span>
+          </div>
+        </a>
+
+        <!-- Component Gallery -->
+        <a
+          href="/shop/demo/components"
+          class="border-2 border-black dark:border-white p-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-xs font-bold tracking-[0.2em] uppercase opacity-60 group-hover:opacity-100">
+              Interactive
+            </div>
+            <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-light mb-3">Component Gallery</h3>
+          <p class="text-sm opacity-60 group-hover:opacity-100 mb-4">
+            Interactive showcase of all 40+ components with live examples and code snippets.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">40+ Components</span>
+            <span class="text-xs px-2 py-1 border border-black dark:border-white group-hover:border-white dark:group-hover:border-black">Code</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Tutorials -->
+    <section class="border-t-2 border-black dark:border-white bg-black/5 dark:bg-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-light tracking-tight mb-4">Setup Tutorials</h2>
+          <p class="text-lg opacity-60">Step-by-step guides to get you started</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+          <!-- Quick Start -->
+          <a
+            href="/shop/tutorial"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all"
+          >
+            <div class="text-4xl mb-4">🚀</div>
+            <h3 class="text-xl font-light mb-3">Quick Start</h3>
+            <p class="text-sm opacity-60 mb-4">
+              5-minute setup guide to get your store running locally.
+            </p>
+            <div class="text-xs font-bold tracking-wider uppercase">
+              Start Here →
+            </div>
+          </a>
+
+          <!-- Stripe Setup -->
+          <a
+            href="/shop/tutorial/stripe"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all"
+          >
+            <div class="text-4xl mb-4">💳</div>
+            <h3 class="text-xl font-light mb-3">Stripe Payments</h3>
+            <p class="text-sm opacity-60 mb-4">
+              Configure Stripe for card payments with test mode and webhooks.
+            </p>
+            <div class="text-xs font-bold tracking-wider uppercase">
+              Learn More →
+            </div>
+          </a>
+
+          <!-- X402 Setup -->
+          <a
+            href="/shop/tutorial/x402"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white p-8 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all"
+          >
+            <div class="text-4xl mb-4">🔗</div>
+            <h3 class="text-xl font-light mb-3">X402 Crypto</h3>
+            <p class="text-sm opacity-60 mb-4">
+              Enable USDC payments on Base network with gasless transactions.
+            </p>
+            <div class="text-xs font-bold tracking-wider uppercase">
+              Learn More →
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="border-t-2 border-black dark:border-white">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-light tracking-tight mb-4">What's Included</h2>
+          <p class="text-lg opacity-60">Everything you need to launch an online store</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12">
+
+          <div>
+            <h3 class="text-2xl font-light mb-6 pb-4 border-b-2 border-black dark:border-white">
+              Components (40+)
+            </h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">17 Shop Components (Hero, Features, Reviews, etc.)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">5 Web3 Components (Wallet, Payments)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Dark Mode Support</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Mobile Responsive</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Accessibility (WCAG)</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-light mb-6 pb-4 border-b-2 border-black dark:border-white">
+              Features
+            </h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Stripe Checkout Integration</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">X402 Crypto Payments (USDC on Base)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Shopping Cart (Nanostores)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Order Confirmation</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">Email Collection</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="border-t-2 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black">
+      <div class="max-w-4xl mx-auto px-6 py-20 text-center">
+        <h2 class="text-4xl md:text-5xl font-light tracking-tight mb-6">
+          Ready to Build Your Store?
+        </h2>
+        <p class="text-lg opacity-80 mb-12">
+          Start with the tutorial or explore the component gallery
+        </p>
+
+        <div class="flex flex-wrap gap-4 justify-center">
+          <a
+            href="/shop/tutorial"
+            class="px-8 py-4 bg-white text-black dark:bg-black dark:text-white border-2 border-white dark:border-black hover:opacity-80 transition-opacity"
+          >
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">Start Tutorial</span>
+          </a>
+
+          <a
+            href="/shop/demo/components"
+            class="px-8 py-4 border-2 border-white dark:border-black hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-colors"
+          >
+            <span class="text-xs font-bold tracking-[0.3em] uppercase">View Components</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Theme Toggle -->
+    <ThemeToggle client:load />
+
+  </div>
+</ShopLayout>

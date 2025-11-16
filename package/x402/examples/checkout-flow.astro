@@ -1,0 +1,85 @@
+---
+/**
+ * Complete Checkout Flow Example
+ *
+ * Full shopping cart with X402 payment
+ */
+
+import { Web3Provider } from '@one/x402/components/Web3Provider';
+import { X402CheckoutFlow } from '@one/x402/components/X402CheckoutFlow';
+
+// Example cart items (in production, get from state management)
+const cartItems = [
+  {
+    id: '1',
+    name: 'Premium Wireless Headphones',
+    description: 'Noise-canceling with 30-hour battery',
+    price: 299.99,
+    quantity: 1,
+    image: 'https://i.imgur.com/ZANVnHE.jpeg'
+  },
+  {
+    id: '2',
+    name: 'Laptop Bag',
+    description: 'Professional bag with multiple compartments',
+    price: 79.99,
+    quantity: 2,
+    image: 'https://i.imgur.com/Y54Bt8J.jpeg'
+  }
+];
+
+const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - X402 Payment</title>
+</head>
+<body>
+  <Web3Provider client:load>
+    <div class="container">
+      <h1>Checkout</h1>
+
+      <X402CheckoutFlow
+        client:load
+        cartItems={cartItems}
+        total={total}
+        onSuccess={(txHash) => {
+          // Store transaction in database
+          fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              txHash,
+              items: cartItems,
+              total,
+              timestamp: Date.now()
+            })
+          });
+
+          // Redirect to confirmation
+          window.location.href = `/order-confirmation?tx=${txHash}`;
+        }}
+        onError={(error) => {
+          console.error('Checkout failed:', error);
+
+          // Log error to tracking service
+          // trackError('checkout_failed', { error: error.message });
+
+          alert(`Payment failed: ${error.message}`);
+        }}
+      />
+    </div>
+  </Web3Provider>
+</body>
+</html>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+</style>
