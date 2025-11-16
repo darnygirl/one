@@ -1,0 +1,78 @@
+{
+  "name": "@one-platform/wordpress",
+  "version": "1.0.0",
+  "description": "Complete WordPress + WooCommerce integration for the ONE Platform with TypeScript providers and production-ready plugin",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./plugin": "./plugin/one-platform-connector",
+    "./examples": {
+      "import": "./dist/examples.mjs",
+      "require": "./dist/examples.js",
+      "types": "./dist/examples.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "plugin",
+    "src",
+    "docs",
+    "scripts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/examples.tsx --format cjs,esm --dts",
+    "build-plugin": "cd plugin && zip -r ../dist/one-platform-connector.zip one-platform-connector/",
+    "install-wp-plugin": "node scripts/install-plugin.js",
+    "generate-keys": "node scripts/generate-keys.js",
+    "prepublishOnly": "npm run build && npm run build-plugin",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "one-platform",
+    "wordpress",
+    "woocommerce",
+    "cms",
+    "ecommerce",
+    "astro",
+    "react",
+    "typescript",
+    "effect-ts",
+    "rest-api",
+    "ontology"
+  ],
+  "author": "ONE Platform <support@one.ie>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/one-ie/one.git",
+    "directory": "packages/wordpress"
+  },
+  "homepage": "https://one.ie",
+  "bugs": {
+    "url": "https://github.com/one-ie/one/issues"
+  },
+  "peerDependencies": {
+    "effect": "^3.0.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
