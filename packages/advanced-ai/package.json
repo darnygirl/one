@@ -1,0 +1,66 @@
+{
+  "name": "@one-platform/advanced-ai",
+  "version": "1.0.0",
+  "description": "Advanced AI tools for the ONE Platform - 22+ tools including calculator, weather, search, translation, image generation, code execution, and more",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tools/*": {
+      "import": "./dist/tools/*.js",
+      "types": "./dist/tools/*.d.ts"
+    },
+    "./cache": {
+      "import": "./dist/cache/index.js",
+      "types": "./dist/cache/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": [
+    "ai",
+    "tools",
+    "calculator",
+    "weather",
+    "search",
+    "translation",
+    "image-generation",
+    "code-execution",
+    "voice",
+    "file-processing",
+    "one-platform"
+  ],
+  "author": "ONE Platform Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/one-ie/one.git",
+    "directory": "packages/advanced-ai"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0",
+    "eslint": "^8.0.0"
+  },
+  "dependencies": {}
+}
