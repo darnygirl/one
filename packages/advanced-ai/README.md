@@ -37,6 +37,8 @@ bun add @one-platform/advanced-ai
 
 ## Quick Start
 
+### Using AI Tools (Core Functionality)
+
 \`\`\`typescript
 import { toolRegistry, registerAllTools } from '@one-platform/advanced-ai';
 
@@ -50,6 +52,66 @@ const result = await toolRegistry.execute('calculator', {
 
 console.log(result); // { result: 87, ... }
 \`\`\`
+
+### Using React Components
+
+> **Note:** The React components require shadcn/ui components and lucide-react icons. Ensure you have these installed and properly configured in your project with path aliases (e.g., `@/components/ui/*`).
+
+\`\`\`tsx
+import { AIToolsPanel, ChatClient, ToolCall } from '@one-platform/advanced-ai/components';
+
+// Display AI Tools Panel with calculator, weather, search, etc.
+function MyApp() {
+  return (
+    <div>
+      <AIToolsPanel />
+    </div>
+  );
+}
+
+// Or use the full chat client with tool integration
+function ChatApp() {
+  return (
+    <ChatClient
+      apiEndpoint="/api/chat"
+      model="google/gemini-2.5-flash-lite"
+    />
+  );
+}
+\`\`\`
+
+### Available Components
+
+**Chat Interfaces:**
+- \`ChatClient\` - Full-featured chat with settings and model selection
+- \`ChatClientV2\` - Advanced chat with streaming support
+- \`SimpleChatClient\` - Minimal chat interface
+- \`FreeChatClient\` - Chat optimized for free models
+- \`Chatbot\` - Embedded chatbot widget
+
+**Tool Components:**
+- \`AIToolsPanel\` - Panel with calculator, weather, search, translation
+- \`ToolCall\` - Display tool execution results
+
+**Message Components:**
+- \`Message\` - Display a single message
+- \`MessageList\` - List of messages with scrolling
+- \`AgentMessage\` - AI agent message with reasoning
+
+**Display Components:**
+- \`CodeBlock\` - Syntax-highlighted code display
+- \`LoadingIndicator\` - Loading animation
+- \`Reasoning\` - Display AI reasoning process
+- \`FileUploader\` - File upload with progress
+- \`ImageGallery\` - Image grid display
+
+**Input Components:**
+- \`PromptInput\` - User input with suggestions
+- \`Suggestions\` - Quick action suggestions
+
+**Elements & Examples:**
+- \`import * from '@one-platform/advanced-ai/components/elements'\` - 35+ UI elements
+- \`import * from '@one-platform/advanced-ai/components/examples'\` - 20+ example implementations
 
 ## License
 

@@ -22,3 +22,6 @@ export { convertToolsForOpenRouter, toolToOpenRouterFunction } from './openroute
 
 // Performance monitoring
 export { PerformanceMonitor } from './performance';
+
+// React Components
+export * from './components';

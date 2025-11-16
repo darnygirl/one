@@ -18,6 +18,26 @@
     "./cache": {
       "import": "./dist/cache/index.js",
       "types": "./dist/cache/index.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./components/*": {
+      "import": "./dist/components/*.js",
+      "types": "./dist/components/*.d.ts"
+    },
+    "./components/elements/*": {
+      "import": "./dist/components/elements/*.js",
+      "types": "./dist/components/elements/*.d.ts"
+    },
+    "./components/examples/*": {
+      "import": "./dist/components/examples/*.js",
+      "types": "./dist/components/examples/*.d.ts"
+    },
+    "./components/chat/*": {
+      "import": "./dist/components/chat/*.js",
+      "types": "./dist/components/chat/*.d.ts"
     }
   },
   "files": [
@@ -54,7 +74,9 @@
     "directory": "packages/advanced-ai"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "@types/react": "^18.0.0 || ^19.0.0",
+    "lucide-react": "^0.263.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
